@@ -132,6 +132,7 @@
 
 ;; configure scheme
 (setq scheme-program-name "racket")
+(setq auto-mode-alist (cons '("\\.rkt$" . scheme-mode) auto-mode-alist))
 
 ; Add date/time stamp to buffer
 (defun insert-date()
