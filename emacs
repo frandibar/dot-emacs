@@ -1,8 +1,36 @@
 ;; Custom miscellaneous functions
 
 ;; use chrome as default browser
-;(setq browse-url-browser-function 'browse-url-generic
-      ;browse-url-generic-program "google-chrome")
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
+
+(defun dip ()
+  "Kill text inside parenthesis. Same as vim's di) command. It doesn't work if cursor is between double quotes."
+  (interactive)
+  (backward-up-sexp nil)
+  (kill-sexp)
+  (insert-parentheses))
+
+(defun vap ()
+  "Select text inside parenthesis (including parenthesis). Same as vim's va) command. It doesn't work if cursor is between double quotes."
+  (interactive)
+  (backward-up-sexp nil)
+  (mark-sexp))
+
+(defun backward-up-sexp (arg)
+  "Added because existing function backward-up-list won't work when point is between double quotes.
+
+Extracted from
+http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs
+"
+  (interactive "p")
+  (let ((ppss (syntax-ppss)))
+    (cond ((elt ppss 3)
+           (goto-char (elt ppss 8))
+           (backward-up-sexp (1- arg)))
+          ((backward-up-list arg)))))
+
+(global-set-key [remap backward-up-list] 'backward-up-sexp)
 
 (defun match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert %."
@@ -51,8 +79,8 @@
 
 ;; copy/paste behavior
 
-;; use C-X C-V C-C for copy/pasting
-;(cua-mode t)
+;; use C-x C-v C-c for copy/pasting
+(cua-mode t)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
