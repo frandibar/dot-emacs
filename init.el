@@ -80,7 +80,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; copy/paste behavior
 
 ;; use C-x C-v C-c for copy/pasting
-(cua-mode t)
+;(cua-mode t)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
@@ -106,15 +106,26 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; Appearance settings
 
 ;; set color theme
-(require 'color-theme)
-(eval-after-load "color-theme" 
-  '(progn 
-     (color-theme-initialize)
-     (color-theme-charcoal-black)))
+;; (require 'color-theme)
+;; (eval-after-load "color-theme" 
+;;   '(progn 
+;;      (color-theme-initialize)
+;; ;     (color-theme-charcoal-black)))
+;; ;     (color-theme-cooper-dark)))  ; this doesn't work, should set Cooper Dark
+;; ;     (color-theme-hober)))
+;; ;     (color-theme-midnight)))
+;;      (color-theme-dark-laptop)))
+
+(load-file "~/.emacs.d/color-themes/zenburn.el")
+(require 'zenburn)
+(zenburn)
 
 ;; highlight cursor line
 ;; (disabled because it causes confusion when selecting a region)
 ;(global-hl-line-mode 1)
+
+;; show matching parenthesis
+(show-paren-mode t)
 
 ;; hide tool bar and menu bar
 (tool-bar-mode nil)
@@ -154,3 +165,6 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; set font size
 (set-face-attribute 'default nil :height 110)
+
+(setq initial-scratch-message nil)
+
