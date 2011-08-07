@@ -1,8 +1,6 @@
-;; Custom miscellaneous functions
+;; My personal emacs customization file
 
-;; use chrome as default browser
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+;; Custom miscellaneous functions
 
 (defun dip ()
   "Kill text inside parenthesis. Same as vim's di) command. It doesn't work if cursor is between double quotes."
@@ -77,31 +75,13 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-;; copy/paste behavior
+;; Copy/paste behavior
 
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
-
-;; File type modes
-;(setq auto-mode-alist (cons '("\.[rkt]\\>" . quack-pltfile-mode) auto-mode-alist))
-
-;; Misc
-
-;; Turn off tab character
-;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
-;; set `indent-tabs-mode' to `nil'. This is a per-buffer variable;
-;; altering the variable affects only the current buffer, but it can be
-;; disabled for all buffers.
-(setq-default indent-tabs-mode nil) 
-
-;; disable backup
-(setq backup-inhibited t)
-
-;; disable auto save
-(setq auto-save-default nil)
 
 ;; Appearance settings
 
@@ -145,26 +125,53 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; show line numbers
 (global-linum-mode 1)
 
-;; use 'y' or 'n' instead of 'yes' or 'no' for answers
-(fset 'yes-or-no-p 'y-or-n-p)
+;; set font size
+(set-face-attribute 'default nil :height 110)
+
+;; highlight tabs and trailing spaces
+(setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
+(whitespace-mode t)
+
+;; show blank screen on startup
+(setq initial-scratch-message nil)
 
 ;; Keybindings
 
-(global-set-key "\C-q" 'scroll-n-lines-down)
-(global-set-key "\C-z" 'scroll-n-lines-up)
+;(global-set-key "\C-q" 'scroll-n-lines-down)
+;(global-set-key "\C-z" 'scroll-n-lines-up)
 ;; reassign clobbered C-q
-(global-set-key "\C-x\C-q" 'quoted-insert)
+;(global-set-key "\C-x\C-q" 'quoted-insert)
 
 (global-set-key "%" 'match-paren)
+
+;; Misc
+
+;; Turn off tab character
+;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
+;; set `indent-tabs-mode' to `nil'. This is a per-buffer variable;
+;; altering the variable affects only the current buffer, but it can be
+;; disabled for all buffers.
+(setq-default indent-tabs-mode nil) 
+
+;; disable backup
+(setq backup-inhibited t)
+
+;; disable auto save
+(setq auto-save-default nil)
+
+;; use 'y' or 'n' instead of 'yes' or 'no' for answers
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Specific settings
 
 ;; configure scheme
 (setq scheme-program-name "racket")
 (setq auto-mode-alist (cons '("\\.rkt$" . scheme-mode) auto-mode-alist))
+;(setq auto-mode-alist (cons '("\.[rkt]\\>" . quack-pltfile-mode) auto-mode-alist))
 
-;; set font size
-(set-face-attribute 'default nil :height 110)
+;; open txt files in org-mode
+;(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 
-(setq initial-scratch-message nil)
-
+;; use chrome as default browser
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
