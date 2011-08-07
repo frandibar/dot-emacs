@@ -96,7 +96,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; ;     (color-theme-midnight)))
 ;;      (color-theme-dark-laptop)))
 
-(load-file "~/.emacs.d/color-themes/zenburn.el")
+(setq load-path (append load-path (list "~/.emacs.d/color-themes")))
 (require 'zenburn)
 (zenburn)
 
