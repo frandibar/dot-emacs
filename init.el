@@ -30,8 +30,8 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; set color theme
 ;; (require 'color-theme)
-;; (eval-after-load "color-theme" 
-;;   '(progn 
+;; (eval-after-load "color-theme"
+;;   '(progn
 ;;      (color-theme-initialize)
 ;; ;     (color-theme-charcoal-black)))
 ;; ;     (color-theme-cooper-dark)))  ; this doesn't work, should set Cooper Dark
@@ -60,7 +60,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; set scroll bar to the right
 (setq scroll-bar-mode-explicit t)
-(set-scroll-bar-mode `right) 
+(set-scroll-bar-mode `right)
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
@@ -87,6 +87,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 (global-set-key "%" 'match-paren)
 
+(global-set-key "\C-c\C-f" 'advance-to)
+(global-set-key "\C-c\C-b" 'back-to)
+
 ;; Misc
 
 ;; Turn off tab character
@@ -94,7 +97,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; set `indent-tabs-mode' to `nil'. This is a per-buffer variable;
 ;; altering the variable affects only the current buffer, but it can be
 ;; disabled for all buffers.
-(setq-default indent-tabs-mode nil) 
+(setq-default indent-tabs-mode nil)
 
 ;; disable backup
 (setq backup-inhibited t)
@@ -107,6 +110,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; enable fast file/buffer switching mode
 (ido-mode t)
+
+;; enable whitespace highlighting
+(whitespace-mode t)
 
 ;; Specific settings
 

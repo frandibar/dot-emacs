@@ -42,19 +42,34 @@
 ; disabled because sometimes leaves a status bar with too many lines
 ;(toggle-fullscreen)
 
-;; jump the cursor to the top of the window, and the bottom, 
-;; like H and L vim commands
-
 (defun point-to-top ()
-  "Put cursor on top line of window, like Vi's H."
+  "Put cursor on top line of window.
+Similar to 'H' in vim."
   (interactive)
   (move-to-window-line 0))
 
 (defun point-to-bottom ()
-  "Put cursor at bottom of last visible line, like Vi's L."
+  "Put cursor at bottom of last visible line.
+Similar to 'L' in vim."
   (interactive)
   (move-to-window-line -1))
 
 (defun insert-date()
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
+
+(defun advance-to (char)
+  "Advance cursor to CHAR if it exists, if not, do nothing.
+Similar to 'f' in vim.
+TODO: restrict to current line."
+  (interactive "cAdvance to char: ")
+  (if (search-forward (string char) nil t)
+      (backward-char)))
+
+(defun back-to (char)
+  "Take cursor back to CHAR if it exists, if not, do nothing.
+Similar to 'F' in vim.
+TODO: restrict to current line."
+  (interactive "cGo back to char: ")
+  (search-backward (string char) nil t))
+
