@@ -114,6 +114,10 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; enable whitespace highlighting
 (whitespace-mode t)
 
+;; In order open a file in an existing emacs from a shell, use
+;; emacsclient -n [file]
+(server-start)
+
 ;; Specific settings
 
 ;; configure scheme
