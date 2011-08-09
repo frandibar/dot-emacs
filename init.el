@@ -118,6 +118,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; emacsclient -n [file]
 (server-start)
 
+;; enable disabled functions by default
+(put 'narrow-to-region 'disabled nil)
+
 ;; Specific settings
 
 ;; configure scheme
@@ -131,3 +134,10 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; use chrome as default browser
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "google-chrome")
+
+;; set indentation style for c++-mode
+(setq c-default-style "stroustrup"
+      c-basic-offset 4)
+
+(add-to-list 'load-path "~/.emacs.d/ecb-snap")
+(require 'ecb)

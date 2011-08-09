@@ -2,14 +2,18 @@
 (provide 'myfuncs)
 
 (defun dip ()
-  "Kill text inside parenthesis. Same as vim's di) command. It doesn't work if cursor is between double quotes."
+  "Kill text inside parenthesis. 
+Similar to di) in vim. 
+It doesn't work if cursor is between double quotes."
   (interactive)
   (backward-up-sexp nil)
   (kill-sexp)
   (insert-parentheses))
 
 (defun vap ()
-  "Select text inside parenthesis (including parenthesis). Same as vim's va) command. It doesn't work if cursor is between double quotes."
+  "Select text inside parenthesis (including parenthesis). 
+Similar to va) in vim. 
+It doesn't work if cursor is between double quotes."
   (interactive)
   (backward-up-sexp nil)
   (mark-sexp))
@@ -58,18 +62,47 @@ Similar to 'L' in vim."
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-(defun advance-to (char)
-  "Advance cursor to CHAR if it exists, if not, do nothing.
+(defun advance-to (arg char)
+  "Advance cursor to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'f' in vim.
-TODO: restrict to current line."
-  (interactive "cAdvance to char: ")
-  (if (search-forward (string char) nil t)
-      (backward-char)))
+Case sensitiveness depends on `case-fold-search'.
+TODO: 
+ - restrict to current line.
+ - if already on CHAR, continue search."
+  (interactive "p\ncAdvance to char: ")
+  (let ((curr (point))
+        (end (move-end-of-line 1)))
+  (save-restriction
+    (narrow-to-region curr end)
+    (progn
+      (goto-char curr)
+      (if (search-forward (char-to-string char) end nil arg)
+          (backward-char))))))
 
-(defun back-to (char)
-  "Take cursor back to CHAR if it exists, if not, do nothing.
+(defun back-to (arg char)
+  "Take cursor back to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'F' in vim.
-TODO: restrict to current line."
-  (interactive "cGo back to char: ")
-  (search-backward (string char) nil t))
+Case sensitiveness depends on `case-fold-search'.
+TODO: 
+ - restrict to current line."
+  (interactive "p\ncGo back to char: ")
+  (search-backward (char-to-string char) nil t arg))
 
+(defun hide-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings.
+Note: This function overrides variable `buffer-display-table'."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
+(defun switch-cpp-h-file ()
+  "Switches buffer to the corresponding header file (.h) if current buffer
+is a .cpp file, and vice-versa.
+It assumes both files are in the same path. If not, it creates a new file."
+  (interactive)
+  (defun alternate-file (cpp-or-h-file)
+    (cond ((equal ".h" (substring cpp-or-h-file -2))
+           (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 2)) ".cpp"))
+          ((equal ".cpp" (substring cpp-or-h-file -4))
+           (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 4)) ".h"))))
+  (find-file (alternate-file (buffer-file-name (current-buffer)))))
