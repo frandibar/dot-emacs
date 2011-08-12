@@ -73,7 +73,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; highlight tabs and trailing spaces
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
-(whitespace-mode t)
+(global-whitespace-mode 1)
 
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
@@ -113,10 +113,6 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; enable fast file/buffer switching mode
 (ido-mode t)
 
-;; enable whitespace highlighting
-;; TODO: this is not being taken into account
-(global-whitespace-mode 1)
-
 ;; In order open a file in an existing emacs from a shell, use
 ;; emacsclient -n [file]
 (server-start)
@@ -133,6 +129,8 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; open txt files in org-mode
 ;(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+;; org-mode clean view
+(setq org-startup-indented t)
 
 ;; use chrome as default browser
 (setq browse-url-browser-function 'browse-url-generic
@@ -158,4 +156,5 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(org-hide ((((background dark)) (:foreground "grey20"))))
  '(which-func ((((class color) (min-colors 88) (background dark)) (:foreground "cyan")))))
