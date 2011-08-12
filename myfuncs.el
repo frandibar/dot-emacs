@@ -106,3 +106,9 @@ It assumes both files are in the same path. If not, it creates a new file."
           ((equal ".cpp" (substring cpp-or-h-file -4))
            (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 4)) ".h"))))
   (find-file (alternate-file (buffer-file-name (current-buffer)))))
+
+(defun fast-buffer-switch ()
+  "Switch to last buffer."
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+

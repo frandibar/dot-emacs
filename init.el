@@ -90,6 +90,8 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (global-set-key "\C-c\C-f" 'advance-to)
 (global-set-key "\C-c\C-b" 'back-to)
 
+(global-set-key [?\C-6] 'fast-buffer-switch)
+
 ;; Misc
 
 ;; Turn off tab character
@@ -112,7 +114,8 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (ido-mode t)
 
 ;; enable whitespace highlighting
-(whitespace-mode t)
+;; TODO: this is not being taken into account
+(global-whitespace-mode 1)
 
 ;; In order open a file in an existing emacs from a shell, use
 ;; emacsclient -n [file]
@@ -155,4 +158,4 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+ '(which-func ((((class color) (min-colors 88) (background dark)) (:foreground "cyan")))))
