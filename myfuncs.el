@@ -2,8 +2,8 @@
 (provide 'myfuncs)
 
 (defun dip ()
-  "Kill text inside parenthesis. 
-Similar to di) in vim. 
+  "Kill text inside parenthesis.
+Similar to di) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
   (backward-up-sexp nil)
@@ -11,8 +11,8 @@ It doesn't work if cursor is between double quotes."
   (insert-parentheses))
 
 (defun vap ()
-  "Select text inside parenthesis (including parenthesis). 
-Similar to va) in vim. 
+  "Select text inside parenthesis (including parenthesis).
+Similar to va) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
   (backward-up-sexp nil)
@@ -66,7 +66,7 @@ Similar to 'L' in vim."
   "Advance cursor to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'f' in vim.
 Case sensitiveness depends on `case-fold-search'.
-TODO: 
+TODO:
  - restrict to current line.
  - if already on CHAR, continue search."
   (interactive "p\ncAdvance to char: ")
@@ -83,7 +83,7 @@ TODO:
   "Take cursor back to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'F' in vim.
 Case sensitiveness depends on `case-fold-search'.
-TODO: 
+TODO:
  - restrict to current line."
   (interactive "p\ncGo back to char: ")
   (search-backward (char-to-string char) nil t arg))
@@ -111,4 +111,3 @@ It assumes both files are in the same path. If not, it creates a new file."
   "Switch to last buffer."
   (interactive)
   (switch-to-buffer (other-buffer)))
-
