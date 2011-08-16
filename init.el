@@ -73,7 +73,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; highlight tabs and trailing spaces
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
-(global-whitespace-mode 1)
+;(global-whitespace-mode 1)
 
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
@@ -90,7 +90,10 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (global-set-key "\C-c\C-f" 'advance-to)
 (global-set-key "\C-c\C-b" 'back-to)
 
+;; map C-^
 (global-set-key [?\C-6] 'fast-buffer-switch)
+;; map C-$
+(global-set-key [?\C-4] 'point-to-eol)
 
 ;; Misc
 
@@ -119,6 +122,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; enable disabled functions by default
 (put 'narrow-to-region 'disabled nil)
+
+;; reload file if changed on disk
+(global-auto-revert-mode 1)
 
 ;; Specific settings
 

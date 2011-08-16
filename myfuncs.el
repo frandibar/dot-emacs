@@ -10,13 +10,25 @@ It doesn't work if cursor is between double quotes."
   (kill-sexp)
   (insert-parentheses))
 
-(defun vap ()
-  "Select text inside parenthesis (including parenthesis).
-Similar to va) in vim.
+(defun vip ()
+  "Mark text inside parenthesis (excluding parenthesis). 
+Similar to vi) in vim. 
 It doesn't work if cursor is between double quotes."
   (interactive)
   (backward-up-sexp nil)
-  (mark-sexp))
+  (mark-sexp)
+  (forward-char)
+  (exchange-point-and-mark)
+  (backward-char))
+
+(defun vap ()
+  "Mark text inside parenthesis (including parenthesis). 
+Similar to va) in vim. 
+It doesn't work if cursor is between double quotes."
+  (interactive)
+  (backward-up-sexp nil)
+  (mark-sexp)
+  (exchange-point-and-mark))
 
 (defun match-paren (arg)
   "Go to the matching parenthesis if cursor on a parenthesis; otherwise insert %."
@@ -111,3 +123,11 @@ It assumes both files are in the same path. If not, it creates a new file."
   "Switch to last buffer."
   (interactive)
   (switch-to-buffer (other-buffer)))
+
+(defun point-to-eol ()
+  "Move point to end of line.
+Similar to '$' in vim."
+  (interactive)
+  (next-line)
+  (beginning-of-line)
+  (backward-char))
