@@ -131,3 +131,27 @@ Similar to '$' in vim."
   (next-line)
   (beginning-of-line)
   (backward-char))
+
+;; TODO: extend to work if point not over number, like in vim
+;; based on http://www.emacswiki.org/emacs/IncrementNumber
+(defun with-number-at-point (fn)
+  (skip-chars-backward "-0123456789")
+  (or (looking-at "-?[0123456789]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (funcall fn (string-to-number (match-string 0))))))
+
+(defun increment-number-at-point ()
+  (interactive)
+  (with-number-at-point '1+))
+
+(defun decrement-number-at-point ()
+  (interactive)
+  (with-number-at-point '1-))
+
+(defun copy-current-line ()
+  "Copy current line.
+If point is on last buffer line, then no newline is inserted."
+  (interactive)
+  (kill-whole-line)
+  (yank)
+  (yank))

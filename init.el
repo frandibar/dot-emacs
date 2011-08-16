@@ -20,6 +20,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (global-set-key [remap backward-up-list] 'backward-up-sexp)
 ;; Copy/paste behavior
 
+(defalias 'inc 'increment-number-at-point)
+(defalias 'dec 'decrement-number-at-point)
+
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
 
@@ -89,6 +92,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 (global-set-key "\C-c\C-f" 'advance-to)
 (global-set-key "\C-c\C-b" 'back-to)
+
+(global-set-key "\C-c\C-a" 'inc)
+(global-set-key "\C-c\C-x" 'dec)
 
 ;; map C-^
 (global-set-key [?\C-6] 'fast-buffer-switch)
