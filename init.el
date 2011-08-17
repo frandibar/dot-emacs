@@ -90,16 +90,22 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 (global-set-key "%" 'match-paren)
 
-(global-set-key "\C-c\C-f" 'advance-to)
-(global-set-key "\C-c\C-b" 'back-to)
+(global-set-key (kbd "C-c C-f") 'advance-to)
+(global-set-key (kbd "C-c C-b") 'back-to)
 
-(global-set-key "\C-c\C-a" 'inc)
-(global-set-key "\C-c\C-x" 'dec)
+(global-set-key (kbd "C-c C-a") 'inc)
+(global-set-key (kbd "C-c C-x") 'dec)
 
-;; map C-^
-(global-set-key [?\C-6] 'fast-buffer-switch)
+;; map C-^, use numbers to avoid need for shift key
+(global-set-key (kbd "C-6") 'fast-buffer-switch)
 ;; map C-$
-(global-set-key [?\C-4] 'point-to-eol)
+(global-set-key (kbd "C-4") 'point-to-eol)
+
+;; map M-*
+(global-set-key (kbd "M-8") 'hl-symbol-and-jump-prev)
+;; map C-*
+(global-set-key (kbd "C-8") 'hl-symbol-and-jump-next)
+(global-set-key (kbd "C-*") 'hl-symbol-cleanup)
 
 ;; Misc
 

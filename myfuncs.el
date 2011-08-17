@@ -133,12 +133,14 @@ Similar to '$' in vim."
   (backward-char))
 
 ;; TODO: extend to work if point not over number, like in vim
-;; based on http://www.emacswiki.org/emacs/IncrementNumber
+;; Based on http://www.emacswiki.org/emacs/IncrementNumber
+;; See also http://www.emacswiki.org/emacs/IntegerAtPoint
 (defun with-number-at-point (fn)
-  (skip-chars-backward "-0123456789")
-  (or (looking-at "-?[0123456789]+")
-      (error "No number at point"))
-  (replace-match (number-to-string (funcall fn (string-to-number (match-string 0))))))
+  (save-excursion
+    (skip-chars-backward "-0123456789")
+    (or (looking-at "-?[0-9]+")
+        (error "No number at point"))
+    (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)))))))
 
 (defun increment-number-at-point ()
   (interactive)
@@ -155,3 +157,34 @@ If point is on last buffer line, then no newline is inserted."
   (kill-whole-line)
   (yank)
   (yank))
+
+
+(require 'highlight-symbol)
+
+(defun hl-symbol-and-jump-next ()
+  "Search for next occurance of symbol under cursor, with highlight.
+Similar to '*' in vim, except that the highlighting is preserved on next search."
+  (interactive)
+  (hl-symbol-and-jump 'highlight-symbol-next))
+
+(defun hl-symbol-and-jump-prev ()
+  (interactive)
+  (hl-symbol-and-jump 'highlight-symbol-prev))
+
+(defun hl-symbol-and-jump (fn-next-or-prev)
+  "Search for previous occurance of symbol under cursor, with highlight.
+Similar to '#' in vim, except that the highlighting is preserved on next search."
+  (let ((symbol (highlight-symbol-get-symbol)))
+    (unless symbol (error "No symbol at point"))
+    (unless hi-lock-mode (hi-lock-mode 1))
+    (if (member symbol highlight-symbol-list)
+        (funcall fn-next-or-prev)
+      (highlight-symbol-at-point)
+      (funcall fn-next-or-prev))))
+
+(defun hl-symbol-cleanup ()
+  "Clear all highlighted symbols.
+Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
+  (interactive)
+  (mapc 'hi-lock-unface-buffer highlight-symbol-list)
+  (setq highlight-symbol-list ()))
