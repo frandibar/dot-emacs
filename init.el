@@ -25,6 +25,8 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
+;; use cua mode for rectangle selection
+(cua-selection-mode t)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
@@ -54,7 +56,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (show-paren-mode t)
 
 ;; hide tool bar and menu bar
-(tool-bar-mode nil)
+(tool-bar-mode -1)
 (menu-bar-mode t)
 
 ;; show line and column number in the mode line
@@ -103,9 +105,10 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; map M-*
 (global-set-key (kbd "M-8") 'hl-symbol-and-jump-prev)
-;; map C-*
-(global-set-key (kbd "C-8") 'hl-symbol-and-jump-next)
-(global-set-key (kbd "C-*") 'hl-symbol-cleanup)
+;; map C-*, and C-#
+(global-set-key (kbd "C-3") 'hl-symbol-and-jump-next)
+(global-set-key (kbd "C-#") 'hl-symbol-cleanup)
+(global-set-key (kbd "C-8") 'isearch-forward-at-point)
 
 ;; Misc
 
