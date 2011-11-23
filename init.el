@@ -80,6 +80,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 ;(global-whitespace-mode 1)
 
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
 
