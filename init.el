@@ -161,8 +161,11 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (setq c-default-style "stroustrup"
       c-basic-offset 4)
 
-(add-to-list 'load-path "~/.emacs.d/ecb-snap")
-(require 'ecb)
+;; set window title to buffer-file-name
+(setq frame-title-format '("" "emacs - %b - " buffer-file-name))
+
+;(add-to-list 'load-path "~/.emacs.d/ecb-snap")
+;(require 'ecb)
 
 (which-function-mode t)
 
