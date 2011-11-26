@@ -1,8 +1,11 @@
-;; My personal emacs customization file
+;; MY PERSONAL EMACS CUSTOMIZATION FILE
 
 ;; load my functions
 (setq load-path (append load-path (list "~/.emacs.d")))
 (require 'myfuncs)
+
+;; set window title to buffer-file-name
+(setq frame-title-format '("" "emacs - %b - " buffer-file-name))
 
 (defun backward-up-sexp (arg)
   "Added because existing function backward-up-list won't work when point is between double quotes.
@@ -31,7 +34,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
 
-;; Appearance settings
+;; APPEARANCE SETTINGS
 
 ;; set color theme
 ;; (require 'color-theme)
@@ -83,7 +86,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
 
-;; Keybindings
+;; KEYBINDINGS
 
 ;(global-set-key "\C-q" 'scroll-n-lines-down)
 ;(global-set-key "\C-z" 'scroll-n-lines-up)
@@ -110,7 +113,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (global-set-key (kbd "C-#") 'hl-symbol-cleanup)
 (global-set-key (kbd "C-8") 'isearch-forward-at-point)
 
-;; Misc
+;; MISC
 
 ;; Turn off tab character
 ;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
@@ -118,6 +121,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; altering the variable affects only the current buffer, but it can be
 ;; disabled for all buffers.
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
 
 ;; disable backup
 (setq backup-inhibited t)
@@ -131,47 +135,42 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; enable fast file/buffer switching mode
 (ido-mode t)
 
-;; In order open a file in an existing emacs from a shell, use
-;; emacsclient -n [file]
-(server-start)
-
 ;; enable disabled functions by default
 (put 'narrow-to-region 'disabled nil)
 
 ;; reload file if changed on disk
 (global-auto-revert-mode 1)
 
-;; Specific settings
+(which-function-mode t)
 
-;; configure scheme
-(setq scheme-program-name "racket")
-(setq auto-mode-alist (cons '("\\.rkt$" . scheme-mode) auto-mode-alist))
-;(setq auto-mode-alist (cons '("\.[rkt]\\>" . quack-pltfile-mode) auto-mode-alist))
+;; set indentation style for c++-mode
+(setq c-default-style "stroustrup"
+      c-basic-offset 4)
+
+;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
+;; (require 'ecb)
 
 ;; open txt files in org-mode
 ;(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
 (setq org-startup-indented t)
 
-;; use chrome as default browser
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+(load-file "~/.emacs.d/init-local.el")
 
-;; set indentation style for c++-mode
-(setq c-default-style "stroustrup"
-      c-basic-offset 4)
+;; In order open a file in an existing emacs from a shell, use
+;; emacsclient -n [file]
+;; TODO: avoid starting server if already started
+(server-start)
 
-(add-to-list 'load-path "~/.emacs.d/ecb-snap")
-(require 'ecb)
-
-(which-function-mode t)
+;; CUSTOM
 
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(ecb-options-version "2.40"))
+ ;; '(ecb-options-version "2.40")
+ )
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.

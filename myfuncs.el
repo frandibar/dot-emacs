@@ -1,6 +1,11 @@
 ;; My custom miscellaneous functions
 (provide 'myfuncs)
 
+;; (defun find-file-in-this-dir ()
+;;   "find-file in the dir of current buffer."
+;;   (interactive)
+;;   (ido-find-file-in-dir (file-name-directory (buffer-file-name))))
+
 (defun dip ()
   "Kill text inside parenthesis.
 Similar to di) in vim.
@@ -141,14 +146,19 @@ Similar to '$' in vim."
     (or (looking-at "-?[0-9]+")
         (error "No number at point"))
     (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)))))))
+(defun scroll-n-lines-down (&optional n)
+  "Scroll behind N lines (1 by default)."
+  (interactive "P")
+  (scroll-down (prefix-numeric-value n)))
 
-(defun increment-number-at-point ()
-  (interactive)
-  (with-number-at-point '1+))
+;; TODO: allow for argument passing
+(defun increment-number-at-point (&optional n)
+  (interactive "P")
+  (with-number-at-point '1+ (prefix-numeric-value n)))
 
-(defun decrement-number-at-point ()
+(defun decrement-number-at-point (&optional n)
   (interactive)
-  (with-number-at-point '1-))
+  (with-number-at-point '1- (prefix-numeric-value n)))
 
 (defun copy-current-line ()
   "Copy current line.
