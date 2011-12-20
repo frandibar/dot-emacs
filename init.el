@@ -162,5 +162,5 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; TODO: avoid starting server if already started
 (server-start)
 
-(setq custom-file "~/.emacs-custom.el")
+(setq custom-file "~/.emacs.d/.emacs-custom.el")
 (load custom-file 'noerror)
