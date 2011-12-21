@@ -93,7 +93,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; reassign clobbered C-q
 ;(global-set-key "\C-x\C-q" 'quoted-insert)
 
-(global-set-key "%" 'match-paren)
+;; (global-set-key "%" 'match-paren)
 
 (global-set-key (kbd "C-c C-f") 'advance-to)
 (global-set-key (kbd "C-c C-b") 'back-to)
@@ -162,5 +162,5 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; TODO: avoid starting server if already started
 (server-start)
 
-(setq custom-file "~/.emacs.d/.emacs-custom.el")
+(setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
