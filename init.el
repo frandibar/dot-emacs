@@ -107,11 +107,13 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 (global-set-key (kbd "C-4") 'point-to-eol)
 
 ;; map M-*
-(global-set-key (kbd "M-8") 'hl-symbol-and-jump-prev)
+;; (global-set-key (kbd "M-8") 'hl-symbol-and-jump-prev)
 ;; map C-*, and C-#
-(global-set-key (kbd "C-3") 'hl-symbol-and-jump-next)
-(global-set-key (kbd "C-#") 'hl-symbol-cleanup)
+;; (global-set-key (kbd "C-3") 'hl-symbol-and-jump-next)
+;; (global-set-key (kbd "C-#") 'hl-symbol-cleanup)
 (global-set-key (kbd "C-8") 'isearch-forward-at-point)
+
+(global-set-key (kbd "C-c l") 'copy-current-line)
 
 ;; MISC
 
@@ -154,6 +156,9 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
 (setq org-startup-indented t)
+; in order to hide the leading stars, set the org-hide face color to background
+;; (setq org-hide-leading-stars t)   ; this is already set with org-startup-indented
+
 
 (load-file "~/.emacs.d/init-local.el")
 
