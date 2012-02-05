@@ -90,6 +90,7 @@
 ;; map C-$
 (global-set-key (kbd "C-4") 'mine-point-to-eol)
 
+;; NOTE: use C-u 8 as a replacement for M-8
 (global-set-key (kbd "M-8") 'mine-extend-selection)
 
 ;; map M-*
@@ -103,7 +104,7 @@
 
 (global-set-key (kbd "M-*") 'mine-select-text-in-quote)
 
-(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
+(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC

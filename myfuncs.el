@@ -146,7 +146,8 @@ It assumes both files are in the same path. If not, it creates a new file."
 (defun mine-fast-buffer-switch ()
   "Switch to last buffer."
   (interactive)
-  (switch-to-buffer (other-buffer)))
+  ;; (switch-to-buffer (other-buffer)))    ; switch to most recent non visible buffer
+  (switch-to-buffer (other-buffer (current-buffer) t))) ; ignore if most recent is visible or not
 
 (defun mine-point-to-eol ()
   "Move point to end of line.
@@ -159,26 +160,25 @@ Similar to '$' in vim."
 ;; TODO: extend to work if point not over number, like in vim
 ;; Based on http://www.emacswiki.org/emacs/IncrementNumber
 ;; See also http://www.emacswiki.org/emacs/IntegerAtPoint
-(defun mine-with-number-at-point (fn)
+(defun mine-with-number-at-point (fn n)
   (save-excursion
     (skip-chars-backward "-0123456789")
     (or (looking-at "-?[0-9]+")
         (error "No number at point"))
-    (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)))))))
+    (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)) n)))))
 
 (defun mine-scroll-n-lines-down (&optional n)
   "Scroll behind N lines (1 by default)."
   (interactive "P")
   (scroll-down (prefix-numeric-value n)))
 
-;; TODO: allow for argument passing
 (defun mine-increment-number-at-point (&optional n)
-  (interactive "P")
-  (with-number-at-point '1+ (prefix-numeric-value n)))
+  (interactive "p")
+  (mine-with-number-at-point '+ n))
 
 (defun mine-decrement-number-at-point (&optional n)
-  (interactive)
-  (with-number-at-point '1- (prefix-numeric-value n)))
+  (interactive "p")
+  (mine-with-number-at-point '- n))
 
 (defun mine-copy-current-line ()
   "Copy current line.
