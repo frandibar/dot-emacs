@@ -65,13 +65,13 @@ It doesn't work if cursor is between double quotes."
 
 (defun mine-scroll-n-lines-up (&optional n)
   "Scroll ahead N lines (1 by default)."
-  (interactive "P")
-  (scroll-up (prefix-numeric-value n)))
+  (interactive "p")
+  (scroll-up n))
 
 (defun mine-scroll-n-lines-down (&optional n)
   "Scroll behind N lines (1 by default)."
-  (interactive "P")
-  (scroll-down (prefix-numeric-value n)))
+  (interactive "p")
+  (scroll-down n))
 
 (defun mine-toggle-fullscreen ()
   (interactive)
@@ -166,11 +166,6 @@ Similar to '$' in vim."
     (or (looking-at "-?[0-9]+")
         (error "No number at point"))
     (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)) n)))))
-
-(defun mine-scroll-n-lines-down (&optional n)
-  "Scroll behind N lines (1 by default)."
-  (interactive "P")
-  (scroll-down (prefix-numeric-value n)))
 
 (defun mine-increment-number-at-point (&optional n)
   (interactive "p")
