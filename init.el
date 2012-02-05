@@ -1,31 +1,10 @@
 ;; MY PERSONAL EMACS CUSTOMIZATION FILE
 
 ;; load my functions
-(setq load-path (append load-path (list "~/.emacs.d")))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d") t)
 (require 'myfuncs)
 
-;; set window title to buffer-file-name
-(setq frame-title-format '("" "emacs - %b - " buffer-file-name))
-
-(defun backward-up-sexp (arg)
-  "Added because existing function backward-up-list won't work when point is between double quotes.
-
-Extracted from
-http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs
-"
-  (interactive "p")
-  (let ((ppss (syntax-ppss)))
-    (cond ((elt ppss 3)
-           (goto-char (elt ppss 8))
-           (backward-up-sexp (1- arg)))
-          ((backward-up-list arg)))))
-
-(global-set-key [remap backward-up-list] 'backward-up-sexp)
 ;; Copy/paste behavior
-
-(defalias 'inc 'increment-number-at-point)
-(defalias 'dec 'decrement-number-at-point)
-
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
 ;; use cua mode for rectangle selection
@@ -34,7 +13,11 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 (setq x-select-enable-clipboard t)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; APPEARANCE SETTINGS
+
+;; set window title to buffer-file-name
+(setq frame-title-format '("" "emacs - %b - " buffer-file-name))
 
 ;; set color theme
 ;; (require 'color-theme)
@@ -47,7 +30,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; ;     (color-theme-midnight)))
 ;;      (color-theme-dark-laptop)))
 
-(setq load-path (append load-path (list "~/.emacs.d/color-themes")))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/color-themes") t)
 (require 'zenburn)
 (zenburn)
 
@@ -86,6 +69,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
 ;(global-set-key "\C-q" 'scroll-n-lines-down)
@@ -95,26 +79,33 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 
 ;; (global-set-key "%" 'match-paren)
 
-(global-set-key (kbd "C-c C-f") 'advance-to)
-(global-set-key (kbd "C-c C-b") 'back-to)
+(global-set-key (kbd "C-c C-f") 'mine-advance-to)
+(global-set-key (kbd "C-c C-b") 'mine-back-to)
 
-(global-set-key (kbd "C-c C-a") 'inc)
-(global-set-key (kbd "C-c C-x") 'dec)
+;; (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
+;; (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
 
 ;; map C-^, use numbers to avoid need for shift key
-(global-set-key (kbd "C-6") 'fast-buffer-switch)
+(global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 ;; map C-$
-(global-set-key (kbd "C-4") 'point-to-eol)
+(global-set-key (kbd "C-4") 'mine-point-to-eol)
+
+(global-set-key (kbd "M-8") 'mine-extend-selection)
 
 ;; map M-*
-;; (global-set-key (kbd "M-8") 'hl-symbol-and-jump-prev)
+;; (global-set-key (kbd "M-8") 'mine-hl-symbol-and-jump-prev)
 ;; map C-*, and C-#
-;; (global-set-key (kbd "C-3") 'hl-symbol-and-jump-next)
-;; (global-set-key (kbd "C-#") 'hl-symbol-cleanup)
-(global-set-key (kbd "C-8") 'isearch-forward-at-point)
+;; (global-set-key (kbd "C-3") 'mine-hl-symbol-and-jump-next)
+;; (global-set-key (kbd "C-#") 'mine-hl-symbol-cleanup)
+(global-set-key (kbd "C-8") 'mine-isearch-forward-at-point)
 
-(global-set-key (kbd "C-c l") 'copy-current-line)
+(global-set-key (kbd "C-c l") 'mine-copy-current-line)
 
+(global-set-key (kbd "M-*") 'mine-select-text-in-quote)
+
+(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
 
 ;; Turn off tab character
@@ -153,7 +144,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
 ;; (require 'ecb)
 
 ;; open txt files in org-mode
-;(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
 (setq org-startup-indented t)
 ; in order to hide the leading stars, set the org-hide face color to background

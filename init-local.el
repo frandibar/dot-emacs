@@ -7,6 +7,7 @@
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "google-chrome")
 
+;; configure connection to mysql
 (eval-after-load "sql"
   '(progn
      (sql-set-product 'mysql)
