@@ -6,36 +6,55 @@
 ;;   (interactive)
 ;;   (ido-find-file-in-dir (file-name-directory (buffer-file-name))))
 
-(defun dip ()
+(defun mine-backward-up-sexp (arg)
+  "Added because existing function backward-up-list won't work when point is between double quotes.
+
+Extracted from
+http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs
+"
+  (interactive "p")
+  (let ((ppss (syntax-ppss)))
+    (cond ((elt ppss 3)
+           (goto-char (elt ppss 8))
+           (mine-backward-up-sexp (1- arg)))
+          ((backward-up-list arg)))))
+
+(defun mine-dip ()
   "Kill text inside parenthesis.
 Similar to di) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (backward-up-sexp nil)
+  (mine-backward-up-sexp nil)
   (kill-sexp)
   (insert-parentheses))
 
-(defun vip ()
+(defalias 'dip 'mine-dip)
+
+(defun mine-vip ()
   "Mark text inside parenthesis (excluding parenthesis). 
 Similar to vi) in vim. 
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (backward-up-sexp nil)
+  (mine-backward-up-sexp nil)
   (mark-sexp)
   (forward-char)
   (exchange-point-and-mark)
   (backward-char))
 
-(defun vap ()
+(defalias 'vip 'mine-vip)
+
+(defun mine-vap ()
   "Mark text inside parenthesis (including parenthesis). 
 Similar to va) in vim. 
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (backward-up-sexp nil)
+  (mine-backward-up-sexp nil)
   (mark-sexp)
   (exchange-point-and-mark))
 
-(defun match-paren (arg)
+(defalias 'vap 'mine-vap)
+
+(defun mine-match-paren (arg)
   "Go to the matching parenthesis if cursor on a parenthesis; otherwise insert %."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
@@ -44,17 +63,17 @@ It doesn't work if cursor is between double quotes."
 
 ;; scroll the window without moving the cursor
 
-(defun scroll-n-lines-up (&optional n)
+(defun mine-scroll-n-lines-up (&optional n)
   "Scroll ahead N lines (1 by default)."
-  (interactive "P")
-  (scroll-up (prefix-numeric-value n)))
+  (interactive "p")
+  (scroll-up n))
 
-(defun scroll-n-lines-down (&optional n)
+(defun mine-scroll-n-lines-down (&optional n)
   "Scroll behind N lines (1 by default)."
-  (interactive "P")
-  (scroll-down (prefix-numeric-value n)))
+  (interactive "p")
+  (scroll-down n))
 
-(defun toggle-fullscreen ()
+(defun mine-toggle-fullscreen ()
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                          '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
@@ -63,23 +82,23 @@ It doesn't work if cursor is between double quotes."
 ; disabled because sometimes leaves a status bar with too many lines
 ;(toggle-fullscreen)
 
-(defun point-to-top ()
+(defun mine-point-to-top ()
   "Put cursor on top line of window.
 Similar to 'H' in vim."
   (interactive)
   (move-to-window-line 0))
 
-(defun point-to-bottom ()
+(defun mine-point-to-bottom ()
   "Put cursor at bottom of last visible line.
 Similar to 'L' in vim."
   (interactive)
   (move-to-window-line -1))
 
-(defun insert-date()
+(defun mine-insert-date()
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-(defun advance-to (arg char)
+(defun mine-advance-to (arg char)
   "Advance cursor to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'f' in vim.
 Case sensitiveness depends on `case-fold-search'.
@@ -96,7 +115,7 @@ TODO:
       (if (search-forward (char-to-string char) end nil arg)
           (backward-char))))))
 
-(defun back-to (arg char)
+(defun mine-back-to (arg char)
   "Take cursor back to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'F' in vim.
 Case sensitiveness depends on `case-fold-search'.
@@ -105,14 +124,14 @@ TODO:
   (interactive "p\ncGo back to char: ")
   (search-backward (char-to-string char) nil t arg))
 
-(defun hide-dos-eol ()
+(defun mine-hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings.
 Note: This function overrides variable `buffer-display-table'."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun switch-cpp-h-file ()
+(defun mine-switch-cpp-h-file ()
   "Switches buffer to the corresponding header file (.h) if current buffer
 is a .cpp file, and vice-versa.
 It assumes both files are in the same path. If not, it creates a new file."
@@ -124,12 +143,13 @@ It assumes both files are in the same path. If not, it creates a new file."
            (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 4)) ".h"))))
   (find-file (alternate-file (buffer-file-name (current-buffer)))))
 
-(defun fast-buffer-switch ()
+(defun mine-fast-buffer-switch ()
   "Switch to last buffer."
   (interactive)
-  (switch-to-buffer (other-buffer)))
+  ;; (switch-to-buffer (other-buffer)))    ; switch to most recent non visible buffer
+  (switch-to-buffer (other-buffer (current-buffer) t))) ; ignore if most recent is visible or not
 
-(defun point-to-eol ()
+(defun mine-point-to-eol ()
   "Move point to end of line.
 Similar to '$' in vim."
   (interactive)
@@ -140,27 +160,22 @@ Similar to '$' in vim."
 ;; TODO: extend to work if point not over number, like in vim
 ;; Based on http://www.emacswiki.org/emacs/IncrementNumber
 ;; See also http://www.emacswiki.org/emacs/IntegerAtPoint
-(defun with-number-at-point (fn)
+(defun mine-with-number-at-point (fn n)
   (save-excursion
     (skip-chars-backward "-0123456789")
     (or (looking-at "-?[0-9]+")
         (error "No number at point"))
-    (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)))))))
-(defun scroll-n-lines-down (&optional n)
-  "Scroll behind N lines (1 by default)."
-  (interactive "P")
-  (scroll-down (prefix-numeric-value n)))
+    (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)) n)))))
 
-;; TODO: allow for argument passing
-(defun increment-number-at-point (&optional n)
-  (interactive "P")
-  (with-number-at-point '1+ (prefix-numeric-value n)))
+(defun mine-increment-number-at-point (&optional n)
+  (interactive "p")
+  (mine-with-number-at-point '+ n))
 
-(defun decrement-number-at-point (&optional n)
-  (interactive)
-  (with-number-at-point '1- (prefix-numeric-value n)))
+(defun mine-decrement-number-at-point (&optional n)
+  (interactive "p")
+  (mine-with-number-at-point '- n))
 
-(defun copy-current-line ()
+(defun mine-copy-current-line ()
   "Copy current line.
 If point is on last buffer line, then no newline is inserted."
   (interactive)
@@ -169,20 +184,19 @@ If point is on last buffer line, then no newline is inserted."
   (yank)
   (previous-line))
 
-
 (require 'highlight-symbol)
 
-(defun hl-symbol-and-jump-next ()
+(defun mine-hl-symbol-and-jump-next ()
   "Search for next occurance of symbol under cursor, with highlight.
 Similar to '*' in vim, except that the highlighting is preserved on next search."
   (interactive)
-  (hl-symbol-and-jump 'highlight-symbol-next))
+  (mine-hl-symbol-and-jump 'highlight-symbol-next))
 
-(defun hl-symbol-and-jump-prev ()
+(defun mine-hl-symbol-and-jump-prev ()
   (interactive)
-  (hl-symbol-and-jump 'highlight-symbol-prev))
+  (mine-hl-symbol-and-jump 'highlight-symbol-prev))
 
-(defun hl-symbol-and-jump (fn-next-or-prev)
+(defun mine-hl-symbol-and-jump (fn-next-or-prev)
   "Search for previous occurance of symbol under cursor, with highlight.
 Similar to '#' in vim, except that the highlighting is preserved on next search."
   (let ((symbol (highlight-symbol-get-symbol)))
@@ -193,7 +207,7 @@ Similar to '#' in vim, except that the highlighting is preserved on next search.
       (highlight-symbol-at-point)
       (funcall fn-next-or-prev))))
 
-(defun hl-symbol-cleanup ()
+(defun mine-hl-symbol-cleanup ()
   "Clear all highlighted symbols.
 Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
   (interactive)
@@ -203,12 +217,14 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
 ;; Search at point, similar to * in vim
 ;; http://www.emacswiki.org/emacs/SearchAtPoint
 ;; I-search with initial contents
-(defvar isearch-initial-string nil)
-(defun isearch-set-initial-string ()
+(defvar mine-isearch-initial-string nil)
+
+(defun mine-isearch-set-initial-string ()
   (remove-hook 'isearch-mode-hook 'isearch-set-initial-string)
-  (setq isearch-string isearch-initial-string)
+  (setq isearch-string mine-isearch-initial-string)
   (isearch-search-and-update))
-(defun isearch-forward-at-point (&optional regexp-p no-recursive-edit)
+
+(defun mine-isearch-forward-at-point (&optional regexp-p no-recursive-edit)
   "Interactive search forward for the symbol at point."
   (interactive "P\np")
   (if regexp-p (isearch-forward regexp-p no-recursive-edit)
@@ -216,14 +232,13 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
            (begin (progn (skip-syntax-backward "w_") (point))))
       (if (eq begin end)
           (isearch-forward regexp-p no-recursive-edit)
-        (setq isearch-initial-string (buffer-substring begin end))
-        (add-hook 'isearch-mode-hook 'isearch-set-initial-string)
+        (setq mine-isearch-initial-string (buffer-substring begin end))
+        (add-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
         (isearch-forward regexp-p no-recursive-edit)))))
-
 
 ;; http://www.emacswiki.org/emacs/Rick_Bielawski#toc5
 ;; Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs
-(defun window-horizontal-to-vertical ()
+(defun mine-window-horizontal-to-vertical ()
   "Switches from a horizontal split to a vertical split."
   (interactive)
   (let ((one-buf (window-buffer (selected-window)))
@@ -235,7 +250,7 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
     (goto-char buf-point)))
 
 ;; complement of above created by rgb 11/2004
-(defun window-vertical-to-horizontal ()
+(defun mine-window-vertical-to-horizontal ()
   "Switches from a vertical split to a horizontal split."
   (interactive)
   (let ((one-buf (window-buffer (selected-window)))
@@ -248,7 +263,7 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
 
 ;; extracted from http://xahlee.org/emacs/modernization_mark-word.html
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun semnav-up (arg)
+(defun mine-semnav-up (arg)
   (interactive "p")
   (when (nth 3 (syntax-ppss))
     (if (> arg 0)
@@ -262,7 +277,7 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
   (up-list arg))
 
 ;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
-(defun extend-selection (arg &optional incremental)
+(defun mine-extend-selection (arg &optional incremental)
   "Select the current word.
 Subsequent calls expands the selection to larger semantic unit."
   (interactive (list (prefix-numeric-value current-prefix-arg)
@@ -274,16 +289,14 @@ Subsequent calls expands the selection to larger semantic unit."
         (forward-sexp)
         (mark-sexp -1))
     (if (> arg 1)
-        (extend-selection (1- arg) t)
+        (mine-extend-selection (1- arg) t)
       (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
           (goto-char (match-end 0))
         (unless (memq (char-before) '(?\) ?\"))
           (forward-sexp)))
       (mark-sexp -1))))
 
-(global-set-key (kbd "M-8") 'extend-selection)
-
-(defun select-text-in-quote ()
+(defun mine-select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
 Delimiters are paired characters:
  () [] {} «» ‹› “” 〖〗 【】 「」 『』 （） 〈〉 《》 〔〕 ⦗⦘ 〘〙
@@ -302,5 +315,3 @@ is easy to get content inside HTML tags."
    (set-mark b1)
    )
  )
-
-(global-set-key (kbd "M-*") 'select-text-in-quote)
