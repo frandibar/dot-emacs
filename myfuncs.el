@@ -184,6 +184,9 @@ If point is on last buffer line, then no newline is inserted."
   (yank)
   (previous-line))
 
+;; TODO function for yanking current line (to avoid copying and killing)
+;; TODO function for copying and pasting line above/below by n
+
 (require 'highlight-symbol)
 
 (defun mine-hl-symbol-and-jump-next ()
@@ -220,7 +223,7 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
 (defvar mine-isearch-initial-string nil)
 
 (defun mine-isearch-set-initial-string ()
-  (remove-hook 'isearch-mode-hook 'isearch-set-initial-string)
+  (remove-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
   (setq isearch-string mine-isearch-initial-string)
   (isearch-search-and-update))
 
