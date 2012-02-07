@@ -106,8 +106,8 @@
 
 (global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
-(global-set-key (kbd "C-c C-v") 'mine-window-vertical-to-horizontal)
-(global-set-key (kbd "C-c C-h") 'mine-window-horizontal-to-vertical)
+(global-set-key (kbd "C-c C-h") 'mine-window-vertical-to-horizontal)
+(global-set-key (kbd "C-c C-v") 'mine-window-horizontal-to-vertical)
 
 (global-set-key (kbd "C-c H") 'mine-point-to-top)
 (global-set-key (kbd "C-c L") 'mine-point-to-bottom)
