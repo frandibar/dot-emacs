@@ -72,50 +72,39 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
-;(global-set-key "\C-q" 'scroll-n-lines-down)
-;(global-set-key "\C-z" 'scroll-n-lines-up)
-;; reassign clobbered C-q
-;(global-set-key "\C-x\C-q" 'quoted-insert)
+;; Notice that they all start with C-c, and then control again to avoid race
+;; condition between first and second keys.
+;; This guarantees that they won't be overriden by any mode.
 
-;; (global-set-key "%" 'match-paren)
+(global-set-key (kbd "C-c C-e") 'mine-scroll-n-lines-up)
+(global-set-key (kbd "C-c C-d") 'mine-scroll-n-lines-down)
+
+(global-set-key (kbd "C-c C-H") 'mine-point-to-top)
+(global-set-key (kbd "C-c C-L") 'mine-point-to-bottom)
 
 (global-set-key (kbd "C-c C-f") 'mine-advance-to)
 (global-set-key (kbd "C-c C-b") 'mine-back-to)
 
-;; (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
-;; (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
+(global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
+(global-set-key (kbd "C-c C-%") 'mine-match-paren)
+(global-set-key (kbd "C-c C-^") 'mine-fast-buffer-switch)
 
-;; map C-^, use numbers to avoid need for shift key
-(global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
-;; map C-$
-(global-set-key (kbd "C-4") 'mine-point-to-eol)
+(global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
+(global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
 
-;; NOTE: use C-u 8 as a replacement for M-8
-(global-set-key (kbd "M-8") 'mine-extend-selection)
+(global-set-key (kbd "C-c C-*") 'mine-isearch-forward-at-point)
 
-;; map M-*
-;; (global-set-key (kbd "M-8") 'mine-hl-symbol-and-jump-prev)
-;; map C-*, and C-#
-;; (global-set-key (kbd "C-3") 'mine-hl-symbol-and-jump-next)
-;; (global-set-key (kbd "C-#") 'mine-hl-symbol-cleanup)
-(global-set-key (kbd "C-8") 'mine-isearch-forward-at-point)
-
-(global-set-key (kbd "C-c l") 'mine-copy-current-line)
-
-(global-set-key (kbd "M-*") 'mine-select-text-in-quote)
-
-(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
+(global-set-key (kbd "C-c C-Y") 'mine-current-line-to-clipboard)
 
 (global-set-key (kbd "C-c C-h") 'mine-window-vertical-to-horizontal)
 (global-set-key (kbd "C-c C-v") 'mine-window-horizontal-to-vertical)
 
-(global-set-key (kbd "C-c H") 'mine-point-to-top)
-(global-set-key (kbd "C-c L") 'mine-point-to-bottom)
+(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
 
-;; Turn off tab character
+;; turn off tab character
 ;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
 ;; set `indent-tabs-mode' to `nil'. This is a per-buffer variable;
 ;; altering the variable affects only the current buffer, but it can be
@@ -141,12 +130,14 @@
 ;; reload file if changed on disk
 (global-auto-revert-mode 1)
 
+;; display current function name in the mode line
 (which-function-mode t)
 
 ;; set indentation style for c++-mode
 (setq c-default-style "stroustrup"
       c-basic-offset 4)
 
+;; enable ecb
 ;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
 ;; (require 'ecb)
 
@@ -157,8 +148,10 @@
 ; in order to hide the leading stars, set the org-hide face color to background
 ;; (setq org-hide-leading-stars t)   ; this is already set with org-startup-indented
 
-
-(load-file "~/.emacs.d/init-local.el")
+;; load initializations for this site
+(let ((init-file "~/.emacs.d/init-local.el"))
+  (if (file-exists-p init-file)
+      (load-file init-file)))
 
 ;; In order open a file in an existing emacs from a shell, use
 ;; emacsclient -n [file]

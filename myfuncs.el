@@ -1,10 +1,10 @@
 ;; My custom miscellaneous functions
 (provide 'myfuncs)
 
-;; (defun find-file-in-this-dir ()
-;;   "find-file in the dir of current buffer."
-;;   (interactive)
-;;   (ido-find-file-in-dir (file-name-directory (buffer-file-name))))
+(defun mine-find-file-in-this-dir ()
+  "find-file in the dir of current buffer."
+  (interactive)
+  (ido-find-file-in-dir (file-name-directory (buffer-file-name))))
 
 (defun mine-backward-up-sexp (arg)
   "Added because existing function backward-up-list won't work when point is between double quotes.
@@ -86,43 +86,45 @@ It doesn't work if cursor is between double quotes."
   "Put cursor on top line of window.
 Similar to 'H' in vim."
   (interactive)
+  (push-mark)
   (move-to-window-line 0))
 
 (defun mine-point-to-bottom ()
   "Put cursor at bottom of last visible line.
 Similar to 'L' in vim."
   (interactive)
+  (push-mark)
   (move-to-window-line -1))
 
 (defun mine-insert-date()
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-(defun mine-advance-to (arg char)
-  "Advance cursor to ARGth CHAR if it exists, if not, do nothing.
-Similar to 'f' in vim.
-Case sensitiveness depends on `case-fold-search'.
-TODO:
- - restrict to current line.
- - if already on CHAR, continue search."
-  (interactive "p\ncAdvance to char: ")
-  (let ((curr (point))
-        (end (move-end-of-line 1)))
-  (save-restriction
-    (narrow-to-region curr end)
-    (progn
-      (goto-char curr)
-      (if (search-forward (char-to-string char) end nil arg)
-          (backward-char))))))
-
 (defun mine-back-to (arg char)
   "Take cursor back to ARGth CHAR if it exists, if not, do nothing.
 Similar to 'F' in vim.
-Case sensitiveness depends on `case-fold-search'.
-TODO:
- - restrict to current line."
+Case sensitiveness depends on `case-fold-search'."
   (interactive "p\ncGo back to char: ")
-  (search-backward (char-to-string char) nil t arg))
+  (let ((curr (point)))
+    (move-beginning-of-line 1)
+    (let ((end (point)))
+      (goto-char curr)  ; because we moved to end of line
+      (search-backward (char-to-string char) end t arg))))
+
+(defun mine-advance-to (arg char)
+  "Advance cursor to ARGth CHAR in current line if it exists, if not, do nothing.
+Similar to 'f' in vim.
+Case sensitiveness depends on `case-fold-search'.
+"
+  (interactive "p\ncAdvance to char: ")
+  (let ((curr (point)))
+    (move-end-of-line 1)
+    (let ((end (point)))
+      (goto-char (1+ curr))  ; because we moved to end of line
+      (if (= curr end) 
+          (backward-char)
+        (progn (search-forward (char-to-string char) end t arg)
+               (backward-char))))))      ; since point se set after the ocurrence
 
 (defun mine-hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings.
@@ -184,8 +186,17 @@ If point is on last buffer line, then no newline is inserted."
   (yank)
   (previous-line))
 
-;; TODO function for yanking current line (to avoid copying and killing)
-;; TODO function for copying and pasting line above/below by n
+(defun mine-current-line-to-clipboard (arg)
+  "Copy ARG lines to clipboard. Default value for ARG is 1.
+Similar to 'Y' in vim."
+  (interactive "p")
+  (let ((curr (point)))
+    (move-beginning-of-line 1)
+    (let ((from (point)))
+      (move-end-of-line arg)
+      (let ((to (point)))
+        (copy-region-as-kill from to)
+        (goto-char curr)))))  ; because we moved to end of line
 
 (require 'highlight-symbol)
 
