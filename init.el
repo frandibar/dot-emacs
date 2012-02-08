@@ -76,8 +76,8 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-(global-set-key (kbd "C-c C-e") 'mine-scroll-n-lines-up)
-(global-set-key (kbd "C-c C-d") 'mine-scroll-n-lines-down)
+(global-set-key (kbd "C-c C-n") 'mine-scroll-n-lines-up)
+(global-set-key (kbd "C-c C-p") 'mine-scroll-n-lines-down)
 
 (global-set-key (kbd "C-c C-H") 'mine-point-to-top)
 (global-set-key (kbd "C-c C-L") 'mine-point-to-bottom)
@@ -87,7 +87,7 @@
 
 (global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
 (global-set-key (kbd "C-c C-%") 'mine-match-paren)
-(global-set-key (kbd "C-c C-^") 'mine-fast-buffer-switch)
+;; (global-set-key (kbd "C-c C-^") 'mine-fast-buffer-switch)  ; commented out because it's not shorter than C-x b RET
 
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
@@ -95,6 +95,7 @@
 (global-set-key (kbd "C-c C-*") 'mine-isearch-forward-at-point)
 
 (global-set-key (kbd "C-c C-Y") 'mine-current-line-to-clipboard)
+(global-set-key (kbd "C-c C-P") 'mine-copy-current-line)
 
 (global-set-key (kbd "C-c C-h") 'mine-window-vertical-to-horizontal)
 (global-set-key (kbd "C-c C-v") 'mine-window-horizontal-to-vertical)

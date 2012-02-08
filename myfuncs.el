@@ -177,14 +177,14 @@ Similar to '$' in vim."
   (interactive "p")
   (mine-with-number-at-point '- n))
 
-(defun mine-copy-current-line ()
-  "Copy current line.
+(defun mine-copy-current-line (arg)
+  "Copy and paste ARG lines from point.
 If point is on last buffer line, then no newline is inserted."
-  (interactive)
-  (kill-whole-line)
+  (interactive "p")
+  (kill-whole-line arg)
   (yank)
   (yank)
-  (previous-line))
+  (previous-line arg))
 
 (defun mine-current-line-to-clipboard (arg)
   "Copy ARG lines to clipboard. Default value for ARG is 1.
