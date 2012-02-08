@@ -190,13 +190,15 @@ If point is on last buffer line, then no newline is inserted."
   "Copy ARG lines to clipboard. Default value for ARG is 1.
 Similar to 'Y' in vim."
   (interactive "p")
-  (let ((curr (point)))
+  (let ((curr (point))                  ; save current point (save-excursion) leaves cursor at the end of line
+        from
+        to)
     (move-beginning-of-line 1)
-    (let ((from (point)))
-      (move-end-of-line arg)
-      (let ((to (point)))
-        (copy-region-as-kill from to)
-        (goto-char curr)))))  ; because we moved to end of line
+    (setq from (point))
+    (move-end-of-line arg)
+    (setq to (point))
+    (copy-region-as-kill from to)
+    (goto-char curr)))  ; because we moved to end of line
 
 (require 'highlight-symbol)
 
@@ -327,5 +329,4 @@ is easy to get content inside HTML tags."
    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙\"")
    (setq b2 (point))
    (set-mark b1)
-   )
- )
+   ))
