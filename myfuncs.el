@@ -105,11 +105,12 @@ Similar to 'L' in vim."
 Similar to 'F' in vim.
 Case sensitiveness depends on `case-fold-search'."
   (interactive "p\ncGo back to char: ")
-  (let ((curr (point)))
+  (let ((curr (point))
+        end)
     (move-beginning-of-line 1)
-    (let ((end (point)))
-      (goto-char curr)  ; because we moved to end of line
-      (search-backward (char-to-string char) end t arg))))
+    (setq end (point))
+    (goto-char curr)  ; because we moved to beginning of line
+    (search-backward (char-to-string char) end t arg)))
 
 (defun mine-advance-to (arg char)
   "Advance cursor to ARGth CHAR in current line if it exists, if not, do nothing.
@@ -117,14 +118,15 @@ Similar to 'f' in vim.
 Case sensitiveness depends on `case-fold-search'.
 "
   (interactive "p\ncAdvance to char: ")
-  (let ((curr (point)))
+  (let ((curr (point))
+        end)
     (move-end-of-line 1)
-    (let ((end (point)))
-      (goto-char (1+ curr))  ; because we moved to end of line
-      (if (= curr end) 
-          (backward-char)
-        (progn (search-forward (char-to-string char) end t arg)
-               (backward-char))))))      ; since point se set after the ocurrence
+    (setq end (point))
+    (goto-char (1+ curr))  ; because we moved to end of line
+    (if (= curr end) 
+        (backward-char)
+      (progn (search-forward (char-to-string char) end t arg)
+             (backward-char)))))      ; since point was set after the ocurrence
 
 (defun mine-hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings.
