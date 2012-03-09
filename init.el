@@ -4,6 +4,10 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d") t)
 (require 'myfuncs)
 
+;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+(let ((default-directory  "/usr/share/emacs/site-lisp"))
+     (normal-top-level-add-subdirs-to-load-path))
+
 ;; Copy/paste behavior
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
@@ -34,9 +38,8 @@
 (require 'zenburn)
 (zenburn)
 
-;; highlight cursor line
-;; (disabled because it causes confusion when selecting a region)
-;(global-hl-line-mode 1)
+;; highlight cursor line, commented out as it produces flickering in org mode
+;; (global-hl-line-mode 1)
 
 ;; show matching parenthesis
 (show-paren-mode t)
@@ -100,6 +103,8 @@
 (global-set-key (kbd "C-c C-h") 'mine-window-vertical-to-horizontal)
 (global-set-key (kbd "C-c C-v") 'mine-window-horizontal-to-vertical)
 
+(global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
+
 (global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -134,6 +139,9 @@
 ;; display current function name in the mode line
 (which-function-mode t)
 
+;; delete trailing whitespace upon saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; set indentation style for c++-mode
 (setq c-default-style "stroustrup"
       c-basic-offset 4)
@@ -145,9 +153,9 @@
 ;; open txt files in org-mode
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
-(setq org-startup-indented t)
+;; (setq org-startup-indented t)   ; commented out as it produces flickering
 ; in order to hide the leading stars, set the org-hide face color to background
-;; (setq org-hide-leading-stars t)   ; this is already set with org-startup-indented
+(setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
 
 ;; load initializations for this site
 (let ((init-file "~/.emacs.d/init-local.el"))

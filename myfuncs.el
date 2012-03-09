@@ -31,8 +31,8 @@ It doesn't work if cursor is between double quotes."
 (defalias 'dip 'mine-dip)
 
 (defun mine-vip ()
-  "Mark text inside parenthesis (excluding parenthesis). 
-Similar to vi) in vim. 
+  "Mark text inside parenthesis (excluding parenthesis).
+Similar to vi) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
   (mine-backward-up-sexp nil)
@@ -44,8 +44,8 @@ It doesn't work if cursor is between double quotes."
 (defalias 'vip 'mine-vip)
 
 (defun mine-vap ()
-  "Mark text inside parenthesis (including parenthesis). 
-Similar to va) in vim. 
+  "Mark text inside parenthesis (including parenthesis).
+Similar to va) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
   (mine-backward-up-sexp nil)
@@ -123,7 +123,7 @@ Case sensitiveness depends on `case-fold-search'.
     (move-end-of-line 1)
     (setq end (point))
     (goto-char (1+ curr))  ; because we moved to end of line
-    (if (= curr end) 
+    (if (= curr end)
         (backward-char)
       (progn (search-forward (char-to-string char) end t arg)
              (backward-char)))))      ; since point was set after the ocurrence
@@ -332,3 +332,8 @@ is easy to get content inside HTML tags."
    (setq b2 (point))
    (set-mark b1)
    ))
+
+(defun mine-close-buffer-and-window ()
+  (interactive)
+  (kill-buffer)
+  (delete-window))
