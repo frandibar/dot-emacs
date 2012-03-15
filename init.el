@@ -72,6 +72,8 @@
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
 
+(setq eshell-directory-name "~/.emacs.d/eshell")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
