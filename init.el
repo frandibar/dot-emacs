@@ -92,7 +92,7 @@
 
 (global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
 (global-set-key (kbd "C-c C-%") 'mine-match-paren)
-;; (global-set-key (kbd "C-c C-^") 'mine-fast-buffer-switch)  ; commented out because it's not shorter than C-x b RET
+(global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
@@ -108,6 +108,9 @@
 (global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
 (global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
+
+;; just-one-space is mapped to M-SPC, but that opens the window menu
+(global-set-key (kbd "C-x C-SPC") 'just-one-space)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
