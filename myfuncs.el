@@ -360,22 +360,20 @@ is easy to get content inside HTML tags."
   "Switch to the next user buffer in cyclic order.\n
 User buffers are those not starting with * nor in dired-mode."
   (interactive)
-  (next-buffer)
-  (let ((i 0))
+  (let ((start-buf (buffer-name)))
+    (next-buffer)
     (while (and (or (string-match "^*" (buffer-name))
                     (string-equal "dired-mode" (symbol-name major-mode)))
-                (< i 50))
-      (setq i (1+ i))
+                (not (string-equal start-buf (buffer-name))))
       (next-buffer))))
 
 (defun mine-previous-user-buffer ()
   "Switch to the previous user buffer in cyclic order.\n
 User buffers are those not starting with * nor in dired-mode."
   (interactive)
-  (previous-buffer)
-  (let ((i 0))
+  (let ((start-buf (buffer-name)))
+    (previous-buffer)
     (while (and (or (string-match "^*" (buffer-name))
                     (string-equal "dired-mode" (symbol-name major-mode)))
-                (< i 50))
-      (setq i (1+ i))
+                (not (string-equal start-buf (buffer-name))))
       (previous-buffer))))
