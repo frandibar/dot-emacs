@@ -112,6 +112,9 @@
 ;; just-one-space is mapped to M-SPC, but that opens the window menu
 (global-set-key (kbd "C-x C-SPC") 'just-one-space)
 
+(global-set-key (kbd "C-<prior>") 'mine-previous-user-buffer) ; Ctrl+PageDown
+(global-set-key (kbd "C-<next>") 'mine-next-user-buffer) ; Ctrl+PageUp
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
 

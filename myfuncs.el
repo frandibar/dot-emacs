@@ -337,3 +337,45 @@ is easy to get content inside HTML tags."
   (interactive)
   (kill-buffer)
   (delete-window))
+
+
+(defun mine-enclose-quotes (start end)
+  "Insert double quotes around a region."
+  (interactive "r")
+  (save-excursion
+    (goto-char end) (insert-char ?" 1)
+    (goto-char start) (insert-char ?" 1)
+    ))
+
+(defun mine-enclose-parens (start end)
+  "Insert parenthesis around a region."
+  (interactive "r")
+  (save-excursion
+    (goto-char end) (insert-char ?) 1)
+    (goto-char start) (insert-char ?( 1)
+    ))
+
+;; Based on http://xahlee.org/emacs/elisp_examples.html
+(defun mine-next-user-buffer ()
+  "Switch to the next user buffer in cyclic order.\n
+User buffers are those not starting with * nor in dired-mode."
+  (interactive)
+  (next-buffer)
+  (let ((i 0))
+    (while (and (or (string-match "^*" (buffer-name))
+                    (string-equal "dired-mode" (symbol-name major-mode)))
+                (< i 50))
+      (setq i (1+ i))
+      (next-buffer))))
+
+(defun mine-previous-user-buffer ()
+  "Switch to the previous user buffer in cyclic order.\n
+User buffers are those not starting with * nor in dired-mode."
+  (interactive)
+  (previous-buffer)
+  (let ((i 0))
+    (while (and (or (string-match "^*" (buffer-name))
+                    (string-equal "dired-mode" (symbol-name major-mode)))
+                (< i 50))
+      (setq i (1+ i))
+      (previous-buffer))))
