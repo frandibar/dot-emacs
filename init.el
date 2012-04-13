@@ -72,7 +72,7 @@
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 ;(global-whitespace-mode 1)
 
-;; TODO: document why this is necessary
+;; the eshell directory holds alias definitions and history information
 (setq eshell-directory-name "~/.emacs.d/eshell")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -145,20 +145,29 @@
 ;; delete trailing whitespace upon saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; C++ MODE
 ;; set indentation style for c++-mode
 (setq c-default-style "stroustrup"
       c-basic-offset 4)
 
-;; enable ecb
-;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
-;; (require 'ecb)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ORG MODE
 ;; use org-mode for txt files
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
 ;; (setq org-startup-indented t)   ; commented out as it produces flickering
 ; in order to hide the leading stars, set the org-hide face color to background
 (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
+;; agenda view of next 14 days
+(setq org-agenda-span 14)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LIBRARIES
+
+;; enable ecb
+;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
+;; (require 'ecb)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
