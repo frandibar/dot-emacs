@@ -59,6 +59,9 @@
 ;; hide splash screen
 (setq inhibit-splash-screen t)
 
+;; show blank screen on startup
+(setq initial-scratch-message nil)
+
 ;; show line numbers
 (global-linum-mode 1)
 
@@ -69,15 +72,13 @@
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 ;(global-whitespace-mode 1)
 
-;; show blank screen on startup
-(setq initial-scratch-message nil)
-
+;; TODO: document why this is necessary
 (setq eshell-directory-name "~/.emacs.d/eshell")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
-;; Notice that they all start with C-c, and then control again to avoid race
+;; When possible, they should start with C-c, and then control again to avoid race
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
@@ -90,30 +91,24 @@
 (global-set-key (kbd "C-c C-f") 'mine-advance-to)
 (global-set-key (kbd "C-c C-b") 'mine-back-to)
 
-(global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
-(global-set-key (kbd "C-c C-%") 'mine-match-paren)
-(global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
-
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
-
-(global-set-key (kbd "C-c C-*") 'mine-isearch-forward-at-point)
 
 (global-set-key (kbd "C-c C-Y") 'mine-current-line-to-clipboard)
 (global-set-key (kbd "C-c C-P") 'mine-copy-current-line)
 
-(global-set-key (kbd "C-c C-h") 'mine-window-vertical-to-horizontal)
-(global-set-key (kbd "C-c C-v") 'mine-window-horizontal-to-vertical)
-
-(global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
-
-(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
+(global-set-key (kbd "C-<prior>") 'mine-previous-user-buffer) ; Ctrl+PageDown
+(global-set-key (kbd "C-<next>") 'mine-next-user-buffer) ; Ctrl+PageUp
 
 ;; just-one-space is mapped to M-SPC, but that opens the window menu
 (global-set-key (kbd "C-x C-SPC") 'just-one-space)
+(global-set-key (kbd "C-c C-*") 'mine-isearch-forward-at-point)
+(global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
+(global-set-key (kbd "C-c C-%") 'mine-match-paren)
+(global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
+(global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
-(global-set-key (kbd "C-<prior>") 'mine-previous-user-buffer) ; Ctrl+PageDown
-(global-set-key (kbd "C-<next>") 'mine-next-user-buffer) ; Ctrl+PageUp
+(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -138,7 +133,7 @@
 ;; enable fast file/buffer switching mode
 (ido-mode t)
 
-;; enable disabled functions by default
+;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
 
 ;; reload file if changed on disk
@@ -158,12 +153,16 @@
 ;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
 ;; (require 'ecb)
 
-;; open txt files in org-mode
+;; use org-mode for txt files
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
 ;; org-mode clean view
 ;; (setq org-startup-indented t)   ; commented out as it produces flickering
 ; in order to hide the leading stars, set the org-hide face color to background
 (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
+;; SO PERFORM ADDITIONS BEFORE THIS LINE
 
 ;; load initializations for this site
 (let ((init-file "~/.emacs.d/init-local.el"))
@@ -172,8 +171,12 @@
 
 ;; In order open a file in an existing emacs from a shell, use
 ;; emacsclient -n [file]
-;; TODO: avoid starting server if already started
-(server-start)
+;; FIXME: avoid starting server if already started
+;; the following code extracted from http://stackoverflow.com/questions/3704962/how-to-know-if-emacs-server-is-running dosn't seem to work
+(unless (and (boundp 'server-process)
+             (memq (process-status server-process) '(connect listen open run)))
+  (server-start))
 
+;; load custom file if present
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
