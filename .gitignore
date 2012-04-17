@@ -4,3 +4,5 @@ ecb-snap
 ede-projects.el
 session.*
 .org-id-locations
+eshell/history
+eshell/lastdir
