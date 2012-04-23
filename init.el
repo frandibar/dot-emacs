@@ -175,6 +175,14 @@
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
 ;; SO PERFORM ADDITIONS BEFORE THIS LINE
 
+;; Change the default naming of buffers to include parts of the file name (directory names) until the buffer names are unique.
+(require 'uniquify)
+    (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
+    (setq uniquify-separator "/")
+    (setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
+    (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
+
 ;; load initializations for this site
 (let ((init-file "~/.emacs.d/init-local.el"))
   (if (file-exists-p init-file)
