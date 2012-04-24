@@ -102,7 +102,7 @@
 
 ;; just-one-space is mapped to M-SPC, but that opens the window menu
 (global-set-key (kbd "C-x C-SPC") 'just-one-space)
-(global-set-key (kbd "C-c C-*") 'mine-isearch-forward-at-point)
+(global-set-key (kbd "C-*") 'mine-isearch-forward-at-point)
 (global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
 (global-set-key (kbd "C-c C-%") 'mine-match-paren)
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
