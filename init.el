@@ -1,7 +1,18 @@
 ;; MY PERSONAL EMACS CUSTOMIZATION FILE
 
 ;; load my functions
-(add-to-list 'load-path (expand-file-name "~/.emacs.d") t)
+(add-to-list 'load-path "~/.emacs.d")
+
+;; add the bundles directory and it's 1st level subdirectories to the load-path variable
+(let ((base "~/.emacs.d/bundles"))
+  (add-to-list 'load-path base)
+  (dolist (f (directory-files base))
+    (let ((name (concat base "/" f)))
+      (when (and (file-directory-p name)
+                 (not (equal f ".."))
+                 (not (equal f ".")))
+        (add-to-list 'load-path name)))))
+
 (require 'myfuncs)
 
 ;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
