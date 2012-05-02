@@ -1,0 +1,9 @@
+[submodule "external/command-log-mode"]
+	path = external/command-log-mode
+	url = https://github.com/lewang/command-log-mode.git
+[submodule "external/highlight-symbol"]
+	path = external/highlight-symbol
+	url = https://github.com/nschum/highlight-symbol.el.git
+[submodule "external/emacs-calfw"]
+	path = external/emacs-calfw
+	url = https://github.com/kiwanami/emacs-calfw.git
