@@ -4,7 +4,7 @@
 (add-to-list 'load-path "~/.emacs.d")
 
 ;; add the bundles directory and it's 1st level subdirectories to the load-path variable
-(let ((base "~/.emacs.d/bundles"))
+(let ((base "~/.emacs.d/external"))
   (add-to-list 'load-path base)
   (dolist (f (directory-files base))
     (let ((name (concat base "/" f)))
@@ -45,9 +45,8 @@
 ;; ;     (color-theme-midnight)))
 ;;      (color-theme-dark-laptop)))
 
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/color-themes") t)
-(require 'zenburn)
-(zenburn)
+(require 'color-theme-zenburn)
+(color-theme-zenburn)
 
 ;; highlight cursor line, commented out as it produces flickering in org mode
 ;; (global-hl-line-mode 1)

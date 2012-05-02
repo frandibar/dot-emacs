@@ -7,3 +7,6 @@
 [submodule "external/emacs-calfw"]
 	path = external/emacs-calfw
 	url = https://github.com/kiwanami/emacs-calfw.git
+[submodule "external/zenburn-emacs"]
+	path = external/zenburn-emacs
+	url = https://github.com/bbatsov/zenburn-emacs.git
