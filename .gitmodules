@@ -10,3 +10,6 @@
 [submodule "external/zenburn-emacs"]
 	path = external/zenburn-emacs
 	url = https://github.com/bbatsov/zenburn-emacs.git
+[submodule "external/yasnippet"]
+	path = external/yasnippet
+	url = https://github.com/capitaomorte/yasnippet.git

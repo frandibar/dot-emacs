@@ -173,6 +173,7 @@
 (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
 ;; agenda view of next 14 days
 (setq org-agenda-span 14)
+(setq org-log-into-drawer t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LIBRARIES
@@ -181,9 +182,12 @@
 ;; (add-to-list 'load-path "~/.emacs.d/ecb-snap")
 ;; (require 'ecb)
 
+(require 'yasnippet)
+(yas/global-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
-;; SO PERFORM ADDITIONS BEFORE THIS LINE
+;; SO MAKE ADDITIONS BEFORE THIS LINE
 
 ;; Change the default naming of buffers to include parts of the file name (directory names) until the buffer names are unique.
 (require 'uniquify)
