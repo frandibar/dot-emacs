@@ -176,6 +176,26 @@
 (setq org-agenda-span 14)
 (setq org-log-into-drawer t)
 
+(setq org-capture-templates
+      '(("m" "movilidad")
+        ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
+         "* %^T %^{prompt}")
+        ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
+         "* %^T %^{prompt}")
+        ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
+         "* %^T %^{prompt}")
+        ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
+         "* %^T %^{prompt}")
+        ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
+         "* %^T %^{prompt}")
+        ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
+         "* %^T %^{prompt}")
+        ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
+         "* %^T %^{prompt}")
+        ("c" "core" entry (file+headline "~/Dropbox/core/agenda.org" "core")
+         "* %^T %^{prompt}")
+        ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LIBRARIES
 
