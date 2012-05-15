@@ -121,6 +121,7 @@
 (global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
+(global-set-key (kbd "C-c c") 'org-capture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
