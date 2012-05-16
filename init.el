@@ -176,6 +176,10 @@
 (setq org-agenda-span 14)
 (setq org-log-into-drawer t)
 
+(setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
+                               "~/Dropbox/core/notas.org"
+                               "~/Dropbox/docs/cumples.org"
+                               "~/Dropbox/docs/agenda-personal.org")))
 (setq org-capture-templates
       '(("m" "movilidad")
         ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
@@ -192,7 +196,7 @@
          "* %^T %^{prompt}")
         ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
          "* %^T %^{prompt}")
-        ("c" "core" entry (file+headline "~/Dropbox/core/agenda.org" "core")
+        ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
          "* %^T %^{prompt}")
         ))
 
