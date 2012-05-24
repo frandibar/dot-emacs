@@ -357,17 +357,30 @@ is easy to get content inside HTML tags."
 
 (defun mine-replace-enclosing-char (old new)
   "Replace the enclosing OLD char with NEW.
-The cursor must be located in between the enclosing chars. Does not work for empty strings."
+The cursor must be located in between the enclosing chars. For empty strings, cursor should be on closing pair."
   (interactive "cEnclosing char to replace: \ncNew enclosing char: ")
+
+  (defun opener (char)
+    (cond ((member char '(?\( ?\) )) ?\()
+          ((member char '(?\[ ?\] )) ?\[)
+          ((member char '(?\{ ?\} )) ?\{)
+          (t char)))
+
+  (defun closer (char)
+    (cond ((member char '(?\( ?\) )) ?\))
+          ((member char '(?\[ ?\] )) ?\])
+          ((member char '(?\{ ?\} )) ?\})
+          (t char)))
+
   (save-excursion
     (progn
-      (search-backward (char-to-string old))
+      (search-backward (char-to-string (opener old)))
       (delete-char 1)
-      (insert-char new 1))
-      (search-forward (char-to-string old))
+      (insert-char (opener new) 1))
+      (search-forward (char-to-string (closer old)))
       (backward-char)
       (delete-char 1)
-      (insert-char new 1)))
+      (insert-char (closer new) 1)))
 
 ;; Based on http://xahlee.org/emacs/elisp_examples.html
 (defun mine-next-user-buffer ()
