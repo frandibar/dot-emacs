@@ -355,6 +355,20 @@ is easy to get content inside HTML tags."
     (goto-char start) (insert-char ?( 1)
     ))
 
+(defun mine-replace-enclosing-char (old new)
+  "Replace the enclosing OLD char with NEW.
+The cursor must be located in between the enclosing chars. Does not work for empty strings."
+  (interactive "cEnclosing char to replace: \ncNew enclosing char: ")
+  (save-excursion
+    (progn
+      (search-backward (char-to-string old))
+      (delete-char 1)
+      (insert-char new 1))
+      (search-forward (char-to-string old))
+      (backward-char)
+      (delete-char 1)
+      (insert-char new 1)))
+
 ;; Based on http://xahlee.org/emacs/elisp_examples.html
 (defun mine-next-user-buffer ()
   "Switch to the next user buffer in cyclic order.\n
@@ -377,3 +391,8 @@ User buffers are those not starting with * nor in dired-mode."
                     (string-equal "dired-mode" (symbol-name major-mode)))
                 (not (string-equal start-buf (buffer-name))))
       (previous-buffer))))
+
+;; displays a popup window, useful for agenda notifications.
+;; requires zenity
+(defun mine-popup (text)
+  (shell-command (concat "zenity --warning --text=" text)))
