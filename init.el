@@ -176,10 +176,10 @@
 (setq org-agenda-span 14)
 (setq org-log-into-drawer t)
 
-(setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
-                               "~/Dropbox/docs/agenda-personal.org"
-                               "~/Dropbox/core/agenda-core.org"
-                               )))
+(setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
+                               "~/Dropbox/core/notas.org"
+                               "~/Dropbox/docs/cumples.org"
+                               "~/Dropbox/docs/agenda-personal.org")))
 
 (setq org-capture-templates
       '(("m" "movilidad")

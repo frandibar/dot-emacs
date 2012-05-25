@@ -355,6 +355,33 @@ is easy to get content inside HTML tags."
     (goto-char start) (insert-char ?( 1)
     ))
 
+(defun mine-replace-enclosing-char (old new)
+  "Replace the enclosing OLD char with NEW.
+The cursor must be located in between the enclosing chars. For empty strings, cursor should be on closing pair."
+  (interactive "cEnclosing char to replace: \ncNew enclosing char: ")
+
+  (defun opener (char)
+    (cond ((member char '(?\( ?\) )) ?\()
+          ((member char '(?\[ ?\] )) ?\[)
+          ((member char '(?\{ ?\} )) ?\{)
+          (t char)))
+
+  (defun closer (char)
+    (cond ((member char '(?\( ?\) )) ?\))
+          ((member char '(?\[ ?\] )) ?\])
+          ((member char '(?\{ ?\} )) ?\})
+          (t char)))
+
+  (save-excursion
+    (progn
+      (search-backward (char-to-string (opener old)))
+      (delete-char 1)
+      (insert-char (opener new) 1))
+      (search-forward (char-to-string (closer old)))
+      (backward-char)
+      (delete-char 1)
+      (insert-char (closer new) 1)))
+
 ;; Based on http://xahlee.org/emacs/elisp_examples.html
 (defun mine-next-user-buffer ()
   "Switch to the next user buffer in cyclic order.\n
@@ -377,3 +404,8 @@ User buffers are those not starting with * nor in dired-mode."
                     (string-equal "dired-mode" (symbol-name major-mode)))
                 (not (string-equal start-buf (buffer-name))))
       (previous-buffer))))
+
+;; displays a popup window, useful for agenda notifications.
+;; requires zenity
+(defun mine-popup (text)
+  (shell-command (concat "zenity --warning --text=" text)))
