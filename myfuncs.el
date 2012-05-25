@@ -198,7 +198,7 @@ Similar to 'Y' in vim."
     (move-beginning-of-line 1)
     (setq from (point))
     (move-end-of-line arg)
-    (setq to (point))
+    (setq to (+ 1 (point)))             ; add 1 to include newline
     (copy-region-as-kill from to)
     (goto-char curr)))  ; because we moved to end of line
 
