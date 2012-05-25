@@ -176,6 +176,11 @@
 (setq org-agenda-span 14)
 (setq org-log-into-drawer t)
 
+(setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
+                               "~/Dropbox/docs/agenda-personal.org"
+                               "~/Dropbox/core/agenda-core.org"
+                               )))
+
 (setq org-capture-templates
       '(("m" "movilidad")
         ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
@@ -192,7 +197,7 @@
          "* %^T %^{prompt}")
         ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
          "* %^T %^{prompt}")
-        ("c" "core" entry (file+headline "~/Dropbox/core/agenda.org" "core")
+        ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
          "* %^T %^{prompt}")
         ))
 
@@ -210,6 +215,12 @@
 (org-crypt-use-before-save-magic)
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
 (setq org-crypt-key nil)
+
+;; latex settings
+
+;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
+;; but also take your `\documentclass' and `\usepackage' commands into account.
+(setq Tex-parse-self t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
