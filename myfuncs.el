@@ -183,24 +183,22 @@ Similar to '$' in vim."
   "Copy and paste ARG lines from point.
 If point is on last buffer line, then no newline is inserted."
   (interactive "p")
-  (kill-whole-line arg)
-  (yank)
-  (yank)
-  (previous-line arg))
+  (save-excursion
+    (kill-whole-line arg)
+    (yank)
+    (yank)))
 
 (defun mine-current-line-to-clipboard (arg)
   "Copy ARG lines to clipboard. Default value for ARG is 1.
 Similar to 'Y' in vim."
   (interactive "p")
-  (let ((curr (point))                  ; save current point (save-excursion) leaves cursor at the end of line
-        from
-        to)
-    (move-beginning-of-line 1)
-    (setq from (point))
-    (move-end-of-line arg)
-    (setq to (+ 1 (point)))             ; add 1 to include newline
-    (copy-region-as-kill from to)
-    (goto-char curr)))  ; because we moved to end of line
+  (save-excursion
+    (let (from to)
+      (move-beginning-of-line 1)
+      (setq from (point))
+      (move-end-of-line arg)
+      (setq to (+ 1 (point)))             ; add 1 to include newline
+      (copy-region-as-kill from to))))
 
 (require 'highlight-symbol)
 
