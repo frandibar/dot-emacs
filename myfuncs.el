@@ -192,13 +192,9 @@ If point is on last buffer line, then no newline is inserted."
   "Copy ARG lines to clipboard. Default value for ARG is 1.
 Similar to 'Y' in vim."
   (interactive "p")
+  (message (format "Copied %d line(s) to clipboard" arg))
   (save-excursion
-    (let (from to)
-      (move-beginning-of-line 1)
-      (setq from (point))
-      (move-end-of-line arg)
-      (setq to (+ 1 (point)))             ; add 1 to include newline
-      (copy-region-as-kill from to))))
+    (copy-region-as-kill (line-beginning-position) (line-beginning-position (+ 1 arg)))))
 
 (require 'highlight-symbol)
 
@@ -407,3 +403,21 @@ User buffers are those not starting with * nor in dired-mode."
 ;; requires zenity
 (defun mine-popup (text)
   (shell-command (concat "zenity --warning --text=" text)))
+
+;; extracted from http://xahlee.org/emacs/emacs_copy_cut_current_line.html
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, copy the current line."
+  (interactive
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (progn
+       (message "Current line is copied.")
+       (list (line-beginning-position) (line-beginning-position 2)) ) ) ))
+
+(defadvice kill-region (before slick-copy activate compile)
+  "When called interactively with no active region, cut the current line."
+  (interactive
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (progn
+       (list (line-beginning-position) (line-beginning-position 2)) ) ) ))
