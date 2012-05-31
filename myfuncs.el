@@ -421,3 +421,39 @@ User buffers are those not starting with * nor in dired-mode."
        (list (region-beginning) (region-end))
      (progn
        (list (line-beginning-position) (line-beginning-position 2)) ) ) ))
+
+;; functions to move selected region up and down
+;; based on https://groups.google.com/group/gnu.emacs.help/msg/a784fbb684a24e17?pli=1
+(defun mine-move-text-internal (arg)
+   (cond
+    ((and mark-active transient-mark-mode)
+     (if (> (point) (mark))
+        (exchange-point-and-mark))
+     (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+       (forward-line arg)
+       (move-to-column column t)
+       (set-mark (point))
+       (insert text)
+       (exchange-point-and-mark)
+       (setq deactivate-mark nil)))
+    (t
+     (beginning-of-line)
+     (when (or (> arg 0) (not (bobp)))
+       (forward-line)
+       (when (or (< arg 0) (not (eobp)))
+        (transpose-lines arg))
+       (forward-line -1)))))
+
+(defun mine-move-text-up (arg)
+   "Move region (transient-mark-mode active) or current line
+  arg lines up."
+   (interactive "*p")
+   (mine-move-text-internal (- arg)))
+
+(defun mine-move-text-down (arg)
+   "Move region (transient-mark-mode active) or current line
+  arg lines down."
+   (interactive "*p")
+   (mine-move-text-internal arg))
+

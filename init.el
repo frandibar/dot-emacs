@@ -120,10 +120,17 @@
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 (global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
-(global-set-key [remap backward-up-list] 'mine-backward-up-sexp)
+(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
+
+(global-set-key (kbd "M-S-<up>") 'mine-move-text-up)
+(global-set-key [kbd "M-S-<down>") 'mine-move-text-down)
+
+;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
+;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
+;; (global-set-key (kbd "<f4>") 'yank)           ; paste
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -202,6 +209,21 @@
         ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
          "* %^T %^{prompt}")
         ))
+
+;; the appointment notification facility
+;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
+(setq appt-message-warning-time 15 ;; warn 15 min in advance
+      appt-display-mode-line t     ;; show in the modeline
+      appt-display-format 'window) ;; use our func
+(appt-activate 1)              ;; active appt (appointment notification)
+(display-time)                 ;; time display is required for this...
+
+;; update appt each time agenda is opened
+(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+
+(defun mine-appt-display (min-to-app new-time msg)
+  (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+(setq appt-disp-window-function (function mine-appt-display))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LIBRARIES
