@@ -401,8 +401,8 @@ User buffers are those not starting with * nor in dired-mode."
 
 ;; displays a popup window, useful for agenda notifications.
 ;; requires zenity
-(defun mine-popup (text)
-  (shell-command (concat "zenity --warning --text=" text)))
+(defun mine-popup (title msg)
+  (shell-command (concat "zenity --warning --width=300 --title=\"" title "\" --text=\"" msg "\"")))
 
 ;; extracted from http://xahlee.org/emacs/emacs_copy_cut_current_line.html
 (defadvice kill-ring-save (before slick-copy activate compile)
