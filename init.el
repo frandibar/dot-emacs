@@ -120,13 +120,13 @@
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 (global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
-(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
+;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
 
 (global-set-key (kbd "M-S-<up>") 'mine-move-text-up)
-(global-set-key [kbd "M-S-<down>") 'mine-move-text-down)
+(global-set-key (kbd "M-S-<down>") 'mine-move-text-down)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
