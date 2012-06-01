@@ -120,13 +120,13 @@
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 (global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
-(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
+;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
 
 (global-set-key (kbd "M-S-<up>") 'mine-move-text-up)
-(global-set-key [kbd "M-S-<down>") 'mine-move-text-down)
+(global-set-key (kbd "M-S-<down>") 'mine-move-text-down)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -166,6 +166,12 @@
 
 ;; delete trailing whitespace upon saving
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; more info: http://www.masteringemacs.org/articles/2012/05/29/compiling-running-scripts-emacs/
+;; shut up compile saves
+(setq compilation-ask-about-save nil)
+;; don't save *anything*
+(setq compilation-save-buffers-predicate '(lambda () nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ MODE
@@ -246,6 +252,7 @@
 ;; but also take your `\documentclass' and `\usepackage' commands into account.
 (setq Tex-parse-self t)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
 ;; SO MAKE ADDITIONS BEFORE THIS LINE
@@ -274,3 +281,4 @@
 ;; load custom file if present
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
+
