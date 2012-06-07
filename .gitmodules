@@ -13,3 +13,6 @@
 [submodule "external/yasnippet"]
 	path = external/yasnippet
 	url = https://github.com/capitaomorte/yasnippet.git
+[submodule "external/workgroups"]
+	path = external/workgroups
+	url = https://github.com/tlh/workgroups.el.git
