@@ -253,7 +253,7 @@
 (setq Tex-parse-self t)
 
 (require 'workgroups)
-(workgroup-mode 1)
+(workgroups-mode 1)
 (setq wg-morph-on nil)
 (wg-load "~/.emacs.d/workgroups")
 
@@ -285,4 +285,3 @@
 ;; load custom file if present
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
-
