@@ -252,10 +252,13 @@
 ;; but also take your `\documentclass' and `\usepackage' commands into account.
 (setq Tex-parse-self t)
 
+;; Enable workgroups if any saved workgroups are found
 (require 'workgroups)
-(workgroups-mode 1)
 (setq wg-morph-on nil)
-(wg-load "~/.emacs.d/workgroups")
+(let ((file "~/.emacs.d/workgroups"))
+  (when (file-exists-p file)
+    (workgroups-mode 1)
+    (wg-load file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
