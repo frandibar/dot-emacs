@@ -26,7 +26,8 @@
 (cua-selection-mode t)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
-(setq x-select-enable-clipboard t)
+;; since v24.0 defaults to t
+;;(setq x-select-enable-clipboard t)
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
