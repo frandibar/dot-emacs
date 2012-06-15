@@ -213,8 +213,11 @@
          "* %^T %^{prompt}")
         ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
          "* %^T %^{prompt}")
-        ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
+        ("c" "core")
+        ("ce" "entry" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
          "* %^T %^{prompt}")
+        ("cs" "schedule" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
+         "* %^{prompt}\n  SCHEDULED: %^T")
         ))
 
 ;; the appointment notification facility
@@ -258,8 +261,9 @@
 (setq wg-morph-on nil)
 (let ((file "~/.emacs.d/workgroups"))
   (when (file-exists-p file)
-    (workgroups-mode 1)
-    (wg-load file)))
+    t))
+    ;; (workgroups-mode 1)
+    ;; (wg-load file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
