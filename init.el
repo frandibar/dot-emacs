@@ -25,6 +25,9 @@
 ;; use cua mode for rectangle selection
 (cua-selection-mode t)
 
+;; insert matching pairs of brackets
+(electric-pair-mode)
+
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 ;; since v24.0 defaults to t
 ;;(setq x-select-enable-clipboard t)
@@ -217,7 +220,7 @@
         ("ce" "entry" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
          "* %^T %^{prompt}")
         ("cs" "schedule" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-         "* %^{prompt}\n  SCHEDULED: %^T")
+         "* TODO %^{prompt}\n  SCHEDULED: %^T")
         ))
 
 ;; the appointment notification facility
