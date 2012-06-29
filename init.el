@@ -177,6 +177,8 @@
 ;; don't save *anything*
 (setq compilation-save-buffers-predicate '(lambda () nil))
 
+(setq delete-by-moving-to-trash t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ MODE
 ;; set indentation style for c++-mode
