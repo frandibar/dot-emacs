@@ -26,7 +26,7 @@
 (cua-selection-mode t)
 
 ;; insert matching pairs of brackets
-(electric-pair-mode)
+;; (electric-pair-mode)
 
 ;; make system copy work with Emacs paste and Emacs copy work with system paste
 ;; since v24.0 defaults to t
@@ -249,6 +249,11 @@
 
 (require 'yasnippet)
 (yas/global-mode 1)
+
+(require 'key-chord)
+(key-chord-mode 1)
+(key-chord-define-global "ff" 'mine-advance-to)
+(key-chord-define-global "FF" 'mine-back-to)
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
