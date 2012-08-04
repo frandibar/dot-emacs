@@ -153,13 +153,14 @@ It assumes both files are in the same path. If not, it creates a new file."
   ;; (switch-to-buffer (other-buffer)))    ; switch to most recent non visible buffer
   (switch-to-buffer (other-buffer (current-buffer) t))) ; ignore if most recent is visible or not
 
-(defun mine-point-to-eol ()
-  "Move point to end of line.
-Similar to '$' in vim."
-  (interactive)
-  (next-line)
-  (beginning-of-line)
-  (backward-char))
+;; commented out due to move-end-of-line with C-e
+;; (defun mine-point-to-eol ()
+;;   "Move point to end of line.
+;; Similar to '$' in vim."
+;;   (interactive)
+;;   (next-line)
+;;   (beginning-of-line)
+;;   (backward-char))
 
 ;; TODO: extend to work if point not over number, like in vim
 ;; Based on http://www.emacswiki.org/emacs/IncrementNumber
@@ -456,4 +457,3 @@ User buffers are those not starting with * nor in dired-mode."
   arg lines down."
    (interactive "*p")
    (mine-move-text-internal arg))
-

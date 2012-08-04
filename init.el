@@ -101,26 +101,12 @@
 (global-set-key (kbd "C-c C-n") 'mine-scroll-n-lines-up)
 (global-set-key (kbd "C-c C-p") 'mine-scroll-n-lines-down)
 
-(global-set-key (kbd "C-c C-H") 'mine-point-to-top)
-(global-set-key (kbd "C-c C-L") 'mine-point-to-bottom)
-
-(global-set-key (kbd "C-c C-f") 'mine-advance-to)
-(global-set-key (kbd "C-c C-b") 'mine-back-to)
-
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
 
-(global-set-key (kbd "C-c C-Y") 'mine-current-line-to-clipboard)
-(global-set-key (kbd "C-c C-P") 'mine-copy-current-line)
-
 (global-set-key (kbd "C-<prior>") 'mine-previous-user-buffer) ; Ctrl+PageDown
-(global-set-key (kbd "C-<next>") 'mine-next-user-buffer) ; Ctrl+PageUp
+(global-set-key (kbd "C-<next>") 'mine-next-user-buffer)      ; Ctrl+PageUp
 
-;; just-one-space is mapped to M-SPC, but that opens the window menu
-(global-set-key (kbd "C-x C-SPC") 'just-one-space)
-(global-set-key (kbd "C-*") 'mine-isearch-forward-at-point)
-(global-set-key (kbd "C-c C-$") 'mine-point-to-eol)
-(global-set-key (kbd "C-c C-%") 'mine-match-paren)
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 (global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
@@ -252,8 +238,27 @@
 
 (require 'key-chord)
 (key-chord-mode 1)
-(key-chord-define-global "ff" 'mine-advance-to)
-(key-chord-define-global "FF" 'mine-back-to)
+;; preferably, use upper case to avoid delay when typing
+(key-chord-define-global "BB" 'ido-switch-buffer)
+
+(key-chord-define-global "FF" 'mine-advance-to)
+(key-chord-define-global "FD" 'mine-back-to)
+
+(key-chord-define-global "HH" 'mine-point-to-top)
+(key-chord-define-global "LL" 'mine-point-to-bottom)
+
+(key-chord-define-global "DD" 'kill-whole-line)
+
+(key-chord-define-global "YY" 'mine-current-line-to-clipboard)
+(key-chord-define-global "PP" 'mine-copy-current-line)
+
+;; just-one-space is mapped to M-SPC, but that opens the window menu
+(key-chord-define-global "~~" 'just-one-space)
+(key-chord-define-global "SS" 'save-some-buffers)
+
+(key-chord-define-global "**" 'mine-isearch-forward-at-point)
+(key-chord-define-global "%%" 'mine-match-paren)
+
 
 (require 'org-crypt)
 (org-crypt-use-before-save-magic)
