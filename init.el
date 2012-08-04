@@ -253,8 +253,8 @@
 (key-chord-define-global "PP" 'mine-copy-current-line)
 
 ;; just-one-space is mapped to M-SPC, but that opens the window menu
-(key-chord-define-global "~~" 'just-one-space)
-(key-chord-define-global "SS" 'save-some-buffers)
+(key-chord-define-global "--" 'just-one-space)
+(key-chord-define-global "SS" 'save-buffer)
 
 (key-chord-define-global "**" 'mine-isearch-forward-at-point)
 (key-chord-define-global "%%" 'mine-match-paren)
