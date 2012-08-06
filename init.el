@@ -248,6 +248,7 @@
 (key-chord-define-global "FD" 'mine-back-to)
 
 (key-chord-define-global "HH" 'mine-point-to-top)
+(key-chord-define-global "MM" 'mine-point-to-middle)
 (key-chord-define-global "LL" 'mine-point-to-bottom)
 
 (key-chord-define-global "DD" 'kill-whole-line)

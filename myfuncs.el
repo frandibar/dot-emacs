@@ -82,6 +82,13 @@ It doesn't work if cursor is between double quotes."
 ; disabled because sometimes leaves a status bar with too many lines
 ;(toggle-fullscreen)
 
+(defun mine-point-to-middle ()
+  "Put cursor on top line of window.
+Similar to 'M' in vim."
+  (interactive)
+  (push-mark)
+  (move-to-window-line nil))
+
 (defun mine-point-to-top ()
   "Put cursor on top line of window.
 Similar to 'H' in vim."
@@ -425,6 +432,7 @@ User buffers are those not starting with * nor in dired-mode."
 
 ;; functions to move selected region up and down
 ;; based on https://groups.google.com/group/gnu.emacs.help/msg/a784fbb684a24e17?pli=1
+;; TODO: undo does not restore state
 (defun mine-move-text-internal (arg)
    (cond
     ((and mark-active transient-mark-mode)
