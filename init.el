@@ -241,7 +241,10 @@
 ;; preferably, use upper case to avoid delay when typing
 (key-chord-define-global "BB" 'ido-switch-buffer)
 
-(key-chord-define-global "FF" 'mine-advance-to)
+(key-chord-define-global "FF" 'ido-find-file)
+(key-chord-define-global "KK" 'kill-buffer)
+
+(key-chord-define-global "FG" 'mine-advance-to)
 (key-chord-define-global "FD" 'mine-back-to)
 
 (key-chord-define-global "HH" 'mine-point-to-top)
@@ -265,11 +268,12 @@
 (setq org-tags-exclude-from-inheritance (quote ("crypt")))
 (setq org-crypt-key nil)
 
-;; latex settings
 
+;; latex settings
 ;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
 ;; but also take your `\documentclass' and `\usepackage' commands into account.
 (setq Tex-parse-self t)
+
 
 ;; Enable workgroups if any saved workgroups are found
 (require 'workgroups)
@@ -279,6 +283,13 @@
     t))
     ;; (workgroups-mode 1)
     ;; (wg-load file)))
+
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(require 'wrap-region)
+(wrap-region-global-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
