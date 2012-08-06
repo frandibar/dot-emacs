@@ -16,3 +16,6 @@
 [submodule "external/workgroups"]
 	path = external/workgroups
 	url = https://github.com/tlh/workgroups.el.git
+[submodule "external/expand-region"]
+	path = external/expand-region
+	url = https://github.com/magnars/expand-region.el.git
