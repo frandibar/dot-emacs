@@ -19,3 +19,6 @@
 [submodule "external/expand-region"]
 	path = external/expand-region
 	url = https://github.com/magnars/expand-region.el.git
+[submodule "external/wrap-region"]
+	path = external/wrap-region
+	url = https://github.com/rejeep/wrap-region.git
