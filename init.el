@@ -244,19 +244,18 @@
 (key-chord-define-global "FF" 'ido-find-file)
 (key-chord-define-global "KK" 'kill-buffer)
 
-(key-chord-define-global "FG" 'mine-advance-to)
-(key-chord-define-global "FD" 'mine-back-to)
+;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
+(key-chord-define-global "--" 'just-one-space)
+(key-chord-define-global "SS" 'save-buffer)
+
+(key-chord-define-global "FG" 'iy-go-to-char)
+(key-chord-define-global "FD" 'iy-go-to-char-backward)
 
 (key-chord-define-global "HH" 'mine-point-to-top)
 (key-chord-define-global "MM" 'mine-point-to-middle)
 (key-chord-define-global "LL" 'mine-point-to-bottom)
 
-(key-chord-define-global "YY" 'mine-current-line-to-clipboard)
 (key-chord-define-global "PP" 'mine-copy-current-line)
-
-;; just-one-space is mapped to M-SPC, but that opens the window menu
-(key-chord-define-global "--" 'just-one-space)
-(key-chord-define-global "SS" 'save-buffer)
 
 (key-chord-define-global "**" 'mine-isearch-forward-at-point)
 (key-chord-define-global "%%" 'mine-match-paren)
@@ -303,6 +302,7 @@
 (require 'wrap-region)
 (wrap-region-global-mode t)
 
+(require 'iy-go-to-char)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
 ;; SO MAKE ADDITIONS BEFORE THIS LINE

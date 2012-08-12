@@ -198,6 +198,7 @@ If point is on last buffer line, then no newline is inserted."
 
 (defun mine-current-line-to-clipboard (arg)
   "Copy ARG lines to clipboard. Default value for ARG is 1.
+Although for ARG=1 it doesn't make much sense since M-w does the same thing.
 Similar to 'Y' in vim."
   (interactive "p")
   (message (format "Copied %d line(s) to clipboard" arg))
