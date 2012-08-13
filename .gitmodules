@@ -24,4 +24,4 @@
 	url = https://github.com/rejeep/wrap-region.git
 [submodule "external/iy-go-to-char"]
 	path = external/iy-go-to-char
-	url = git://github.com/emacsmirror/iy-go-to-char.git
+	url = https://github.com/emacsmirror/iy-go-to-char.git
