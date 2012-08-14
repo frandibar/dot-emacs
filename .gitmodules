@@ -25,3 +25,6 @@
 [submodule "external/iy-go-to-char"]
 	path = external/iy-go-to-char
 	url = https://github.com/emacsmirror/iy-go-to-char.git
+[submodule "external/mark-multiple"]
+	path = external/mark-multiple
+	url = https://github.com/magnars/mark-multiple.el.git
