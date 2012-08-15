@@ -108,7 +108,6 @@
 (global-set-key (kbd "C-<next>") 'mine-next-user-buffer)      ; Ctrl+PageUp
 
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
-(global-set-key (kbd "C-x 9") 'mine-close-buffer-and-window)
 
 ;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
@@ -117,6 +116,12 @@
 
 (global-set-key (kbd "M-S-<up>") 'mine-move-text-up)
 (global-set-key (kbd "M-S-<down>") 'mine-move-text-down)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(global-set-key (kbd "C-<") 'mark-previous-like-this)
+(global-set-key (kbd "C->") 'mark-next-like-this)
+(global-set-key (kbd "C-*") 'mark-all-like-this)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -242,7 +247,7 @@
 (key-chord-define-global "BB" 'ido-switch-buffer)
 
 (key-chord-define-global "FF" 'ido-find-file)
-(key-chord-define-global "KK" 'kill-buffer)
+(key-chord-define-global "KK" 'mine-close-buffer-and-window)
 
 ;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
 (key-chord-define-global "--" 'just-one-space)
@@ -279,12 +284,10 @@
 ;; # -*- buffer-auto-save-file-name: nil; -*-
 ;; Excluding the crypt tag from inheritance prevents already encrypted text being encrypted again.
 
-
 ;; latex settings
 ;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
 ;; but also take your `\documentclass' and `\usepackage' commands into account.
 (setq Tex-parse-self t)
-
 
 ;; Enable workgroups if any saved workgroups are found
 (require 'workgroups)
@@ -295,14 +298,15 @@
     ;; (workgroups-mode 1)
     ;; (wg-load file)))
 
-
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
 
 (require 'wrap-region)
 (wrap-region-global-mode t)
 
 (require 'iy-go-to-char)
+
+(require 'mark-more-like-this)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
 ;; SO MAKE ADDITIONS BEFORE THIS LINE
@@ -313,7 +317,6 @@
     (setq uniquify-separator "/")
     (setq uniquify-after-kill-buffer-p t) ; rename after killing uniquified
     (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
-
 
 ;; load initializations for this site
 (let ((init-file "~/.emacs.d/init-local.el"))
