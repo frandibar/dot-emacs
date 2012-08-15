@@ -301,6 +301,9 @@
     ;; (workgroups-mode 1)
     ;; (wg-load file)))
 
+(require 'undo-tree)
+(global-undo-tree-mode)
+
 (require 'expand-region)
 
 (require 'wrap-region)
