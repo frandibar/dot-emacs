@@ -265,6 +265,9 @@
 (key-chord-define-global "**" 'mine-isearch-forward-at-point)
 (key-chord-define-global "%%" 'mine-match-paren)
 
+(key-chord-define-global "WW" 'ace-jump-word-mode)
+(key-chord-define-global "CC" 'ace-jump-char-mode)
+(key-chord-define-global "LL" 'ace-jump-line-mode)
 
 ;; encryption settings
 (require 'org-crypt)
@@ -306,6 +309,8 @@
 (require 'iy-go-to-char)
 
 (require 'mark-more-like-this)
+
+(require 'ace-jump-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
