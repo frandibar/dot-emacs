@@ -267,7 +267,10 @@
 
 (key-chord-define-global "WW" 'ace-jump-word-mode)
 (key-chord-define-global "CC" 'ace-jump-char-mode)
-(key-chord-define-global "LL" 'ace-jump-line-mode)
+(key-chord-define-global "NN" 'ace-jump-line-mode)
+
+(key-chord-define-global "RR" 'point-to-register)
+(key-chord-define-global "JJ" 'jump-to-register)
 
 ;; encryption settings
 (require 'org-crypt)
