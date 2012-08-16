@@ -317,6 +317,7 @@
 (require 'mark-more-like-this)
 
 (require 'ace-jump-mode)
+(setq ace-jump-mode-case-fold nil)      ; case sensitive jump mode
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
