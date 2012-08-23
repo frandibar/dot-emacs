@@ -108,7 +108,7 @@
 (global-set-key (kbd "C-<next>") 'mine-next-user-buffer)      ; Ctrl+PageUp
 
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
-
+(global-set-key (kbd "<esc>") 'keyboard-quit)
 ;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
@@ -261,6 +261,7 @@
 ;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
 (key-chord-define-global "--" 'just-one-space)
 (key-chord-define-global "SS" 'save-buffer)
+(key-chord-define-global "OO" 'other-window)
 
 (key-chord-define-global "FG" 'iy-go-to-char)
 (key-chord-define-global "FD" 'iy-go-to-char-backward)
