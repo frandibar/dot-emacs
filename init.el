@@ -329,6 +329,8 @@
 (require 'ace-jump-mode)
 (setq ace-jump-mode-case-fold nil)      ; case sensitive jump mode
 
+(require 'starter-kit-defuns)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
 ;; SO MAKE ADDITIONS BEFORE THIS LINE
