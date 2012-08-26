@@ -125,6 +125,8 @@
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
+(global-set-key (kbd "C-c e") 'esk-eval-and-replace)
+
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
 ;; (global-set-key (kbd "<f4>") 'yank)           ; paste
