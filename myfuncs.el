@@ -466,3 +466,10 @@ User buffers are those not starting with * nor in dired-mode."
   arg lines down."
    (interactive "*p")
    (mine-move-text-internal arg))
+
+;; extracted from http://ergoemacs.org/emacs/modernization_mark-word.html
+(defun mine-select-current-line ()
+  "Select the current line"
+  (interactive)
+    (beginning-of-line) ; move to end of line
+    (set-mark (line-end-position)))
