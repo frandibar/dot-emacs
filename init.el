@@ -55,7 +55,7 @@
 (color-theme-zenburn)
 
 ;; highlight cursor line, commented out as it produces flickering in org mode
-;; (global-hl-line-mode 1)
+(global-hl-line-mode 1)
 
 ;; show matching parenthesis
 (show-paren-mode t)
@@ -69,8 +69,8 @@
 (column-number-mode 1)
 
 ;; set scroll bar to the right
-(setq scroll-bar-mode-explicit t)
-(set-scroll-bar-mode `right)
+;; (setq scroll-bar-mode-explicit t)
+;; (set-scroll-bar-mode `right)
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
@@ -97,6 +97,8 @@
 ;; When possible, they should start with C-c, and then control again to avoid race
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
+
+(global-set-key (kbd "S-SPC") 'mine-select-current-line)
 
 (global-set-key (kbd "C-c C-n") 'mine-scroll-n-lines-up)
 (global-set-key (kbd "C-c C-p") 'mine-scroll-n-lines-down)
@@ -332,6 +334,8 @@
 (setq ace-jump-mode-case-fold nil)      ; case sensitive jump mode
 
 (require 'starter-kit-defuns)
+;; (require 'python-pep8)
+;; (require 'python-pylint)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
