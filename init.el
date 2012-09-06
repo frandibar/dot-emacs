@@ -274,8 +274,10 @@
 (key-chord-define-global "SS" 'save-buffer)
 (key-chord-define-global "OO" 'other-window)
 
-(key-chord-define-global "FG" 'iy-go-to-char)
-(key-chord-define-global "FD" 'iy-go-to-char-backward)
+(key-chord-define-global "FG" 'mine-advance-to)
+(key-chord-define-global "FD" 'mine-back-to)
+;; (key-chord-define-global "FG" 'iy-go-to-char) ; leaves cursor after the char
+;; (key-chord-define-global "FD" 'iy-go-to-char-backward) ; takes cursor to char, but when typing a key it moves to the right 1 char!
 
 (key-chord-define-global "HH" 'mine-point-to-top)
 (key-chord-define-global "MM" 'mine-point-to-middle)
