@@ -102,6 +102,8 @@
 (global-set-key (kbd "<f12>") 'view-mode)
 
 (global-set-key (kbd "M-S-SPC") 'mine-select-current-line)
+;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
+(global-set-key (kbd "C-M-S-SPC") 'just-one-space)
 
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
@@ -265,8 +267,6 @@
 (key-chord-define-global "FF" 'ido-find-file)
 (key-chord-define-global "KK" 'mine-close-buffer-and-window)
 
-;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
-(key-chord-define-global "__" 'just-one-space)
 (key-chord-define-global "SS" 'save-buffer)
 (key-chord-define-global "OO" 'other-window)
 
