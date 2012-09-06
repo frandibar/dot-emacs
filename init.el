@@ -71,6 +71,7 @@
 ;; set scroll bar to the right
 ;; (setq scroll-bar-mode-explicit t)
 ;; (set-scroll-bar-mode `right)
+(set-scroll-bar-mode nil)
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
