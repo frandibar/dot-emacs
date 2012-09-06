@@ -61,18 +61,6 @@ It doesn't work if cursor is between double quotes."
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t (self-insert-command (or arg 1)))))
 
-;; scroll the window without moving the cursor
-
-(defun mine-scroll-n-lines-up (&optional n)
-  "Scroll ahead N lines (1 by default)."
-  (interactive "p")
-  (scroll-up n))
-
-(defun mine-scroll-n-lines-down (&optional n)
-  "Scroll behind N lines (1 by default)."
-  (interactive "p")
-  (scroll-down n))
-
 (defun mine-toggle-fullscreen ()
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32

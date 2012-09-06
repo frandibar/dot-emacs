@@ -98,10 +98,9 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-(global-set-key (kbd "S-SPC") 'mine-select-current-line)
+(global-set-key (kbd "<f12>") 'view-mode)
 
-(global-set-key (kbd "C-c C-n") 'mine-scroll-n-lines-up)
-(global-set-key (kbd "C-c C-p") 'mine-scroll-n-lines-down)
+(global-set-key (kbd "M-S-SPC") 'mine-select-current-line)
 
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
@@ -112,6 +111,9 @@
 (global-set-key (kbd "C-6") 'mine-fast-buffer-switch)
 (global-set-key (kbd "<esc>") 'keyboard-quit)
 ;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
+
+(global-set-key (kbd "C-c C-n") 'View-scroll-line-forward)
+(global-set-key (kbd "C-c C-p") 'View-scroll-line-backward)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -263,7 +265,7 @@
 (key-chord-define-global "KK" 'mine-close-buffer-and-window)
 
 ;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
-(key-chord-define-global "--" 'just-one-space)
+(key-chord-define-global "__" 'just-one-space)
 (key-chord-define-global "SS" 'save-buffer)
 (key-chord-define-global "OO" 'other-window)
 
