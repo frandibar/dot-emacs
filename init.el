@@ -115,8 +115,8 @@
 (global-set-key (kbd "<esc>") 'keyboard-quit)
 ;(global-set-key (remap backward-up-list) 'mine-backward-up-sexp)
 
-(global-set-key (kbd "C-c C-n") 'View-scroll-line-forward)
-(global-set-key (kbd "C-c C-p") 'View-scroll-line-backward)
+(global-set-key (kbd "M-n") 'View-scroll-line-forward)
+(global-set-key (kbd "M-p") 'View-scroll-line-backward)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
