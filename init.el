@@ -170,9 +170,6 @@
 ;; display current function name in the mode line
 (which-function-mode t)
 
-;; delete trailing whitespace upon saving
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 ;; more info: http://www.masteringemacs.org/articles/2012/05/29/compiling-running-scripts-emacs/
 ;; shut up compile saves
 (setq compilation-ask-about-save nil)
@@ -180,6 +177,13 @@
 (setq compilation-save-buffers-predicate '(lambda () nil))
 
 (setq delete-by-moving-to-trash t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HOOKS
+
+;; delete trailing whitespace upon saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'help-mode-hook '(lambda () (view-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
