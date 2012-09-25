@@ -70,6 +70,11 @@
   (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
   (add-hook 'scheme-mode-hook 'highlight-parentheses-mode))
 
+(setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
+
+;; highlight expression (instead of enclosing parens) when over an openning paren or after closing one
+(setq show-paren-style 'expression)
+
 ;; hide tool bar and menu bar
 (tool-bar-mode -1)
 (menu-bar-mode t)
