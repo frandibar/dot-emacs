@@ -19,6 +19,10 @@
 (let ((default-directory  "/usr/share/emacs/site-lisp"))
      (normal-top-level-add-subdirs-to-load-path))
 
+;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+(let ((default-directory  "/usr/local/share/emacs/site-lisp"))
+     (normal-top-level-add-subdirs-to-load-path))
+
 ;; Copy/paste behavior
 ;; use C-x C-v C-c for copy/pasting
 ;(cua-mode t)
@@ -33,6 +37,8 @@
 ;;(setq x-select-enable-clipboard t)
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
+
+(setq-default major-mode 'lisp-interaction-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; APPEARANCE SETTINGS
@@ -59,6 +65,10 @@
 
 ;; show matching parenthesis
 (show-paren-mode t)
+(when (require 'highlight-parentheses nil 'noerror)
+  (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
+  (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
+  (add-hook 'scheme-mode-hook 'highlight-parentheses-mode))
 
 ;; hide tool bar and menu bar
 (tool-bar-mode -1)
@@ -100,6 +110,7 @@
 ;; This guarantees that they won't be overriden by any mode.
 
 (global-set-key (kbd "<f12>") 'view-mode)
+(global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 (global-set-key (kbd "M-S-SPC") 'mine-select-current-line)
 ;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
