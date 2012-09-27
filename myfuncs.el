@@ -461,3 +461,14 @@ User buffers are those not starting with * nor in dired-mode."
   (interactive)
     (beginning-of-line) ; move to end of line
     (set-mark (line-end-position)))
+
+;; extracted from https://github.com/magnars/.emacs.d/blob/master/defuns/lisp-defuns.el
+(defun mine-eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
