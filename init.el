@@ -36,7 +36,19 @@
 ;; since v24.0 defaults to t
 ;;(setq x-select-enable-clipboard t)
 
+;; show week number in calendar
+(copy-face font-lock-constant-face 'calendar-iso-week-face)
+(set-face-attribute 'calendar-iso-week-face nil
+                    :height 0.7)
+(setq calendar-intermonth-text
+      '(propertize
+        (format "%2d"
+                (car
+                 (calendar-iso-from-absolute
+                  (calendar-absolute-from-gregorian (list month day year)))))
+        'font-lock-face 'calendar-iso-week-face))
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
+
 
 (setq-default major-mode 'lisp-interaction-mode)
 
@@ -118,8 +130,6 @@
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 (global-set-key (kbd "M-S-SPC") 'mine-select-current-line)
-;; just-one-space is mapped to M-SPC, but on certain WM's it opens the window menu
-(global-set-key (kbd "C-M-S-SPC") 'just-one-space)
 
 (global-set-key (kbd "C-c C-a") 'mine-increment-number-at-point)
 (global-set-key (kbd "C-c C-x") 'mine-decrement-number-at-point)
@@ -149,6 +159,13 @@
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
 (global-set-key (kbd "C-c e") 'esk-eval-and-replace)
+
+;; override backward-char and forward-char
+(global-set-key (kbd "C-b") 'ido-switch-buffer)
+(global-set-key (kbd "C-f") 'ido-find-file)
+;; override kill-sentence
+(global-set-key (kbd "M-k") 'mine-close-buffer-and-window)
+
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -234,24 +251,21 @@
 (setq org-capture-templates
       '(("m" "movilidad")
         ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
-         "* %^T %^{prompt}")
+         "* %^t %^{prompt}")
         ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
-         "* %^T %^{prompt}")
-        ("c" "core")
-        ("ce" "entry" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-         "* %^T %^{prompt}")
-        ("cs" "schedule" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-         "* TODO %^{prompt}\n  SCHEDULED: %^T")
+         "* %^t %^{prompt}")
+        ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
+         "* %^t %^{prompt}")
         ))
 
 ;; the appointment notification facility
@@ -282,12 +296,12 @@
 (require 'key-chord)
 (key-chord-mode 1)
 ;; preferably, use upper case to avoid delay when typing
-(key-chord-define-global "BB" 'ido-switch-buffer)
+;; (key-chord-define-global "BB" 'ido-switch-buffer)
 
-(key-chord-define-global "FF" 'ido-find-file)
-(key-chord-define-global "KK" 'mine-close-buffer-and-window)
+;; (key-chord-define-global "FF" 'ido-find-file)
+;; (key-chord-define-global "KK" 'mine-close-buffer-and-window)
 
-(key-chord-define-global "SS" 'save-buffer)
+;; (key-chord-define-global "SS" 'save-buffer)
 (key-chord-define-global "OO" 'other-window)
 
 (key-chord-define-global "FG" 'mine-advance-to)
@@ -361,6 +375,11 @@
 (require 'starter-kit-defuns)
 ;; (require 'python-pep8)
 ;; (require 'python-pylint)
+
+;; load sunrise commander
+(require 'sunrise-commander)
+(require 'sunrise-x-tree)
+(require 'sunrise-x-buttons)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
