@@ -36,19 +36,7 @@
 ;; since v24.0 defaults to t
 ;;(setq x-select-enable-clipboard t)
 
-;; show week number in calendar
-(copy-face font-lock-constant-face 'calendar-iso-week-face)
-(set-face-attribute 'calendar-iso-week-face nil
-                    :height 0.7)
-(setq calendar-intermonth-text
-      '(propertize
-        (format "%2d"
-                (car
-                 (calendar-iso-from-absolute
-                  (calendar-absolute-from-gregorian (list month day year)))))
-        'font-lock-face 'calendar-iso-week-face))
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
-
 
 (setq-default major-mode 'lisp-interaction-mode)
 
@@ -225,6 +213,23 @@
    '(add-to-list 'dired-compress-file-suffixes
                  '("\\.zip\\'" ".zip" "unzip")))
 
+;; if there is a dired buffer displayed in the next window,
+;; use its current subdir, instead of the current subdir of this dired buffer.
+(setq dired-dwim-target t)
+
+;; enable disabled function
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; make Enter and ^ (parent dir) to use the same buffer
+(add-hook 'dired-mode-hook
+          (lambda ()
+            (define-key dired-mode-map (kbd "<return>")
+              'dired-find-alternate-file) ; was dired-advertised-find-file
+            (define-key dired-mode-map (kbd "^")
+              (lambda () (interactive) (find-alternate-file "..")))
+                                        ; was dired-up-directory
+            ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ mode
 ;; set indentation style for c++-mode
@@ -380,6 +385,11 @@
 (require 'sunrise-commander)
 (require 'sunrise-x-tree)
 (require 'sunrise-x-buttons)
+
+;; show bookmarks on startup
+(require 'bookmark)
+(bookmark-bmenu-list)
+(switch-to-buffer "*Bookmark List*")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
