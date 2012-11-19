@@ -37,3 +37,6 @@
 [submodule "external/sunrise-commander"]
 	path = external/sunrise-commander
 	url = https://github.com/escherdragon/sunrise-commander.git
+[submodule "external/use-package"]
+	path = external/use-package
+	url = git://github.com/jwiegley/use-package.git

@@ -6,3 +6,9 @@ session.*
 .org-id-locations
 eshell/history
 eshell/lastdir
+games/
+image-dired/
+bookmarks
+mylocalfuncs.el
+init-local.el
+external/
