@@ -123,6 +123,23 @@ Case sensitiveness depends on `case-fold-search'.
       (progn (search-forward (char-to-string char) end t arg)
              (backward-char)))))      ; since point was set after the ocurrence
 
+;; convert a buffer from DOS `^M' end of lines to Unix end of lines
+(defun mine-dos-to-unix ()
+  "Cut all visible ^M from the current buffer."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\r" nil t)
+      (replace-match ""))))
+
+;; convert a buffer from Unix end of lines to DOS `^M' end of lines
+(defun mine-unix-to-dos ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\n" nil t)
+      (replace-match "\r\n"))))
+
 (defun mine-hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings.
 Note: This function overrides variable `buffer-display-table'."
