@@ -1,4 +1,5 @@
-;; My custom miscellaneous functions
+; My custom miscellaneous functions
+
 (provide 'myfuncs)
 
 (defun mine-find-file-in-this-dir ()
@@ -10,8 +11,7 @@
   "Added because existing function backward-up-list won't work when point is between double quotes.
 
 Extracted from
-http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs
-"
+http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs"
   (interactive "p")
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
@@ -20,7 +20,7 @@ http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-pare
           ((backward-up-list arg)))))
 
 (defun mine-dip ()
-  "Kill text inside parenthesis.
+  "Kill text inside parentheses.
 Similar to di) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
@@ -31,7 +31,7 @@ It doesn't work if cursor is between double quotes."
 (defalias 'dip 'mine-dip)
 
 (defun mine-vip ()
-  "Mark text inside parenthesis (excluding parenthesis).
+  "Mark text inside parenthesis (excluding parentheses).
 Similar to vi) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
@@ -55,7 +55,8 @@ It doesn't work if cursor is between double quotes."
 (defalias 'vap 'mine-vap)
 
 (defun mine-match-paren (arg)
-  "Go to the matching parenthesis if cursor on a parenthesis; otherwise insert %."
+  "Go to the matching parenthesis if cursor on a parenthesis;
+otherwise insert %."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
@@ -67,8 +68,8 @@ It doesn't work if cursor is between double quotes."
                          '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                          '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0)))
-; disabled because sometimes leaves a status bar with too many lines
-;(toggle-fullscreen)
+                                        ; disabled because sometimes leaves a status bar with too many lines
+                                        ;(toggle-fullscreen)
 
 (defun mine-point-to-middle ()
   "Put cursor on top line of window.
@@ -110,8 +111,7 @@ Case sensitiveness depends on `case-fold-search'."
 (defun mine-advance-to (arg char)
   "Advance cursor to ARGth CHAR in current line if it exists, if not, do nothing.
 Similar to 'f' in vim.
-Case sensitiveness depends on `case-fold-search'.
-"
+Case sensitiveness depends on `case-fold-search'."
   (interactive "p\ncAdvance to char: ")
   (let ((curr (point))
         end)
@@ -132,8 +132,9 @@ Case sensitiveness depends on `case-fold-search'.
     (while (search-forward "\r" nil t)
       (replace-match ""))))
 
-;; convert a buffer from Unix end of lines to DOS `^M' end of lines
 (defun mine-unix-to-dos ()
+  "Convert a buffer from Unix end of lines to DOS `^M' end of
+lines."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -203,8 +204,8 @@ If point is on last buffer line, then no newline is inserted."
 
 (defun mine-current-line-to-clipboard (arg)
   "Copy ARG lines to clipboard. Default value for ARG is 1.
-Although for ARG=1 it doesn't make much sense since M-w does the same thing.
-Similar to 'Y' in vim."
+Although for ARG=1 it doesn't make much sense since M-w does the
+same thing.  Similar to 'Y' in vim."
   (interactive "p")
   (message (format "Copied %d line(s) to clipboard" arg))
   (save-excursion
@@ -214,7 +215,8 @@ Similar to 'Y' in vim."
 
 (defun mine-hl-symbol-and-jump-next ()
   "Search for next occurance of symbol under cursor, with highlight.
-Similar to '*' in vim, except that the highlighting is preserved on next search."
+Similar to '*' in vim, except that the highlighting is preserved
+on next search."
   (interactive)
   (mine-hl-symbol-and-jump 'highlight-symbol-next))
 
@@ -224,7 +226,8 @@ Similar to '*' in vim, except that the highlighting is preserved on next search.
 
 (defun mine-hl-symbol-and-jump (fn-next-or-prev)
   "Search for previous occurance of symbol under cursor, with highlight.
-Similar to '#' in vim, except that the highlighting is preserved on next search."
+Similar to '#' in vim, except that the highlighting is preserved
+on next search."
   (let ((symbol (highlight-symbol-get-symbol)))
     (unless symbol (error "No symbol at point"))
     (unless hi-lock-mode (hi-lock-mode 1))
@@ -262,10 +265,10 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
         (add-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
         (isearch-forward regexp-p no-recursive-edit)))))
 
-;; http://www.emacswiki.org/emacs/Rick_Bielawski#toc5
-;; Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs
 (defun mine-window-horizontal-to-vertical ()
-  "Switches from a horizontal split to a vertical split."
+  "Switches from a horizontal split to a vertical split.
+http://www.emacswiki.org/emacs/Rick_Bielawski#toc5
+Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs"
   (interactive)
   (let ((one-buf (window-buffer (selected-window)))
         (buf-point (point)))
@@ -287,9 +290,10 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
     (switch-to-buffer one-buf)
     (goto-char buf-point)))
 
-;; extracted from http://xahlee.org/emacs/modernization_mark-word.html
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
 (defun mine-semnav-up (arg)
+  "Extracted from
+http://xahlee.org/emacs/modernization_mark-word.html by Nikolaj
+Schumacher, 2008-10-20. Released under GPL."
   (interactive "p")
   (when (nth 3 (syntax-ppss))
     (if (> arg 0)
@@ -302,10 +306,10 @@ Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
       (incf arg)))
   (up-list arg))
 
-;; by Nikolaj Schumacher, 2008-10-20. Released under GPL.
 (defun mine-extend-selection (arg &optional incremental)
   "Select the current word.
-Subsequent calls expands the selection to larger semantic unit."
+Subsequent calls expands the selection to larger semantic unit.
+By Nikolaj Schumacher, 2008-10-20. Released under GPL."
   (interactive (list (prefix-numeric-value current-prefix-arg)
                      (or (region-active-p)
                          (eq last-command this-command))))
@@ -332,14 +336,14 @@ For practical purposes, it also includes double straight quote
 often used as apostrophy. It also consider both left and right
 angle brackets <> as either beginning or ending pair, so that it
 is easy to get content inside HTML tags."
- (interactive)
- (let (b1 b2)
-   (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘\"")
-   (setq b1 (point))
-   (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙\"")
-   (setq b2 (point))
-   (set-mark b1)
-   ))
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘\"")
+    (setq b1 (point))
+    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙\"")
+    (setq b2 (point))
+    (set-mark b1)
+    ))
 
 (defun mine-close-buffer-and-window ()
   (interactive)
@@ -360,12 +364,12 @@ is easy to get content inside HTML tags."
   (interactive "r")
   (save-excursion
     (goto-char end) (insert-char ?) 1)
-    (goto-char start) (insert-char ?( 1)
-    ))
-
+  (goto-char start) (insert-char ?( 1)
+                                 ))
 (defun mine-replace-enclosing-char (old new)
   "Replace the enclosing OLD char with NEW.
-The cursor must be located in between the enclosing chars. For empty strings, cursor should be on closing pair."
+The cursor must be located in between the enclosing chars.
+For empty strings, cursor should be on closing pair."
   (interactive "cEnclosing char to replace: \ncNew enclosing char: ")
 
   (defun opener (char)
@@ -385,15 +389,15 @@ The cursor must be located in between the enclosing chars. For empty strings, cu
       (search-backward (char-to-string (opener old)))
       (delete-char 1)
       (insert-char (opener new) 1))
-      (search-forward (char-to-string (closer old)))
-      (backward-char)
-      (delete-char 1)
-      (insert-char (closer new) 1)))
+    (search-forward (char-to-string (closer old)))
+    (backward-char)
+    (delete-char 1)
+    (insert-char (closer new) 1)))
 
-;; Based on http://xahlee.org/emacs/elisp_examples.html
 (defun mine-next-user-buffer ()
-  "Switch to the next user buffer in cyclic order.\n
-User buffers are those not starting with * nor in dired-mode."
+  "Switch to the next user buffer in cyclic order.
+User buffers are those not starting with * nor in dired-mode.
+Based on http://xahlee.org/emacs/elisp_examples.html"
   (interactive)
   (let ((start-buf (buffer-name)))
     (next-buffer)
@@ -403,7 +407,7 @@ User buffers are those not starting with * nor in dired-mode."
       (next-buffer))))
 
 (defun mine-previous-user-buffer ()
-  "Switch to the previous user buffer in cyclic order.\n
+  "Switch to the previous user buffer in cyclic order.
 User buffers are those not starting with * nor in dired-mode."
   (interactive)
   (let ((start-buf (buffer-name)))
@@ -440,48 +444,50 @@ User buffers are those not starting with * nor in dired-mode."
 ;; based on https://groups.google.com/group/gnu.emacs.help/msg/a784fbb684a24e17?pli=1
 ;; TODO: undo does not restore state
 (defun mine-move-text-internal (arg)
-   (cond
-    ((and mark-active transient-mark-mode)
-     (if (> (point) (mark))
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
         (exchange-point-and-mark))
-     (let ((column (current-column))
+    (let ((column (current-column))
           (text (delete-and-extract-region (point) (mark))))
-       (forward-line arg)
-       (move-to-column column t)
-       (set-mark (point))
-       (insert text)
-       (exchange-point-and-mark)
-       (setq deactivate-mark nil)))
-    (t
-     (beginning-of-line)
-     (when (or (> arg 0) (not (bobp)))
-       (forward-line)
-       (when (or (< arg 0) (not (eobp)))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (beginning-of-line)
+    (when (or (> arg 0) (not (bobp)))
+      (forward-line)
+      (when (or (< arg 0) (not (eobp)))
         (transpose-lines arg))
-       (forward-line -1)))))
+      (forward-line -1)))))
 
 (defun mine-move-text-up (arg)
-   "Move region (transient-mark-mode active) or current line
-  arg lines up."
-   (interactive "*p")
-   (mine-move-text-internal (- arg)))
+  "Move region (transient-mark-mode active) or current line arg
+lines up."
+  (interactive "*p")
+  (mine-move-text-internal (- arg)))
 
 (defun mine-move-text-down (arg)
-   "Move region (transient-mark-mode active) or current line
-  arg lines down."
-   (interactive "*p")
-   (mine-move-text-internal arg))
+  "Move region (transient-mark-mode active) or current line arg
+lines down."
+  (interactive "*p")
+  (mine-move-text-internal arg))
 
-;; extracted from http://ergoemacs.org/emacs/modernization_mark-word.html
 (defun mine-select-current-line ()
-  "Select the current line"
+  "Select the current line.
+Extracted from
+http://ergoemacs.org/emacs/modernization_mark-word.html"
   (interactive)
-    (beginning-of-line) ; move to end of line
-    (set-mark (line-end-position)))
+  (beginning-of-line) ; move to end of line
+  (set-mark (line-end-position)))
 
-;; extracted from https://github.com/magnars/.emacs.d/blob/master/defuns/lisp-defuns.el
 (defun mine-eval-and-replace ()
-  "Replace the preceding sexp with its value."
+  "Replace the preceding sexp with its value.
+Extracted from
+https://github.com/magnars/.emacs.d/blob/master/defuns/lisp-defuns.el"
   (interactive)
   (backward-kill-sexp)
   (condition-case nil
@@ -489,3 +495,12 @@ User buffers are those not starting with * nor in dired-mode."
              (current-buffer))
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
+
+(defun mine-greek-lambda ()
+  "Visualize greek letter lambda as a single letter.
+Extracted from
+http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lambda-in-scheme-mode"
+  (font-lock-add-keywords nil `(("\\<lambda\\>"
+                                 (0 (progn (compose-region (match-beginning 0) (match-end 0)
+                                                           ,(make-char 'greek-iso8859-7 107))
+                                           nil))))))

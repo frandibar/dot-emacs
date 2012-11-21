@@ -195,13 +195,6 @@
 (setq read-file-name-completion-ignore-case t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; HOOKS
-
-;; delete trailing whitespace upon saving
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'help-mode-hook '(lambda () (view-mode t)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
 ;; to uncompress a .zip file, add "zip" to the variable 'dired-compress-file-suffixes
 (eval-after-load "dired-aux"
@@ -286,7 +279,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXTERNAL LIBRARIES
 
-(use-package myfuncs                   ; add functions defined by me
+;; FIXME: had to use require, if not only the keybinded functions are loaded
+(require 'myfuncs)
+(use-package myfuncs
+  :defer nil                           ; this doesn't work
   :bind (("M-S-SPC" . mine-select-current-line)
          ("C-c C-a" . mine-increment-number-at-point)
          ("C-c C-x" . mine-decrement-number-at-point)
@@ -300,7 +296,13 @@
          ("M-S-<down>" . mine-move-text-down)
 
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
-         ))
+         )
+  :init
+  (progn
+    ;; view greek letter lambda
+    (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
+    (add-hook 'python-mode-hook 'mine-greek-lambda)
+    ))
 
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
@@ -334,6 +336,7 @@
 ;; encryption settings
 (use-package org-crypt
   :commands (org-decrypt-entries
+             org-encrypt-entries
              org-crypt-use-before-save-magic)
   :config
   (progn
@@ -453,6 +456,14 @@
 (let ((init-file "~/.emacs.d/init-local.el"))
   (if (file-exists-p init-file)
       (load-file init-file)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HOOKS
+
+;; delete trailing whitespace upon saving
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; view-mode
+(add-hook 'help-mode-hook '(lambda () (view-mode t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
