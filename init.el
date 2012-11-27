@@ -478,6 +478,7 @@
 ;;              (memq (process-status server-process) '(connect listen open run)))
 ;;   (server-start))
 
+;; allow editing text boxes from clients such as google chrome (requires "Edit with emacs" extension)
 (use-package edit-server
   :if window-system
   :init
