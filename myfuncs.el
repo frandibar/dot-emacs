@@ -504,3 +504,7 @@ http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lam
                                  (0 (progn (compose-region (match-beginning 0) (match-end 0)
                                                            ,(make-char 'greek-iso8859-7 107))
                                            nil))))))
+
+(defun mine-filename-to-clipboard ()
+  (interactive)
+  (kill-new (buffer-file-name)))
