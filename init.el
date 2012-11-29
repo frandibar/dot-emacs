@@ -120,6 +120,9 @@
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 ;;(global-whitespace-mode 1)
 
+;; interactive name completion for describe-function, describe-variable, etc.
+(icomplete-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
