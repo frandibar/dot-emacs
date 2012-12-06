@@ -508,3 +508,9 @@ http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lam
 (defun mine-filename-to-clipboard ()
   (interactive)
   (kill-new (buffer-file-name)))
+
+(defun mine-xml-format ()
+  "Reformat xml using xmllint"
+  (interactive)
+  ;; use xmllint instead of sgml-pretty-print because it's output is nicer
+  (call-process-region (point-min) (point-max) "/usr/bin/xmllint" t t t "--format" "-"))
