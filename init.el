@@ -3,7 +3,7 @@
 ;; Show the time it took to load this file
 (defvar *emacs-load-start-time* (current-time))
 
-(message "Loading my init file")
+(message "Loading my init file...")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ENVIRONMENT SETTINGS
@@ -53,6 +53,12 @@
 
 ;; the eshell directory holds alias definitions and history information
 (setq eshell-directory-name "~/.emacs.d/eshell")
+(setq eshell-cmpl-ignore-case t)
+
+;; this allows (among other things) entering unicode chars in the minibuffer
+(setq enable-recursive-minibuffers t)
+(setq minibuffer-depth-indicate-mode t)  ;; add depth count to minibuffer (useful when recursive)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BEHAVIOR SETTINGS
@@ -166,7 +172,15 @@
 (setq-default tab-width 4)
 
 ;; disable backup
-(setq backup-inhibited t)
+;;(setq backup-inhibited t)
+
+;; write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
+
+;; make backups of files, even when they're in version control
+(setq vc-make-backup-files t)
 
 ;; disable auto save
 (setq auto-save-default nil)

@@ -1,4 +1,4 @@
+alias cp *cp -i $*
+alias mv *mv -i $*
 alias ll ls -l $*
 alias rm rm -iv $*
-alias cp cp -i $*
-alias mv mv -i $*
