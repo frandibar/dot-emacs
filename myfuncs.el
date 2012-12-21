@@ -514,3 +514,20 @@ http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lam
   (interactive)
   ;; use xmllint instead of sgml-pretty-print because it's output is nicer
   (call-process-region (point-min) (point-max) "/usr/bin/xmllint" t t t "--format" "-"))
+
+
+(defun mine-toggle-folding-level (level)
+  "Toggle folding level to show/hide only lines indentation level LEVEL lines
+  TODO: not working"
+  (interactive "P")
+  (save-excursion
+    (let ((offset
+           (cond ((member mode-name '("Lisp Interaction" "Emacs-Lisp")) 2)
+                 ((member mode-name '("Python")) 4)
+                 (t 0))))
+      (goto-char (point-min))
+      ;; use set-selective display function instead of (setq selective-display)
+      ;; so message appears
+      (set-selective-display (cond (level (* level offset))
+                                    ((eq selective-display 0) offset)
+                                    (t 0))))))
