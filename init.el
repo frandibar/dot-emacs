@@ -155,7 +155,7 @@
 (global-set-key (kbd "C-b") 'ido-switch-buffer)
 (global-set-key (kbd "C-f") 'ido-find-file)
 
-;(global-set-key (kbd "C-x $") 'mine-toggle-folding-level)  ;; overrides set-selective-display
+(global-set-key (kbd "C-x $") 'mine-toggle-folding-level)  ;; overrides set-selective-display
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
