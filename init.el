@@ -54,6 +54,19 @@
 ;; the eshell directory holds alias definitions and history information
 (setq eshell-directory-name "~/.emacs.d/eshell")
 (setq eshell-cmpl-ignore-case t)
+;; by default eshell does completion the Emacs way: cycle through all
+;; the possible values. Bash instead complete as much as possible, and
+;; then wait for the next charater. This makes eshell behave like Bash
+(setq eshell-cmpl-cycle-completions nil)
+;; behave more like a terminal
+(setq eshell-scroll-to-bottom-on-output t)
+;; use ansi-term for these commands, since eshell is not good at
+;; ansi-colors and control
+(add-hook 'eshell-first-time-mode-hook
+          (lambda () (setq eshell-visual-commands
+                      (append '("mutt" "vim" "screen" "lftp" "ipython" "telnet" "ssh" "htop")
+                              eshell-visual-commands))))
+
 
 ;; this allows (among other things) entering unicode chars in the minibuffer
 (setq enable-recursive-minibuffers t)
@@ -458,6 +471,19 @@
     (setq uniquify-separator "/")
     (setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
     (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+    ))
+
+;; toggles between the shell buffer and current buffer
+(use-package shell-toggle-patched
+  :config
+  (progn
+    (autoload 'shell-toggle "shell-toggle"
+      "Toggles between the shell buffer and whatever buffer you are editing." t)
+    (autoload 'shell-toggle-cd "shell-toggle"
+      "Pops up a shell-buffer and insert a \"cd <file-dir>\" command." t)
+    (setq shell-toggle-launch-shell 'shell-toggle-eshell)
+    (global-set-key (kbd "C-c g s") 'shell-toggle)
+    (global-set-key (kbd "C-c g S") 'shell-toggle-cd)
     ))
 
 ;; slime for common lisp
