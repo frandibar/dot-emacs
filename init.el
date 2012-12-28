@@ -162,17 +162,21 @@
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
-(global-set-key (kbd "C-c e") 'esk-eval-and-replace)
-
 ;; override backward-char and forward-char
 (global-set-key (kbd "C-b") 'ido-switch-buffer)
 (global-set-key (kbd "C-f") 'ido-find-file)
 
-(global-set-key (kbd "C-x $") 'mine-toggle-folding-level)  ;; overrides set-selective-display
-
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
 ;; (global-set-key (kbd "<f4>") 'yank)           ; paste
+
+;; by default, emacs binds M-z to zap-to-char. I prefer binding it to
+;; zap-up-to-char, but the latter is not loaded by default (it's in
+;; misc.el instead of simple.el)
+(autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "M-Z") 'zap-to-char)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -315,18 +319,20 @@
 (use-package myfuncs
   :defer nil                           ; this doesn't work
   :bind (("M-S-SPC" . mine-select-current-line)
+         ("M-S-<up>" . mine-move-text-up)
+         ("M-S-<down>" . mine-move-text-down)
+
          ("C-c C-a" . mine-increment-number-at-point)
          ("C-c C-x" . mine-decrement-number-at-point)
 
          ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
          ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
-
          ("C-6" . mine-fast-buffer-switch)
-
-         ("M-S-<up>" . mine-move-text-up)
-         ("M-S-<down>" . mine-move-text-down)
-
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
+
+         ("C-c e" . mine-eval-and-replace)
+         ("M-C" . mine-toggle-case)
+         ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
          )
   :init
   (progn
@@ -482,8 +488,7 @@
     (autoload 'shell-toggle-cd "shell-toggle"
       "Pops up a shell-buffer and insert a \"cd <file-dir>\" command." t)
     (setq shell-toggle-launch-shell 'shell-toggle-eshell)
-    (global-set-key (kbd "C-c g s") 'shell-toggle)
-    (global-set-key (kbd "C-c g S") 'shell-toggle-cd)
+    (global-set-key (kbd "<f5>") 'shell-toggle)
     ))
 
 ;; slime for common lisp
@@ -497,9 +502,7 @@
     ))
 
 ;; load initializations for this site
-(let ((init-file "~/.emacs.d/init-local.el"))
-  (if (file-exists-p init-file)
-      (load-file init-file)))
+(use-package init-local)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HOOKS
@@ -534,6 +537,6 @@
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
 
-;; show load time in *Messages* buffer (current 8s)
+;; show load time in *Messages* buffer
 (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))

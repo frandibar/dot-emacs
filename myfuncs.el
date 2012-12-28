@@ -532,7 +532,7 @@ http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lam
                                     ((eq selective-display 0) offset)
                                     (t 0))))))
 
-(defun toggle-letter-case ()
+(defun mine-toggle-case ()
   "Toggle the letter case of current word or text selection.
 Toggles between: “all lower”, “Init Caps”, “ALL CAPS”.
 
@@ -564,3 +564,41 @@ Extracted from http://ergoemacs.org/emacs/modernization_upcase-word.html
      ((string= "all caps" (get this-command 'state))
       (downcase-region p1 p2) (put this-command 'state "all lower")) )
     ) )
+
+;; must start with `eshell/' so it can be called as `clear' from the eshell prompt
+(defun eshell/clear ()
+  "Clears the eshell buffer.
+Extracted from http://www.khngai.com/emacs/eshell.php"
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)))
+
+(defun eshell-prompt-function-short ()
+  "Makes a short eshell prompt to avoid moving out of the buffer window boundary"
+  (let* ((pwd (eshell/pwd))
+         (pwdlst (split-string pwd "/"))
+         (rpwdlst (reverse pwdlst))
+         (base (car rpwdlst)))
+    (concat (if (string= base "")
+                "/"
+              (if (cdr pwdlst) "<...> /" ""))
+            base
+            (if (= (user-uid) 0) " # " " $ "))))
+
+;; Returns the long prompt string for eshell
+(defun eshell-prompt-function-long ()
+  "Makes a long standard eshell prompt"
+  (concat (abbreviate-file-name (eshell/pwd))
+          (if (= (user-uid) 0) " # " " $ ")))
+
+(setq eshell-prompt-function 'eshell-prompt-function-long)
+
+(defun eshell/sprompt ()
+  "Makes a short eshell prompt to avoid moving out of the buffer
+window boundary (link to eshell-prompt-function-short)"
+  (setq eshell-prompt-function 'eshell-prompt-function-short))
+
+(defun eshell/lprompt ()
+  "Makes a long standard eshell prompt (link to
+eshell-prompt-function-long)"
+  (setq eshell-prompt-function 'eshell-prompt-function-long))
