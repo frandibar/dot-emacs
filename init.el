@@ -491,6 +491,16 @@
     (global-set-key (kbd "<f5>") 'shell-toggle)
     ))
 
+;; Slime allows navigation to the symbol at point (using M-.), and the
+;; ability to pop back to previous marks (using M-,).  This plugin
+;; provides similar navigation for Emacs Lisp, supporting navigation
+;; to the definitions of variables, functions, libraries and faces.
+(use-package elisp-slime-nav
+  :config
+  (progn
+    (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
+    ))
+
 ;; slime for common lisp
 (use-package slime
   :disabled t                           ; not using it
