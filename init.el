@@ -168,6 +168,8 @@
 ;; override backward-char and forward-char
 (global-set-key (kbd "C-b") 'ido-switch-buffer)
 (global-set-key (kbd "C-f") 'ido-find-file)
+;; override 'list-buffers with ibuffer
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -233,6 +235,24 @@
 (setq read-file-name-completion-ignore-case t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ibuffer mode
+;; show buffers into the following groups
+(setq ibuffer-saved-filter-groups
+      (quote (("default"
+               ("dired" (mode . dired-mode))
+               ("python" (mode . python-mode))
+               ("org" (mode . org-mode))
+               ("sql" (mode . sql-mode))
+               ("xml" (mode . nxml-mode))))))
+
+;; don't show empty groups
+(setq ibuffer-show-empty-filter-groups nil)
+
+;; use the defined groups when entering ibuffer-mode
+(add-hook 'ibuffer-mode-hook
+          (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
 ;; to uncompress a .zip file, add "zip" to the variable 'dired-compress-file-suffixes
 (eval-after-load "dired-aux"
@@ -255,7 +275,6 @@
               (lambda () (interactive) (find-alternate-file "..")))
                                         ; was dired-up-directory
             ))
-
 
 ;; show all, long, no group, human readable
 (setq dired-listing-switches "-algh")
