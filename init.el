@@ -142,6 +142,9 @@
 ;; interactive name completion for describe-function, describe-variable, etc.
 (icomplete-mode 1)
 
+;; turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
+(winner-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
 
@@ -252,6 +255,10 @@
               (lambda () (interactive) (find-alternate-file "..")))
                                         ; was dired-up-directory
             ))
+
+
+;; show all, long, no group, human readable
+(setq dired-listing-switches "-algh")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ mode
@@ -511,6 +518,9 @@
     (slime-setup '(slime-fancy))
     ))
 
+;; git within emacs
+(use-package magit)
+
 ;; load initializations for this site
 (use-package init-local)
 
@@ -547,6 +557,8 @@
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
 
+;; TODO check why I get an error when using emacs-init-time
 ;; show load time in *Messages* buffer
 (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
+;; (message (concat "My init file loaded in " (emacs-init-time)))
