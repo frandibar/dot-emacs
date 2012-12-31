@@ -238,22 +238,23 @@
 ;; Ibuffer mode
 ;; show buffers into the following groups
 (setq ibuffer-saved-filter-groups
-      (quote (("default"
-               ("dired" (mode . dired-mode))
-               ("python" (mode . python-mode))
-               ("elisp" (mode . emacs-lisp-mode))
-               ("org" (mode . org-mode))
-               ("sql" (mode . sql-mode))
-               ("gnus" (or
-                        (mode . message-mode)
-                        (mode . bbdb-mode)
-                        (mode . mail-mode)
-                        (mode . gnus-group-mode)
-                        (mode . gnus-summary-mode)
-                        (mode . gnus-article-mode)
-                        (name . "^\\.bbdb$")
-                        (name . "^\\.newsrc-dribble")))
-               ("xml" (mode . nxml-mode))))))
+      '(("default"
+         ("dired" (mode . dired-mode))
+         ("python" (mode . python-mode))
+         ("elisp" (mode . emacs-lisp-mode))
+         ("org" (mode . org-mode))
+         ("sql" (mode . sql-mode))
+         ("gnus" (or
+                  (mode . message-mode)
+                  (mode . bbdb-mode)
+                  (mode . mail-mode)
+                  (mode . gnus-group-mode)
+                  (mode . gnus-summary-mode)
+                  (mode . gnus-article-mode)
+                  (name . "^\\.bbdb$")
+                  (name . "^\\.newsrc-dribble")))
+         ("emacs" (name . "^*"))
+         ("xml" (mode . nxml-mode)))))
 
 ;; don't show empty groups
 (setq ibuffer-show-empty-filter-groups nil)
@@ -273,6 +274,30 @@
       (t (format "%8d" (buffer-size)))))
   )
 
+;; add additional package repositories.
+;; the default elpa.gnu.org are all FSF signed.
+(use-package package
+  :config
+  (progn
+    (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/") t)
+    (package-initialize)
+    (when (not package-archive-contents)
+      (package-refresh-contents))
+
+    (defvar prelude-packages
+      '(minimap
+        smex
+        undo-tree
+        yasnippet
+        )
+      "A list of packages to ensure are installed at launch.")
+
+    (dolist (p prelude-packages)
+      (when (not (package-installed-p p))
+        (package-install p)))
+    ))
+
 ;; Modify the default ibuffer-formats
 (setq ibuffer-formats
       '((mark modified read-only " "
@@ -284,7 +309,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
 ;; to uncompress a .zip file, add "zip" to the variable 'dired-compress-file-suffixes
-(eval-after-load "dired"
+(eval-after-load "dired-aux"
   '(add-to-list 'dired-compress-file-suffixes
                 '("\\.zip\\'" ".zip" "unzip")))
 
@@ -398,6 +423,12 @@
 
 (use-package minimap
   :bind (("<f11>" . mine-minimap-toggle)))
+
+;; ido-like behavior for M-x
+(use-package smex
+  :bind (("M-x" . smex)                 ; overrides default execute-extended-command
+         ("M-X" . smex-major-mode-commands)
+         ("C-c C-c M-x" . execute-extended-command))) ; this is the old M-x
 
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
