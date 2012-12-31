@@ -274,6 +274,14 @@
       (t (format "%8d" (buffer-size)))))
   )
 
+;; Modify the default ibuffer-formats
+(setq ibuffer-formats
+      '((mark modified read-only " "
+              (name 18 18 :left :elide) " "
+              (size-h 9 -1 :right) " "
+              (mode 16 16 :left :elide) " "
+              filename-and-process)))
+
 ;; add additional package repositories.
 ;; the default elpa.gnu.org are all FSF signed.
 (use-package package
@@ -285,26 +293,28 @@
     (when (not package-archive-contents)
       (package-refresh-contents))
 
+    ;; here go the packages that should be installed
     (defvar prelude-packages
       '(minimap
         smex
         undo-tree
         yasnippet
+        ;; highlight-symbol
+        ;; zenburn-theme (es zenburn-emacs?)
+        ;; workgroups
+        ;; expand-region
+        ;; wrap-region
+        ;; iy-go-to-char
+        ;; mark-multiple
+        ;; ace-jump-mode
+        ;; elisp-slime-nav
         )
       "A list of packages to ensure are installed at launch.")
 
     (dolist (p prelude-packages)
-      (when (not (package-installed-p p))
+      (unless (package-installed-p p)
         (package-install p)))
     ))
-
-;; Modify the default ibuffer-formats
-(setq ibuffer-formats
-      '((mark modified read-only " "
-              (name 18 18 :left :elide) " "
-              (size-h 9 -1 :right) " "
-              (mode 16 16 :left :elide) " "
-              filename-and-process)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
