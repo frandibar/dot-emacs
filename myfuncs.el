@@ -602,3 +602,12 @@ window boundary (link to eshell-prompt-function-short)"
   "Makes a long standard eshell prompt (link to
 eshell-prompt-function-long)"
   (setq eshell-prompt-function 'eshell-prompt-function-long))
+
+(defun mine-minimap-toggle ()
+  "Toggle minimap for current buffer.
+Based on http://www.emacswiki.org/emacs/MiniMap"
+  (interactive)
+  (if (or (not (boundp 'minimap-bufname))
+          (null minimap-bufname))
+      (minimap-create)
+    (minimap-kill)))

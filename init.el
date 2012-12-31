@@ -241,8 +241,18 @@
       (quote (("default"
                ("dired" (mode . dired-mode))
                ("python" (mode . python-mode))
+               ("elisp" (mode . emacs-lisp-mode))
                ("org" (mode . org-mode))
                ("sql" (mode . sql-mode))
+               ("gnus" (or
+                        (mode . message-mode)
+                        (mode . bbdb-mode)
+                        (mode . mail-mode)
+                        (mode . gnus-group-mode)
+                        (mode . gnus-summary-mode)
+                        (mode . gnus-article-mode)
+                        (name . "^\\.bbdb$")
+                        (name . "^\\.newsrc-dribble")))
                ("xml" (mode . nxml-mode))))))
 
 ;; don't show empty groups
@@ -252,10 +262,29 @@
 (add-hook 'ibuffer-mode-hook
           (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 
+(eval-after-load "ibuffer"
+  ;; use human readable Size column instead of original one
+  ;; extracted from http://www.emacswiki.org/emacs/IbufferMode
+  '(define-ibuffer-column size-h
+     (:name "Size" :inline t)
+     (cond
+      ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
+      ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
+      (t (format "%8d" (buffer-size)))))
+  )
+
+;; Modify the default ibuffer-formats
+(setq ibuffer-formats
+      '((mark modified read-only " "
+              (name 18 18 :left :elide) " "
+              (size-h 9 -1 :right) " "
+              (mode 16 16 :left :elide) " "
+              filename-and-process)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
 ;; to uncompress a .zip file, add "zip" to the variable 'dired-compress-file-suffixes
-(eval-after-load "dired-aux"
+(eval-after-load "dired"
   '(add-to-list 'dired-compress-file-suffixes
                 '("\\.zip\\'" ".zip" "unzip")))
 
@@ -366,6 +395,9 @@
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
     ))
+
+(use-package minimap
+  :bind (("<f11>" . mine-minimap-toggle)))
 
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
