@@ -298,15 +298,21 @@
 
     ;; here go the packages that should be installed
     (defvar prelude-packages
-      '(minimap                         ; view code from far away
-        smex                            ; ido like behavior for M-x
-        undo-tree                       ; treat undo history as a tree
-        yasnippet                       ; a template system
-
+      '(
         ace-jump-mode                   ; quick cursor location
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
+        eshell-manual                   ; an updated manual for Eshell
         expand-region                   ; increase selected region by semantic units
-        zenburn-theme ;(es zenburn-emacs?) ; low contrast color theme
+        graphviz-dot-mode               ; mode for the dot-language used by graphviz
+        highlight-parentheses           ; highlight surrounding parentheses
+        ipython                         ; add support for ipython in python-mode
+        key-chord                       ; map pairs of simultaneously pressed keys to commands
+        minimap                         ; view code from far away
+        smex                            ; ido like behavior for M-x
+        typing                          ; a game for fast typers
+        undo-tree                       ; treat undo history as a tree
+        yasnippet                       ; a template system
+        zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
         ;; highlight-symbol
@@ -425,7 +431,6 @@
          ("C-6" . mine-fast-buffer-switch)
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
 
-         ("C-c e" . mine-eval-and-replace)
          ("M-C" . mine-toggle-case)
          ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
          )
@@ -435,6 +440,9 @@
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
     ))
+
+(use-package starter-kit-defuns
+  :bind (("C-c e" . esk-eval-and-replace)))
 
 (use-package minimap
   :bind (("<f11>" . mine-minimap-toggle)))

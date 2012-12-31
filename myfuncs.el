@@ -211,37 +211,37 @@ same thing.  Similar to 'Y' in vim."
   (save-excursion
     (copy-region-as-kill (line-beginning-position) (line-beginning-position (+ 1 arg)))))
 
-(require 'highlight-symbol)
+;; (require 'highlight-symbol)
 
-(defun mine-hl-symbol-and-jump-next ()
-  "Search for next occurance of symbol under cursor, with highlight.
-Similar to '*' in vim, except that the highlighting is preserved
-on next search."
-  (interactive)
-  (mine-hl-symbol-and-jump 'highlight-symbol-next))
+;; (defun mine-hl-symbol-and-jump-next ()
+;;   "Search for next occurance of symbol under cursor, with highlight.
+;; Similar to '*' in vim, except that the highlighting is preserved
+;; on next search."
+;;   (interactive)
+;;   (mine-hl-symbol-and-jump 'highlight-symbol-next))
 
-(defun mine-hl-symbol-and-jump-prev ()
-  (interactive)
-  (mine-hl-symbol-and-jump 'highlight-symbol-prev))
+;; (defun mine-hl-symbol-and-jump-prev ()
+;;   (interactive)
+;;   (mine-hl-symbol-and-jump 'highlight-symbol-prev))
 
-(defun mine-hl-symbol-and-jump (fn-next-or-prev)
-  "Search for previous occurance of symbol under cursor, with highlight.
-Similar to '#' in vim, except that the highlighting is preserved
-on next search."
-  (let ((symbol (highlight-symbol-get-symbol)))
-    (unless symbol (error "No symbol at point"))
-    (unless hi-lock-mode (hi-lock-mode 1))
-    (if (member symbol highlight-symbol-list)
-        (funcall fn-next-or-prev)
-      (highlight-symbol-at-point)
-      (funcall fn-next-or-prev))))
+;; (defun mine-hl-symbol-and-jump (fn-next-or-prev)
+;;   "Search for previous occurance of symbol under cursor, with highlight.
+;; Similar to '#' in vim, except that the highlighting is preserved
+;; on next search."
+;;   (let ((symbol (highlight-symbol-get-symbol)))
+;;     (unless symbol (error "No symbol at point"))
+;;     (unless hi-lock-mode (hi-lock-mode 1))
+;;     (if (member symbol highlight-symbol-list)
+;;         (funcall fn-next-or-prev)
+;;       (highlight-symbol-at-point)
+;;       (funcall fn-next-or-prev))))
 
-(defun mine-hl-symbol-cleanup ()
-  "Clear all highlighted symbols.
-Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
-  (interactive)
-  (mapc 'hi-lock-unface-buffer highlight-symbol-list)
-  (setq highlight-symbol-list ()))
+;; (defun mine-hl-symbol-cleanup ()
+;;   "Clear all highlighted symbols.
+;; Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
+;;   (interactive)
+;;   (mapc 'hi-lock-unface-buffer highlight-symbol-list)
+;;   (setq highlight-symbol-list ()))
 
 ;; Search at point, similar to * in vim
 ;; http://www.emacswiki.org/emacs/SearchAtPoint
@@ -483,18 +483,6 @@ http://ergoemacs.org/emacs/modernization_mark-word.html"
   (interactive)
   (beginning-of-line) ; move to end of line
   (set-mark (line-end-position)))
-
-(defun mine-eval-and-replace ()
-  "Replace the preceding sexp with its value.
-Extracted from
-https://github.com/magnars/.emacs.d/blob/master/defuns/lisp-defuns.el"
-  (interactive)
-  (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))
-    (error (message "Invalid expression")
-           (insert (current-kill 0)))))
 
 (defun mine-greek-lambda ()
   "Visualize greek letter lambda as a single letter.
