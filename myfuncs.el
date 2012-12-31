@@ -591,6 +591,18 @@ window boundary (link to eshell-prompt-function-short)"
 eshell-prompt-function-long)"
   (setq eshell-prompt-function 'eshell-prompt-function-long))
 
+(defun move-dir-to-trash (dir)
+  (let ((flag delete-by-moving-to-trash))
+    (setq delete-by-moving-to-trash t)
+    (delete-directory dir t t) ; recursive delete to trash
+    (setq delete-by-moving-to-trash flag)))
+
+(defun eshell/trash (&rest args)
+  (dolist (name args)
+    (if (file-directory-p name)
+        (move-dir-to-trash name)
+      (move-file-to-trash name))))
+
 (defun mine-minimap-toggle ()
   "Toggle minimap for current buffer.
 Based on http://www.emacswiki.org/emacs/MiniMap"

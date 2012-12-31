@@ -1,12 +1,15 @@
 .org-id-locations
 TAGS
 auto-save-list
+backups
 bbdb
 bookmarks
 ecb-snap
 ede-projects.el
+elpa
 eshell/history
 eshell/lastdir
+external/untracked
 games/
 image-dired/
 init-local.el
