@@ -1,39 +1,12 @@
 [submodule "external/command-log-mode"]
 	path = external/command-log-mode
 	url = https://github.com/lewang/command-log-mode.git
-[submodule "external/highlight-symbol"]
-	path = external/highlight-symbol
-	url = https://github.com/nschum/highlight-symbol.el.git
 [submodule "external/emacs-calfw"]
 	path = external/emacs-calfw
 	url = https://github.com/kiwanami/emacs-calfw.git
-[submodule "external/zenburn-emacs"]
-	path = external/zenburn-emacs
-	url = https://github.com/bbatsov/zenburn-emacs.git
-[submodule "external/workgroups"]
-	path = external/workgroups
-	url = https://github.com/tlh/workgroups.el.git
-[submodule "external/expand-region"]
-	path = external/expand-region
-	url = https://github.com/magnars/expand-region.el.git
-[submodule "external/wrap-region"]
-	path = external/wrap-region
-	url = https://github.com/rejeep/wrap-region.git
-[submodule "external/iy-go-to-char"]
-	path = external/iy-go-to-char
-	url = https://github.com/emacsmirror/iy-go-to-char.git
-[submodule "external/mark-multiple"]
-	path = external/mark-multiple
-	url = https://github.com/magnars/mark-multiple.el.git
-[submodule "external/ace-jump-mode"]
-	path = external/ace-jump-mode
-	url = https://github.com/winterTTr/ace-jump-mode.git
 [submodule "external/sunrise-commander"]
 	path = external/sunrise-commander
 	url = https://github.com/escherdragon/sunrise-commander.git
 [submodule "external/use-package"]
 	path = external/use-package
 	url = https://github.com/jwiegley/use-package.git
-[submodule "external/elisp-slime-nav"]
-	path = external/elisp-slime-nav
-	url = https://github.com/purcell/elisp-slime-nav.git

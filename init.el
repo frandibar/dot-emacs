@@ -44,7 +44,10 @@
 ;; to load if it was over 0.01s.
 
 ;; `:init' always happens in the case of deferred modules, `:config'
-;; form only run after the module has been loaded by Emacs
+;; form only run after the module has been loaded by Emacs.
+;; You should keep `:init' forms as simple as possible, and put
+;; as much as you can get away with on the `:config' side.
+
 ;; `use-package' also adds `describe-personal-keybindings'
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
@@ -295,19 +298,21 @@
 
     ;; here go the packages that should be installed
     (defvar prelude-packages
-      '(minimap
-        smex
-        undo-tree
-        yasnippet
+      '(minimap                         ; view code from far away
+        smex                            ; ido like behavior for M-x
+        undo-tree                       ; treat undo history as a tree
+        yasnippet                       ; a template system
+
+        ace-jump-mode                   ; quick cursor location
+        elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
+        expand-region                   ; increase selected region by semantic units
+        zenburn-theme ;(es zenburn-emacs?) ; low contrast color theme
+        ;; once used but fell in disuse
+        ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
         ;; highlight-symbol
-        ;; zenburn-theme (es zenburn-emacs?)
         ;; workgroups
-        ;; expand-region
         ;; wrap-region
-        ;; iy-go-to-char
         ;; mark-multiple
-        ;; ace-jump-mode
-        ;; elisp-slime-nav
         )
       "A list of packages to ensure are installed at launch.")
 
@@ -454,7 +459,7 @@
     (key-chord-define-global "OO" 'other-window)
 
     (key-chord-define-global "FG" 'mine-advance-to)
-    (key-chord-define-global "FD" 'mine-back-to)
+    (key-chord-define-global "FD" 'mine-back-to) ; TODO: not working
 
     (key-chord-define-global "HH" 'mine-point-to-top)
     (key-chord-define-global "MM" 'mine-point-to-middle)
