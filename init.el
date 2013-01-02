@@ -300,6 +300,7 @@
     (defvar prelude-packages
       '(
         ace-jump-mode                   ; quick cursor location
+        dired+                          ; extensions to dired
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
         expand-region                   ; increase selected region by semantic units
@@ -329,27 +330,34 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
-;; to uncompress a .zip file, add "zip" to the variable 'dired-compress-file-suffixes
+
+;; to uncompress a .zip file, add "zip" to the variable
+;; 'dired-compress-file-suffixes
 (eval-after-load "dired-aux"
   '(add-to-list 'dired-compress-file-suffixes
                 '("\\.zip\\'" ".zip" "unzip")))
 
 ;; if there is a dired buffer displayed in the next window, use its
-;; current subdir, instead of the current subdir of this dired buffer.
+;; current subdir as target, instead of the current subdir of this dired buffer.
 (setq dired-dwim-target t)
+
+;; allow dired to be able to delete or copy a whole dir.  “always”
+;; means no asking. “top” means ask once. Any other symbol means ask
+;; each and every time for a dir and subdir.
+(setq dired-recursive-copies (quote always))
+(setq dired-recursive-deletes (quote top))
 
 ;; enable disabled function
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; make Enter and ^ (parent dir) to use the same buffer
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (define-key dired-mode-map (kbd "<return>")
-              'dired-find-alternate-file) ; was dired-advertised-find-file
-            (define-key dired-mode-map (kbd "^")
-              (lambda () (interactive) (find-alternate-file "..")))
-                                        ; was dired-up-directory
-            ))
+;; ;; make Enter and ^ (parent dir) to use the same buffer
+;; (add-hook 'dired-mode-hook
+;;           (lambda ()
+;;             (define-key dired-mode-map (kbd "<return>")
+;;               'dired-find-alternate-file)               ; was dired-advertised-find-file
+;;             (define-key dired-mode-map (kbd "^")
+;;               (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
+;;             ))
 
 ;; show all, long, no group, human readable
 (setq dired-listing-switches "-algh")
@@ -628,6 +636,10 @@
 
 ;; load initializations for this site
 (use-package init-local)
+
+;; cd with bookmark navigation
+;; use M-x cv RET or directly from shell
+(use-package cdargs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HOOKS
