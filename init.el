@@ -312,6 +312,7 @@
         smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
+        wgrep                           ; writable grep buffer and apply the changes to files
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
         ;; once used but fell in disuse
@@ -636,6 +637,9 @@
 
 ;; load initializations for this site
 (use-package init-local)
+
+;; allows changing files directly from grep buffer
+(use-package wgrep)
 
 ;; cd with bookmark navigation
 ;; use M-x cv RET or directly from shell
