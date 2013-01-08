@@ -260,6 +260,7 @@
                   (mode . gnus-article-mode)
                   (name . "^\\.bbdb$")
                   (name . "^\\.newsrc-dribble")))
+         ("man" (name . "^*Man "))
          ("emacs" (name . "^*"))
          ("xml" (mode . nxml-mode)))))
 
