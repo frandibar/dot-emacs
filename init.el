@@ -131,7 +131,7 @@
 (column-number-mode 1)
 
 ;; show line numbers on left
-(global-linum-mode 1)
+;; (global-linum-mode 1)
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
@@ -177,6 +177,8 @@
 (global-set-key (kbd "C-f") 'ido-find-file)
 ;; override 'list-buffers with ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(global-set-key (kbd "C-c C-g") 'global-linum-mode)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -642,15 +644,19 @@
 ;; git within emacs
 (use-package magit)
 
-;; load initializations for this site
-(use-package init-local)
-
 ;; allows changing files directly from grep buffer
 (use-package wgrep)
 
 ;; cd with bookmark navigation
 ;; use M-x cv RET or directly from shell
 (use-package cdargs)
+
+(use-package auto-complete-config
+  :config
+  (ac-config-default))
+
+;; load initializations for this site
+(use-package init-local)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HOOKS
