@@ -611,3 +611,7 @@ Based on http://www.emacswiki.org/emacs/MiniMap"
           (null minimap-bufname))
       (minimap-create)
     (minimap-kill)))
+
+(defun mine-scissors ()
+  (interactive)
+  (insert "8<--------8<--------8<--------8<--------8<--------8<--------8<--------8<--------"))
