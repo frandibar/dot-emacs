@@ -54,22 +54,26 @@
 
 (setq-default major-mode 'lisp-interaction-mode)
 
-;; the eshell directory holds alias definitions and history information
-(setq eshell-directory-name "~/.emacs.d/eshell")
-(setq eshell-cmpl-ignore-case t)
-;; by default eshell does completion the Emacs way: cycle through all
-;; the possible values. Bash instead complete as much as possible, and
-;; then wait for the next charater. This makes eshell behave like Bash
-(setq eshell-cmpl-cycle-completions nil)
-;; behave more like a terminal
-(setq eshell-scroll-to-bottom-on-output t)
-;; use ansi-term for these commands, since eshell is not good at
-;; ansi-colors and control
-(add-hook 'eshell-first-time-mode-hook
-          (lambda () (setq eshell-visual-commands
-                      (append '("mutt" "vim" "screen" "lftp" "ipython" "telnet" "ssh" "htop")
-                              eshell-visual-commands))))
-
+(use-package eshell
+  :config
+  (progn
+    ;; the eshell directory holds alias definitions and history information
+    (setq eshell-history-size 1280)
+    (setq eshell-directory-name "~/.emacs.d/eshell")
+    (setq eshell-cmpl-ignore-case t)
+    ;; by default eshell does completion the Emacs way: cycle through all
+    ;; the possible values. Bash instead complete as much as possible, and
+    ;; then wait for the next charater. This makes eshell behave like Bash
+    (setq eshell-cmpl-cycle-completions nil)
+    ;; behave more like a terminal
+    (setq eshell-scroll-to-bottom-on-output t)
+    ;; use ansi-term for these commands, since eshell is not good at
+    ;; ansi-colors and control
+    (add-hook 'eshell-first-time-mode-hook
+              (lambda () (setq eshell-visual-commands
+                          (append '("mutt" "vim" "screen" "lftp" "ipython" "telnet" "ssh" "htop")
+                                  eshell-visual-commands))))
+    ))
 
 ;; this allows (among other things) entering unicode chars in the minibuffer
 (setq enable-recursive-minibuffers t)
@@ -81,10 +85,10 @@
 
 ;; Copy/paste behavior
 ;; use C-x C-v C-c for copy/pasting
-;;(cua-mode t)
+(cua-mode t)
 ;; use cua mode for rectangle selection
-(cua-selection-mode t)
-(setq cua-keep-region-after-copy t)
+;(cua-selection-mode t)
+;(setq cua-keep-region-after-copy t)
 
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)
@@ -300,6 +304,7 @@
     (defvar prelude-packages
       '(
         ace-jump-mode                   ; quick cursor location
+        auto-complete
         dired+                          ; extensions to dired
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
@@ -308,6 +313,7 @@
         highlight-parentheses           ; highlight surrounding parentheses
         ipython                         ; add support for ipython in python-mode
         key-chord                       ; map pairs of simultaneously pressed keys to commands
+        magit                           ; control git from emacs
         minimap                         ; view code from far away
         smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
