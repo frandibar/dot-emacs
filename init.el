@@ -84,11 +84,11 @@
 ;; BEHAVIOR SETTINGS
 
 ;; Copy/paste behavior
-;; use C-x C-v C-c for copy/pasting
+;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
 (cua-mode t)
 ;; use cua mode for rectangle selection
-;(cua-selection-mode t)
-;(setq cua-keep-region-after-copy t)
+;;(cua-selection-mode t)
+;;(setq cua-keep-region-after-copy t)
 
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)

@@ -366,10 +366,15 @@ is easy to get content inside HTML tags."
     (goto-char end) (insert-char ?) 1)
   (goto-char start) (insert-char ?( 1)
                                  ))
+
 (defun mine-replace-enclosing-char (old new)
   "Replace the enclosing OLD char with NEW.
 The cursor must be located in between the enclosing chars.
-For empty strings, cursor should be on closing pair."
+For empty strings, cursor should be on closing pair.
+
+TODO: make it in such a way that parameter OLD is detected
+automatically, and allow specifying it with prefix argument.
+"
   (interactive "cEnclosing char to replace: \ncNew enclosing char: ")
 
   (defun opener (char)
