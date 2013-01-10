@@ -191,6 +191,39 @@
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "M-Z") 'zap-to-char)
 
+;; move between windows with S-{up,down,left,right}
+(windmove-default-keybindings)
+;; these keybindings don't work well with org-mode, so replace them in org
+(setq org-replace-disputed-keys t)
+
+;; Use a minor mode that makes my keybindings globally override and
+;; take precedence over all other bindings for that key, that is,
+;; override all major/minor mode maps and make sure my binding is
+;; always in effect.  In order to avoid precedence over other minor
+;; modes, it should go first on the list minor-mode-map-alist.
+;; Extracted from
+;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
+(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+(define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " my-keys" 'my-keys-minor-mode-map)
+
+(my-keys-minor-mode 1)
+
+;; but turn off the overridings in the minibuffer
+(add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
+;; Make my keybindings retain precedence, even if subsequently-loaded
+;; libraries bring in new keymaps of their own. Because keymaps can be
+;; generated at compile time, load seemed like the best place to do
+;; this.
+(defadvice load (after give-my-keybindings-priority)
+  "Try to ensure that my keybindings always have priority."
+  (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
+      (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
+        (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
+        (add-to-list 'minor-mode-map-alist mykeys))))
+(ad-activate 'load)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -417,18 +450,20 @@
 
 ;; the appointment notification facility
 ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
-(setq appt-message-warning-time 15 ;; warn 15 min in advance
-      appt-display-mode-line t     ;; show in the modeline
-      appt-display-format 'window) ;; use our func
-(appt-activate 1)              ;; active appt (appointment notification)
-(display-time)                 ;; time display is required for this...
+(setq appt-message-warning-time 15 ; warn 15 min in advance
+      appt-display-interval 5      ; repeat every 5 min
+      appt-display-mode-line t     ; show in the modeline
+      appt-display-format 'window) ; use our func
+(appt-activate 1)              ; active appt (appointment notification)
+(display-time)                 ; time display is required for this...
 
 ;; update appt each time agenda is opened
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-(defun mine-appt-display (min-to-app new-time msg)
-  (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-(setq appt-disp-window-function (function mine-appt-display))
+;; commented out because I prefer using sauron buffer instead of a popup window.
+;; (defun mine-appt-display (min-to-app new-time msg)
+;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+;; (setq appt-disp-window-function (function mine-appt-display))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXTERNAL LIBRARIES
@@ -447,6 +482,7 @@
          ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
          ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
          ("C-6" . mine-fast-buffer-switch)
+         ;; FIXME: doesn't override calc-copy-as-kill in calc-mode
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
 
          ("M-C" . mine-toggle-case)
@@ -482,10 +518,8 @@
   (progn
     (key-chord-mode 1)
     ;; preferably, use upper case to avoid delay when typing
-    (key-chord-define-global "OO" 'other-window)
-
     (key-chord-define-global "FG" 'mine-advance-to)
-    (key-chord-define-global "FD" 'mine-back-to) ; TODO: not working
+    (key-chord-define-global "FD" 'mine-back-to)
 
     (key-chord-define-global "HH" 'mine-point-to-top)
     (key-chord-define-global "MM" 'mine-point-to-middle)
