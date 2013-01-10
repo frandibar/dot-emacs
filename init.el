@@ -351,6 +351,7 @@
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
+        projectile                      ; project management
         smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
@@ -688,6 +689,13 @@
 (use-package auto-complete-config
   :config
   (ac-config-default))
+
+;; enable project management for all modes
+;; root dir must have a file named .projectile to be considered a project
+;; except for git repos. This file has entries with patterns to ignore files
+(use-package projectile
+  :config
+  (projectile-global-mode))
 
 ;; load initializations for this site
 (use-package init-local)
