@@ -27,7 +27,7 @@
 ;; problems).
 
 ;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
-(let ((default-directory  "/usr/share/emacs/site-lisp"))
+(let ((default-directory "/usr/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
@@ -99,9 +99,9 @@
 ;; set window title to buffer-file-name
 (setq frame-title-format '("" "emacs - %b - " buffer-file-name))
 
-(use-package color-theme-zenburn
-  :config
-  (color-theme-zenburn))
+;; (use-package color-theme-zenburn
+;;   :config
+;;   (color-theme-zenburn))
 
 ;; highlight cursor line
 (global-hl-line-mode 1)
@@ -109,17 +109,17 @@
 ;; show matching parentheses
 (show-paren-mode t)
 
-(use-package highlight-parentheses
-  :config
-  (progn
-    (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
-    (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
-    (add-hook 'scheme-mode-hook 'highlight-parentheses-mode)
-    ;; highlight expression (instead of enclosing parens)
-    ;; when over an opening paren or after closing one
-    (setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
-    (setq show-paren-style 'expression)
-    ))
+;; (use-package highlight-parentheses
+;;   :config
+;;   (progn
+;;     (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
+;;     (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
+;;     (add-hook 'scheme-mode-hook 'highlight-parentheses-mode)
+;;     ;; highlight expression (instead of enclosing parens)
+;;     ;; when over an opening paren or after closing one
+;;     (setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
+;;     (setq show-paren-style 'expression)
+;;     ))
 
 ;; hide tool bar and menu bar and scroll bar
 (tool-bar-mode -1)
@@ -191,10 +191,13 @@
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "M-Z") 'zap-to-char)
 
-;; move between windows with S-{up,down,left,right}
-(windmove-default-keybindings)
-;; these keybindings don't work well with org-mode, so replace them in org
-(setq org-replace-disputed-keys t)
+;; use these keybindings for window switching since default ones
+;; (windmove-default-keybindings) S-{up,down,left,right}
+;; interfere with org and calendar
+(global-set-key (kbd "C-x <up>") 'windmove-up)
+(global-set-key (kbd "C-x <down>") 'windmove-down)
+(global-set-key (kbd "C-x <right>") 'windmove-right)
+(global-set-key (kbd "C-x <left>") 'windmove-left)
 
 ;; Use a minor mode that makes my keybindings globally override and
 ;; take precedence over all other bindings for that key, that is,
@@ -203,27 +206,27 @@
 ;; modes, it should go first on the list minor-mode-map-alist.
 ;; Extracted from
 ;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
-(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-(define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
-(define-minor-mode my-keys-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " my-keys" 'my-keys-minor-mode-map)
+;; (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+;; (define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
+;; (define-minor-mode my-keys-minor-mode
+;;   "A minor mode so that my key settings override annoying major modes."
+;;   t " my-keys" 'my-keys-minor-mode-map)
 
-(my-keys-minor-mode 1)
+;; (my-keys-minor-mode 1)
 
-;; but turn off the overridings in the minibuffer
-(add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
-;; Make my keybindings retain precedence, even if subsequently-loaded
-;; libraries bring in new keymaps of their own. Because keymaps can be
-;; generated at compile time, load seemed like the best place to do
-;; this.
-(defadvice load (after give-my-keybindings-priority)
-  "Try to ensure that my keybindings always have priority."
-  (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
-      (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
-        (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
-        (add-to-list 'minor-mode-map-alist mykeys))))
-(ad-activate 'load)
+;; ;; but turn off the overridings in the minibuffer
+;; (add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
+;; ;; Make my keybindings retain precedence, even if subsequently-loaded
+;; ;; libraries bring in new keymaps of their own. Because keymaps can be
+;; ;; generated at compile time, load seemed like the best place to do
+;; ;; this.
+;; (defadvice load (after give-my-keybindings-priority)
+;;   "Try to ensure that my keybindings always have priority."
+;;   (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
+;;       (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
+;;         (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
+;;         (add-to-list 'minor-mode-map-alist mykeys))))
+;; (ad-activate 'load)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -347,7 +350,6 @@
         expand-region                   ; increase selected region by semantic units
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         highlight-parentheses           ; highlight surrounding parentheses
-        ipython                         ; add support for ipython in python-mode
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
@@ -358,6 +360,14 @@
         wgrep                           ; writable grep buffer and apply the changes to files
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
+
+        ;; python setup
+        flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
+        ipython                         ; add support for ipython in python-mode
+        pyflakes                        ; run python pyflakes checker and output to grep buffer
+        python-pep8                     ; minor mode for running `pep8'
+        python-pylint                   ; minor mode for running `pylint'
+
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
         ;; highlight-symbol
@@ -494,6 +504,7 @@
     ;; view greek letter lambda
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
+    (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
     ))
 
 (use-package starter-kit-defuns
