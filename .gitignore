@@ -17,3 +17,4 @@ mylocalfuncs.el
 session.*
 tramp
 url
+projectile.cache

@@ -27,7 +27,7 @@
 ;; problems).
 
 ;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
-(let ((default-directory  "/usr/share/emacs/site-lisp"))
+(let ((default-directory "/usr/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
@@ -99,9 +99,9 @@
 ;; set window title to buffer-file-name
 (setq frame-title-format '("" "emacs - %b - " buffer-file-name))
 
-(use-package color-theme-zenburn
-  :config
-  (color-theme-zenburn))
+;; (use-package color-theme-zenburn
+;;   :config
+;;   (color-theme-zenburn))
 
 ;; highlight cursor line
 (global-hl-line-mode 1)
@@ -109,17 +109,17 @@
 ;; show matching parentheses
 (show-paren-mode t)
 
-(use-package highlight-parentheses
-  :config
-  (progn
-    (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
-    (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
-    (add-hook 'scheme-mode-hook 'highlight-parentheses-mode)
-    ;; highlight expression (instead of enclosing parens)
-    ;; when over an opening paren or after closing one
-    (setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
-    (setq show-paren-style 'expression)
-    ))
+;; (use-package highlight-parentheses
+;;   :config
+;;   (progn
+;;     (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
+;;     (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
+;;     (add-hook 'scheme-mode-hook 'highlight-parentheses-mode)
+;;     ;; highlight expression (instead of enclosing parens)
+;;     ;; when over an opening paren or after closing one
+;;     (setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
+;;     (setq show-paren-style 'expression)
+;;     ))
 
 ;; hide tool bar and menu bar and scroll bar
 (tool-bar-mode -1)
@@ -131,7 +131,7 @@
 (column-number-mode 1)
 
 ;; show line numbers on left
-(global-linum-mode 1)
+;; (global-linum-mode 1)
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
@@ -178,6 +178,8 @@
 ;; override 'list-buffers with ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
+(global-set-key (kbd "C-c C-g") 'global-linum-mode)
+
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
 ;; (global-set-key (kbd "<f4>") 'yank)           ; paste
@@ -189,6 +191,42 @@
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 (global-set-key (kbd "M-Z") 'zap-to-char)
 
+;; use these keybindings for window switching since default ones
+;; (windmove-default-keybindings) S-{up,down,left,right}
+;; interfere with org and calendar
+(global-set-key (kbd "C-x <up>") 'windmove-up)
+(global-set-key (kbd "C-x <down>") 'windmove-down)
+(global-set-key (kbd "C-x <right>") 'windmove-right)
+(global-set-key (kbd "C-x <left>") 'windmove-left)
+
+;; Use a minor mode that makes my keybindings globally override and
+;; take precedence over all other bindings for that key, that is,
+;; override all major/minor mode maps and make sure my binding is
+;; always in effect.  In order to avoid precedence over other minor
+;; modes, it should go first on the list minor-mode-map-alist.
+;; Extracted from
+;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
+;; (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+;; (define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
+;; (define-minor-mode my-keys-minor-mode
+;;   "A minor mode so that my key settings override annoying major modes."
+;;   t " my-keys" 'my-keys-minor-mode-map)
+
+;; (my-keys-minor-mode 1)
+
+;; ;; but turn off the overridings in the minibuffer
+;; (add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
+;; ;; Make my keybindings retain precedence, even if subsequently-loaded
+;; ;; libraries bring in new keymaps of their own. Because keymaps can be
+;; ;; generated at compile time, load seemed like the best place to do
+;; ;; this.
+;; (defadvice load (after give-my-keybindings-priority)
+;;   "Try to ensure that my keybindings always have priority."
+;;   (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
+;;       (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
+;;         (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
+;;         (add-to-list 'minor-mode-map-alist mykeys))))
+;; (ad-activate 'load)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -312,16 +350,24 @@
         expand-region                   ; increase selected region by semantic units
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         highlight-parentheses           ; highlight surrounding parentheses
-        ipython                         ; add support for ipython in python-mode
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
+        projectile                      ; project management
         smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
+
+        ;; python setup
+        flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
+        ipython                         ; add support for ipython in python-mode
+        pyflakes                        ; run python pyflakes checker and output to grep buffer
+        python-pep8                     ; minor mode for running `pep8'
+        python-pylint                   ; minor mode for running `pylint'
+
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
         ;; highlight-symbol
@@ -415,18 +461,20 @@
 
 ;; the appointment notification facility
 ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
-(setq appt-message-warning-time 15 ;; warn 15 min in advance
-      appt-display-mode-line t     ;; show in the modeline
-      appt-display-format 'window) ;; use our func
-(appt-activate 1)              ;; active appt (appointment notification)
-(display-time)                 ;; time display is required for this...
+(setq appt-message-warning-time 15 ; warn 15 min in advance
+      appt-display-interval 5      ; repeat every 5 min
+      appt-display-mode-line t     ; show in the modeline
+      appt-display-format 'window) ; use our func
+(appt-activate 1)              ; active appt (appointment notification)
+(display-time)                 ; time display is required for this...
 
 ;; update appt each time agenda is opened
 (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-(defun mine-appt-display (min-to-app new-time msg)
-  (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-(setq appt-disp-window-function (function mine-appt-display))
+;; commented out because I prefer using sauron buffer instead of a popup window.
+;; (defun mine-appt-display (min-to-app new-time msg)
+;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+;; (setq appt-disp-window-function (function mine-appt-display))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXTERNAL LIBRARIES
@@ -445,6 +493,7 @@
          ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
          ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
          ("C-6" . mine-fast-buffer-switch)
+         ;; FIXME: doesn't override calc-copy-as-kill in calc-mode
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
 
          ("M-C" . mine-toggle-case)
@@ -455,6 +504,7 @@
     ;; view greek letter lambda
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
+    (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
     ))
 
 (use-package starter-kit-defuns
@@ -480,10 +530,8 @@
   (progn
     (key-chord-mode 1)
     ;; preferably, use upper case to avoid delay when typing
-    (key-chord-define-global "OO" 'other-window)
-
     (key-chord-define-global "FG" 'mine-advance-to)
-    (key-chord-define-global "FD" 'mine-back-to) ; TODO: not working
+    (key-chord-define-global "FD" 'mine-back-to)
 
     (key-chord-define-global "HH" 'mine-point-to-top)
     (key-chord-define-global "MM" 'mine-point-to-middle)
@@ -642,15 +690,26 @@
 ;; git within emacs
 (use-package magit)
 
-;; load initializations for this site
-(use-package init-local)
-
 ;; allows changing files directly from grep buffer
 (use-package wgrep)
 
 ;; cd with bookmark navigation
 ;; use M-x cv RET or directly from shell
 (use-package cdargs)
+
+(use-package auto-complete-config
+  :config
+  (ac-config-default))
+
+;; enable project management for all modes
+;; root dir must have a file named .projectile to be considered a project
+;; except for git repos. This file has entries with patterns to ignore files
+(use-package projectile
+  :config
+  (projectile-global-mode))
+
+;; load initializations for this site
+(use-package init-local)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HOOKS
