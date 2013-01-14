@@ -355,6 +355,7 @@
         minimap                         ; view code from far away
         projectile                      ; project management
         smex                            ; ido like behavior for M-x
+        sauron                          ; notification of events (org, mail, etc)
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
