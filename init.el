@@ -84,11 +84,11 @@
 ;; BEHAVIOR SETTINGS
 
 ;; Copy/paste behavior
-;; use C-x C-v C-c for copy/pasting
+;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
 (cua-mode t)
 ;; use cua mode for rectangle selection
-;(cua-selection-mode t)
-;(setq cua-keep-region-after-copy t)
+;;(cua-selection-mode t)
+;;(setq cua-keep-region-after-copy t)
 
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)
@@ -358,6 +358,7 @@
         minimap                         ; view code from far away
         projectile                      ; project management
         smex                            ; ido like behavior for M-x
+        sauron                          ; notification of events (org, mail, etc)
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
