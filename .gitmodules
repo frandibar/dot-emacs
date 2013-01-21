@@ -10,3 +10,9 @@
 [submodule "external/use-package"]
 	path = external/use-package
 	url = https://github.com/jwiegley/use-package.git
+[submodule "external/jedi"]
+	path = external/jedi
+	url = https://github.com/tkf/emacs-jedi.git
+[submodule "lib/jedi"]
+	path = lib/jedi
+	url = https://github.com/tkf/emacs-jedi.git

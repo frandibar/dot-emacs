@@ -130,14 +130,14 @@
 (line-number-mode 1)
 (column-number-mode 1)
 
-;; show line numbers on left
-;; (global-linum-mode 1)
-
 ;; hide splash screen
 (setq inhibit-splash-screen t)
 
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
+
+;; show visual feedback upon C-g
+(setq visible-bell t)
 
 ;; set font size
 (set-face-attribute 'default nil :height 110)
@@ -177,8 +177,6 @@
 (global-set-key (kbd "C-f") 'ido-find-file)
 ;; override 'list-buffers with ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-
-(global-set-key (kbd "C-c C-g") 'global-linum-mode)
 
 ;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
 ;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
@@ -289,6 +287,11 @@
          ("elisp" (mode . emacs-lisp-mode))
          ("org" (mode . org-mode))
          ("sql" (mode . sql-mode))
+         ("mu4e" (or
+                  (mode . mu4e-compose-mode)
+                  (mode . mu4e-headers-mode)
+                  (mode . mu4e-view-mode)
+                  (mode . mu4e-main-mode)))
          ("gnus" (or
                   (mode . message-mode)
                   (mode . bbdb-mode)
@@ -367,6 +370,7 @@
         pyflakes                        ; run python pyflakes checker and output to grep buffer
         python-pep8                     ; minor mode for running `pep8'
         python-pylint                   ; minor mode for running `pylint'
+        epc                             ; an RPC stack for the Emacs Lisp (needed for jedi)
 
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
@@ -384,37 +388,38 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
+(use-package dired-x)  ; makes dired-jump available with C-x C-j from the start
+(use-package dired-aux
+  :init
+  ;; to uncompress a .zip file, add "zip" to the variable
+  ;; 'dired-compress-file-suffixes
+  (add-to-list 'dired-compress-file-suffixes '("\\.zip\\'" ".zip" "unzip"))
 
-;; to uncompress a .zip file, add "zip" to the variable
-;; 'dired-compress-file-suffixes
-(eval-after-load "dired-aux"
-  '(add-to-list 'dired-compress-file-suffixes
-                '("\\.zip\\'" ".zip" "unzip")))
+  ;; if there is a dired buffer displayed in the next window, use its
+  ;; current subdir as target, instead of the current subdir of this dired buffer.
+  (setq dired-dwim-target t)
 
-;; if there is a dired buffer displayed in the next window, use its
-;; current subdir as target, instead of the current subdir of this dired buffer.
-(setq dired-dwim-target t)
+  ;; allow dired to be able to delete or copy a whole dir.  “always”
+  ;; means no asking. “top” means ask once. Any other symbol means ask
+  ;; each and every time for a dir and subdir.
+  (setq dired-recursive-copies (quote always))
+  (setq dired-recursive-deletes (quote top))
 
-;; allow dired to be able to delete or copy a whole dir.  “always”
-;; means no asking. “top” means ask once. Any other symbol means ask
-;; each and every time for a dir and subdir.
-(setq dired-recursive-copies (quote always))
-(setq dired-recursive-deletes (quote top))
+  ;; enable disabled function
+  (put 'dired-find-alternate-file 'disabled nil)
 
-;; enable disabled function
-(put 'dired-find-alternate-file 'disabled nil)
+  ;; ;; make Enter and ^ (parent dir) to use the same buffer
+  ;; (add-hook 'dired-mode-hook
+  ;;           (lambda ()
+  ;;             (define-key dired-mode-map (kbd "<return>")
+  ;;               'dired-find-alternate-file)               ; was dired-advertised-find-file
+  ;;             (define-key dired-mode-map (kbd "^")
+  ;;               (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
+  ;;             ))
 
-;; ;; make Enter and ^ (parent dir) to use the same buffer
-;; (add-hook 'dired-mode-hook
-;;           (lambda ()
-;;             (define-key dired-mode-map (kbd "<return>")
-;;               'dired-find-alternate-file)               ; was dired-advertised-find-file
-;;             (define-key dired-mode-map (kbd "^")
-;;               (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
-;;             ))
-
-;; show all, long, no group, human readable
-(setq dired-listing-switches "-algh")
+  ;; show all, long, no group, human readable
+  (setq dired-listing-switches "-algh")
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ mode
@@ -475,6 +480,13 @@
 ;; (defun mine-appt-display (min-to-app new-time msg)
 ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
 ;; (setq appt-disp-window-function (function mine-appt-display))
+
+(use-package eldoc
+  :config
+  (progn
+    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXTERNAL LIBRARIES
@@ -629,6 +641,15 @@
     (use-package python-pep8)
     (use-package python-pylint)))
 
+;; ;; python autocompletion
+;; (use-package jedi
+;;   :config
+;;   (progn
+;;     ;; (add-hook 'python-mode-hook 'jedi:setup)     ; FIXME: epc not working
+;;     (add-hook 'python-mode-hook 'jedi:ac-setup)     ; alternatively, only if autocompletion needed
+;;     (setq jedi:setup-keys t)
+;;   ))
+
 ;; load sunrise commander, a mix between dired and midnight commander.
 (use-package sunrise-commander
   :commands sunrise
@@ -699,7 +720,8 @@
 
 (use-package auto-complete-config
   :config
-  (ac-config-default))
+  (ac-config-default)
+  (setq ac-auto-start 4))               ; only offer when 4 chars have been typed
 
 ;; enable project management for all modes
 ;; root dir must have a file named .projectile to be considered a project
@@ -707,6 +729,25 @@
 (use-package projectile
   :config
   (projectile-global-mode))
+
+;; mu4e mail client
+(use-package init-mail)
+
+(use-package sauron
+  :bind (("C-c s" . sauron-toggle-hide-show)
+         ("C-c t" . sauron-clear))
+  :init
+  (progn
+    (setq sauron-separate-frame nil)
+    ;; allow the script to find the D-Bus session bus, even when running outside its session.
+    (setq sauron-dbus-cookie t)
+    ;; pop up window when an event occurs
+    (add-hook 'sauron-event-added-functions
+              (lambda (origin prio msg &optional props)
+                (sr-show)))
+    (sauron-start)
+    (sr-hide)
+    ))
 
 ;; load initializations for this site
 (use-package init-local)
