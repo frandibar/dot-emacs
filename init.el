@@ -517,6 +517,7 @@
     ;; view greek letter lambda
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
+    (setq linum-format "%4d")           ; adjust line number width
     (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
     ))
 
