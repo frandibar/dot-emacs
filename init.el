@@ -259,6 +259,9 @@
 ;; enable fast file/buffer switching mode
 (ido-mode t)
 
+;; adjust line number width
+(setq linum-format "%4d")
+
 ;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
 
@@ -519,7 +522,6 @@
     ;; view greek letter lambda
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
-    (setq linum-format "%4d")           ; adjust line number width
     (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
     ))
 
@@ -752,6 +754,9 @@
     (sauron-start)
     (sr-hide)
     ))
+
+;; enable functions disabled by default
+(put 'erase-buffer 'disabled nil)
 
 ;; load initializations for this site
 (use-package init-local)
