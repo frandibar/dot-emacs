@@ -106,6 +106,9 @@
 ;; highlight cursor line
 (global-hl-line-mode 1)
 
+;; flash the frame upon C-g
+(setq visible-bell t)
+
 ;; show matching parentheses
 (show-paren-mode t)
 
@@ -178,9 +181,8 @@
 ;; override 'list-buffers with ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-;; (global-set-key (kbd "<f2>") 'kill-region)    ; cut
-;; (global-set-key (kbd "<f3>") 'kill-ring-save) ; copy
-;; (global-set-key (kbd "<f4>") 'yank)           ; paste
+;; key to show line numbers
+;(global-set-key (kbd "C-c C-g") 'global-linum-mode)
 
 ;; by default, emacs binds M-z to zap-to-char. I prefer binding it to
 ;; zap-up-to-char, but the latter is not loaded by default (it's in
