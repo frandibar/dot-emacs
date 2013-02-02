@@ -85,9 +85,9 @@
 
 ;; Copy/paste behavior
 ;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
-(cua-mode t)
+;(cua-mode t)
 ;; use cua mode for rectangle selection
-;;(cua-selection-mode t)
+(cua-selection-mode t)
 ;;(setq cua-keep-region-after-copy t)
 
 ;; insert matching pairs of brackets
@@ -264,6 +264,7 @@
 
 ;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; reload file if changed on disk
 (global-auto-revert-mode 1)
@@ -411,9 +412,6 @@
   (setq dired-recursive-copies (quote always))
   (setq dired-recursive-deletes (quote top))
 
-  ;; enable disabled function
-  (put 'dired-find-alternate-file 'disabled nil)
-
   ;; ;; make Enter and ^ (parent dir) to use the same buffer
   ;; (add-hook 'dired-mode-hook
   ;;           (lambda ()
@@ -459,6 +457,8 @@
         ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
          "* %^t %^{prompt}")
         ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
+         "* %^t %^{prompt}")
+        ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
          "* %^t %^{prompt}")
         ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
          "* %^t %^{prompt}")
