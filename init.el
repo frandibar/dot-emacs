@@ -199,6 +199,12 @@
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
 
+;; keybindings for navigating lisp code
+(global-set-key (kbd "M-<right>") 'forward-sexp)  ; defaults to right-word, same as C-<right>
+(global-set-key (kbd "M-<left>") 'backward-sexp)  ; defaults to left-word, same as C-<left>
+(global-set-key (kbd "M-<up>") 'backward-up-list)
+(global-set-key (kbd "M-<down>") 'down-list)
+
 ;; Use a minor mode that makes my keybindings globally override and
 ;; take precedence over all other bindings for that key, that is,
 ;; override all major/minor mode maps and make sure my binding is
@@ -523,6 +529,7 @@
     (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook 'mine-greek-lambda)
     (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
+    (add-hook 'c++-mode-hook (lambda () (linum-mode 1)))
     ))
 
 (use-package starter-kit-defuns

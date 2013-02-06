@@ -620,3 +620,19 @@ Based on http://www.emacswiki.org/emacs/MiniMap"
 (defun mine-scissors ()
   (interactive)
   (insert "8<--------8<--------8<--------8<--------8<--------8<--------8<--------8<--------"))
+
+;; OVERRIDES
+
+(defun sauron-clear ()
+  "Clear the sauron buffer."
+  (interactive)
+  (when
+    (and sr-buffer (buffer-live-p sr-buffer))
+; I commented this out to avoid being asked
+;      (yes-or-no-p "Are you sure you want to clear the log? "))
+    (with-current-buffer sr-buffer
+      (let ((inhibit-read-only t))
+	(erase-buffer)))
+    (message nil)
+; added by me
+    (sr-hide)))
