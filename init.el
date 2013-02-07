@@ -270,6 +270,7 @@
 
 ;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
+(put 'erase-buffer 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;; reload file if changed on disk
@@ -761,9 +762,6 @@
     (sauron-start)
     (sr-hide)
     ))
-
-;; enable functions disabled by default
-(put 'erase-buffer 'disabled nil)
 
 ;; load initializations for this site
 (use-package init-local)
