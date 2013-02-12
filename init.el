@@ -369,6 +369,7 @@
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
+        openwith                        ; open files with external programs
         projectile                      ; project management
         smex                            ; ido like behavior for M-x
         sauron                          ; notification of events (org, mail, etc)
@@ -428,7 +429,7 @@
   ;;               (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
   ;;             ))
 
-  ;; show all, long, no group, human readable
+  ;; show all, long, no group, human readable file size
   (setq dired-listing-switches "-algh")
   )
 
@@ -736,6 +737,17 @@
   :config
   (ac-config-default)
   (setq ac-auto-start 4))               ; only offer when 4 chars have been typed
+
+(use-package openwith
+  :init
+  (progn
+    (setq openwith-associations
+          '(("\\.pdf\\'" "evince" (file))
+            ("\\.mp3\\'" "xmms" (file))
+            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\)\\'" "mplayer" ("-idx" file))
+            ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
+          )
+    (openwith-mode t)))
 
 ;; enable project management for all modes
 ;; root dir must have a file named .projectile to be considered a project
