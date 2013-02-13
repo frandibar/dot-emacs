@@ -392,7 +392,8 @@
         ;; highlight-symbol
         ;; workgroups
         ;; wrap-region
-        ;; mark-multiple
+        ;; mark-multiple                   ; A library that sorta lets you mark several regions at once
+        ;; mark-more-like-this             ; Mark additional regions in buffer matching current region.
         )
       "A list of packages to ensure are installed at launch.")
 
@@ -631,10 +632,10 @@
   (wrap-region-global-mode t))
 
 ;; An extension that lets you mark several regions at once.
-(use-package mark-more-like-this
-  :bind (("C-<" . mark-previous-like-this)
-         ("C->" . mark-next-like-this)
-         ("C-*" . mark-all-like-this)))
+;; (use-package mark-more-like-this
+;;   :bind (("C-<" . mark-previous-like-this)
+;;          ("C->" . mark-next-like-this)
+;;          ("C-*" . mark-all-like-this)))
 
 ;; Ace jump mode is a minor mode of emacs, which help you to move the
 ;; cursor to **ANY** position (across window and frame) using at most
