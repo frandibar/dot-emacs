@@ -387,6 +387,12 @@
         python-pylint                   ; minor mode for running `pylint'
         epc                             ; an RPC stack for the Emacs Lisp (needed for jedi)
 
+        ;; clojure setup
+        clojure-mode
+        clojure-test-mode
+        elein                           ; running leiningen commands from emacs
+        nrepl                           ; Client for Clojure nREPL
+
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
         ;; highlight-symbol
@@ -745,7 +751,8 @@
     (setq openwith-associations
           '(("\\.pdf\\'" "evince" (file))
             ("\\.mp3\\'" "xmms" (file))
-            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\)\\'" "mplayer" ("-idx" file))
+            ("\\.sgf\\'" "qgo" (file))
+            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\)\\'" "mplayer" ("-idx" file))
             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
           )
     (openwith-mode t)))
@@ -812,8 +819,9 @@
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
 
-;; TODO check why I get an error when using emacs-init-time
+;; FIXME: check why I get an error when using emacs-init-time
 ;; show load time in *Messages* buffer
-(message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
-                                        (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
+;; FIXME: broke when upgrading to 24.3
+;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
+;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
 ;; (message (concat "My init file loaded in " (emacs-init-time)))
