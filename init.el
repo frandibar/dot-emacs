@@ -378,6 +378,7 @@
         wgrep                           ; writable grep buffer and apply the changes to files
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
+        auto-highlight-symbol           ; automatic highlighting current symbol minor mode
 
         ;; python setup
         flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
@@ -400,6 +401,7 @@
         ;; wrap-region
         ;; mark-multiple                   ; A library that sorta lets you mark several regions at once
         ;; mark-more-like-this             ; Mark additional regions in buffer matching current region.
+        ;; dot-mode                        ; minor mode to repeat typing or commands
         )
       "A list of packages to ensure are installed at launch.")
 
@@ -782,6 +784,10 @@
     (sauron-start)
     (sr-hide)
     ))
+
+(use-package auto-highlight-symbol
+  :init
+  (global-auto-highlight-symbol-mode t))
 
 ;; load initializations for this site
 (use-package init-local)
