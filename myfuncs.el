@@ -499,8 +499,16 @@ http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lam
                                            nil))))))
 
 (defun mine-filename-to-clipboard ()
+  "Copy the current buffer file name to the clipboard.
+Extracted from
+http://emacsredux.com/"
   (interactive)
-  (kill-new (buffer-file-name)))
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (defun mine-xml-format ()
   "Reformat xml using xmllint"
@@ -636,3 +644,12 @@ Based on http://www.emacswiki.org/emacs/MiniMap"
     (message nil)
 ; added by me
     (sr-hide)))
+
+(defun mine-smart-open-line ()
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode.
+Extracted from
+http://emacsredux.com/"
+  (interactive)
+  (move-end-of-line nil)
+  (newline-and-indent))

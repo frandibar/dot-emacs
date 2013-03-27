@@ -364,12 +364,14 @@
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
         expand-region                   ; increase selected region by semantic units
+        git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         highlight-parentheses           ; highlight surrounding parentheses
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
         openwith                        ; open files with external programs
+        paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
         smex                            ; ido like behavior for M-x
         sauron                          ; notification of events (org, mail, etc)
@@ -533,6 +535,8 @@
 
          ("M-C" . mine-toggle-case)
          ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
+
+         ("S-<return>" . mine-smart-open-line)
          )
   :init
   (progn
