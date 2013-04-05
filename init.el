@@ -162,7 +162,7 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-(global-set-key (kbd "<f12>") 'view-mode)
+;; (global-set-key (kbd "<f12>") 'view-mode)
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 (global-set-key (kbd "<esc>") 'keyboard-quit)
@@ -442,6 +442,14 @@
 
   ;; show all, long, no group, human readable file size
   (setq dired-listing-switches "-algh")
+
+  ;; use M-o to toggle viewing files
+  (setq dired-omit-files
+        (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
+                (seq bol "." (not (any "."))) ;; dot-files
+                (seq bol ".pyc" eol))))       ;; python compiled
+                (seq bol ".pyo" eol))))       ;; python object
+                (seq bol ".o" eol))))         ;; object files
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -551,7 +559,8 @@
   :bind (("C-c e" . esk-eval-and-replace)))
 
 (use-package minimap
-  :bind (("<f11>" . mine-minimap-toggle)))
+  ;; :bind (("<f11>" . mine-minimap-toggle))
+  )
 
 ;; ido-like behavior for M-x
 (use-package smex
