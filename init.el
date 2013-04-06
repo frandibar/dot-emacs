@@ -175,9 +175,6 @@
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
-;; override 'list-buffers with ibuffer
-;; (global-set-key (kbd "C-x C-b") 'ibuffer)
-
 ;; key to show line numbers
 ;(global-set-key (kbd "C-c C-g") 'global-linum-mode)
 
@@ -287,60 +284,63 @@
 ;; ignore case when reading a file name completion
 (setq read-file-name-completion-ignore-case t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Ibuffer mode
-;; show buffers into the following groups
-(setq ibuffer-saved-filter-groups
-      '(("default"
-         ("dired" (mode . dired-mode))
-         ("clojure" (mode . clojure-mode))
-         ("python" (mode . python-mode))
-         ("elisp" (mode . emacs-lisp-mode))
-         ("org" (mode . org-mode))
-         ("sql" (mode . sql-mode))
-         ("mu4e" (or
-                  (mode . mu4e-compose-mode)
-                  (mode . mu4e-headers-mode)
-                  (mode . mu4e-view-mode)
-                  (mode . mu4e-main-mode)))
-         ("gnus" (or
-                  (mode . message-mode)
-                  (mode . bbdb-mode)
-                  (mode . mail-mode)
-                  (mode . gnus-group-mode)
-                  (mode . gnus-summary-mode)
-                  (mode . gnus-article-mode)
-                  (name . "^\\.bbdb$")
-                  (name . "^\\.newsrc-dribble")))
-         ("man" (name . "^*Man "))
-         ("emacs" (name . "^*"))
-         ("xml" (mode . nxml-mode)))))
+(use-package ibuffer
+  :config
+  (progn
+    ;; show buffers into the following groups
+    (setq ibuffer-saved-filter-groups
+          '(("default"
+             ("dired" (mode . dired-mode))
+             ("clojure" (mode . clojure-mode))
+             ("python" (mode . python-mode))
+             ("elisp" (mode . emacs-lisp-mode))
+             ("org" (mode . org-mode))
+             ("sql" (mode . sql-mode))
+             ("mu4e" (or
+                      (mode . mu4e-compose-mode)
+                      (mode . mu4e-headers-mode)
+                      (mode . mu4e-view-mode)
+                      (mode . mu4e-main-mode)))
+             ("gnus" (or
+                      (mode . message-mode)
+                      (mode . bbdb-mode)
+                      (mode . mail-mode)
+                      (mode . gnus-group-mode)
+                      (mode . gnus-summary-mode)
+                      (mode . gnus-article-mode)
+                      (name . "^\\.bbdb$")
+                      (name . "^\\.newsrc-dribble")))
+             ("man" (name . "^*Man "))
+             ("emacs" (name . "^*"))
+             ("xml" (mode . nxml-mode)))))
 
-;; don't show empty groups
-(setq ibuffer-show-empty-filter-groups nil)
+    ;; don't show empty groups
+    (setq ibuffer-show-empty-filter-groups nil)
 
-;; use the defined groups when entering ibuffer-mode
-(add-hook 'ibuffer-mode-hook
-          (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
+    ;; use ibuffer instead of list-buffers which I find useless
+    (defalias 'list-buffers 'ibuffer)
 
-(eval-after-load "ibuffer"
-  ;; use human readable Size column instead of original one
-  ;; extracted from http://www.emacswiki.org/emacs/IbufferMode
-  '(define-ibuffer-column size-h
-     (:name "Size" :inline t)
-     (cond
-      ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
-      ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
-      (t (format "%8d" (buffer-size)))))
-  )
+    ;; use the defined groups when entering ibuffer-mode
+    (add-hook 'ibuffer-mode-hook
+              (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 
-;; Modify the default ibuffer-formats
-(setq ibuffer-formats
-      '((mark modified read-only " "
-              (name 18 18 :left :elide) " "
-              (size-h 9 -1 :right) " "
-              (mode 16 16 :left :elide) " "
-              filename-and-process)))
+    ;; use human readable Size column instead of original one
+    ;; extracted from http://www.emacswiki.org/emacs/IbufferMode
+    (define-ibuffer-column size-h
+      (:name "Size" :inline t)
+      (cond
+       ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
+       ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
+       (t (format "%8d" (buffer-size)))))
+    )
+
+  ;; modify the default ibuffer-formats
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 18 18 :left :elide) " "
+                (size-h 9 -1 :right) " "
+                (mode 16 16 :left :elide) " "
+                filename-and-process))))
 
 ;; add additional package repositories.
 ;; the default elpa.gnu.org are all FSF signed.
@@ -462,59 +462,62 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG mode
-;; use org-mode for txt files
-(add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-;; org-mode clean view
-;; (setq org-startup-indented t)   ; commented out as it produces flickering
+(use-package org
+  :config
+  ;; use org-mode for txt files
+  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+  ;; org-mode clean view
+  ;; (setq org-startup-indented t)   ; commented out as it produces flickering
                                         ; in order to hide the leading stars, set the org-hide face color to background
-(setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
-;; agenda view of next 14 days
-(setq org-agenda-span 14)
-(setq org-log-into-drawer t)
+  (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
+  ;; agenda view of next 14 days
+  (setq org-agenda-span 14)
+  (setq org-log-into-drawer t)
 
-(setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
-                               "~/Dropbox/core/notas.org"
-                               "~/Dropbox/docs/cumples.org"
-                               "~/Dropbox/docs/agenda-personal.org")))
+  (setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
+                                 "~/Dropbox/core/notas.org"
+                                 "~/Dropbox/docs/cumples.org"
+                                 "~/Dropbox/docs/agenda-personal.org")))
 
-(setq org-capture-templates
-      '(("m" "movilidad")
-        ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
-         "* %^t %^{prompt}")
-        ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
-         "* %^t %^{prompt}")
-        ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
-         "* %^t %^{prompt}")
-        ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
-         "* %^t %^{prompt}")
-        ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
-         "* %^t %^{prompt}")
-        ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
-         "* %^t %^{prompt}")
-        ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
-         "* %^t %^{prompt}")
-        ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
-         "* %^t %^{prompt}")
-        ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-         "* %^t %^{prompt}")
-        ))
+  (setq org-capture-templates
+        '(("m" "movilidad")
+          ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
+           "* %^t %^{prompt}")
+          ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
+           "* %^t %^{prompt}")
+          ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
+           "* %^t %^{prompt}")
+          ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
+           "* %^t %^{prompt}")
+          ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
+           "* %^t %^{prompt}")
+          ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
+           "* %^t %^{prompt}")
+          ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
+           "* %^t %^{prompt}")
+          ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
+           "* %^t %^{prompt}")
+          ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
+           "* %^t %^{prompt}")
+          ))
 
-;; the appointment notification facility
-;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
-(setq appt-message-warning-time 15 ; warn 15 min in advance
-      appt-display-interval 5      ; repeat every 5 min
-      appt-display-mode-line t     ; show in the modeline
-      appt-display-format 'window) ; use our func
-(appt-activate 1)              ; active appt (appointment notification)
-(display-time)                 ; time display is required for this...
+  ;; the appointment notification facility
+  ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
+  (setq appt-message-warning-time 15 ; warn 15 min in advance
+        appt-display-interval 5      ; repeat every 5 min
+        appt-display-mode-line t     ; show in the modeline
+        appt-display-format 'window) ; use our func
+  (appt-activate 1)              ; active appt (appointment notification)
+  (display-time)                 ; time display is required for this...
 
-;; update appt each time agenda is opened
-(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+  ;; update appt each time agenda is opened
+  (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-;; commented out because I prefer using sauron buffer instead of a popup window.
-;; (defun mine-appt-display (min-to-app new-time msg)
-;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-;; (setq appt-disp-window-function (function mine-appt-display))
+  ;; commented out because I prefer using sauron buffer instead of a popup window.
+  ;; (defun mine-appt-display (min-to-app new-time msg)
+  ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+  ;; (setq appt-disp-window-function (function mine-appt-display))
+  )
 
 (use-package eldoc
   :config
