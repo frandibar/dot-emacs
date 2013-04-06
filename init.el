@@ -175,11 +175,8 @@
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
-;; override backward-char and forward-char
-(global-set-key (kbd "C-b") 'ido-switch-buffer)
-(global-set-key (kbd "C-f") 'ido-find-file)
 ;; override 'list-buffers with ibuffer
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+;; (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; key to show line numbers
 ;(global-set-key (kbd "C-c C-g") 'global-linum-mode)
@@ -296,6 +293,7 @@
 (setq ibuffer-saved-filter-groups
       '(("default"
          ("dired" (mode . dired-mode))
+         ("clojure" (mode . clojure-mode))
          ("python" (mode . python-mode))
          ("elisp" (mode . emacs-lisp-mode))
          ("org" (mode . org-mode))
@@ -351,6 +349,7 @@
   (progn
     (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
     (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/") t)
+    (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
     (package-initialize)
     (when (not package-archive-contents)
       (package-refresh-contents))
@@ -395,6 +394,9 @@
         clojure-test-mode
         elein                           ; running leiningen commands from emacs
         nrepl                           ; Client for Clojure nREPL
+        slime                           ; Superior Lisp Interaction Mode for Emacs
+        slime-clj                       ;         slime extensions for swank-clj
+        slime-repl                      ; Read-Eval-Print Loop written in Emacs Lisp
 
         ;; once used but fell in disuse
         ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
@@ -447,8 +449,8 @@
   (setq dired-omit-files
         (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
                 (seq bol "." (not (any "."))) ;; dot-files
-                (seq bol ".pyc" eol))))       ;; python compiled
-                (seq bol ".pyo" eol))))       ;; python object
+                (seq bol ".pyc" eol)          ;; python compiled
+                (seq bol ".pyo" eol)          ;; python object
                 (seq bol ".o" eol))))         ;; object files
   )
 
@@ -743,6 +745,9 @@
   (progn
     (setq inferior-lisp-program "/usr/bin/clisp")
     (slime-setup '(slime-fancy))
+
+    ;; enable paredit in slime repl
+    (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
     ))
 
 ;; git within emacs
@@ -766,7 +771,7 @@
     (setq openwith-associations
           '(("\\.pdf\\'" "evince" (file))
             ("\\.mp3\\'" "xmms" (file))
-            ("\\.sgf\\'" "qgo" (file))
+            ("\\.sgf\\'" "quarry" (file))
             ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\)\\'" "mplayer" ("-idx" file))
             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
           )
@@ -812,6 +817,10 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; view-mode
 (add-hook 'help-mode-hook '(lambda () (view-mode t)))
+
+;; avoid being asked when opening not so large files
+;; i.e. video files are handled by external program
+(setq large-file-warning-threshold nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
