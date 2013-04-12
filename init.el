@@ -162,7 +162,7 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-;; (global-set-key (kbd "<f12>") 'view-mode)
+(global-set-key (kbd "<f12>") 'view-mode)
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 (global-set-key (kbd "<esc>") 'keyboard-quit)
@@ -359,10 +359,12 @@
       '(
         ace-jump-mode                   ; quick cursor location
         auto-complete
+        auto-highlight-symbol           ; automatic highlighting current symbol minor mode
         dired+                          ; extensions to dired
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
         expand-region                   ; increase selected region by semantic units
+        ggtags                          ; GNU Global source code tagging system
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         highlight-parentheses           ; highlight surrounding parentheses
@@ -372,14 +374,13 @@
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
-        smex                            ; ido like behavior for M-x
         sauron                          ; notification of events (org, mail, etc)
+        smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
-        auto-highlight-symbol           ; automatic highlighting current symbol minor mode
 
         ;; python setup
         flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
@@ -406,12 +407,12 @@
         ;; mark-multiple                   ; A library that sorta lets you mark several regions at once
         ;; mark-more-like-this             ; Mark additional regions in buffer matching current region.
         ;; dot-mode                        ; minor mode to repeat typing or commands
-        )
-      "A list of packages to ensure are installed at launch.")
 
-    (dolist (p prelude-packages)
-      (unless (package-installed-p p)
-        (package-install p)))
+        "A list of packages to ensure are installed at launch.")
+
+      (dolist (p prelude-packages)
+        (unless (package-installed-p p)
+          (package-install p))))
     ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -464,60 +465,61 @@
 ;; ORG mode
 (use-package org
   :config
-  ;; use org-mode for txt files
-  (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
-  ;; org-mode clean view
-  ;; (setq org-startup-indented t)   ; commented out as it produces flickering
+  (progn
+    ;; use org-mode for txt files
+    (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
+    ;; org-mode clean view
+    ;; (setq org-startup-indented t)   ; commented out as it produces flickering
                                         ; in order to hide the leading stars, set the org-hide face color to background
-  (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
-  ;; agenda view of next 14 days
-  (setq org-agenda-span 14)
-  (setq org-log-into-drawer t)
+    (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
+    ;; agenda view of next 14 days
+    (setq org-agenda-span 14)
+    (setq org-log-into-drawer t)
 
-  (setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
-                                 "~/Dropbox/core/notas.org"
-                                 "~/Dropbox/docs/cumples.org"
-                                 "~/Dropbox/docs/agenda-personal.org")))
+    (setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
+                                   "~/Dropbox/core/notas.org"
+                                   "~/Dropbox/docs/cumples.org"
+                                   "~/Dropbox/docs/agenda-personal.org")))
 
-  (setq org-capture-templates
-        '(("m" "movilidad")
-          ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
-           "* %^t %^{prompt}")
-          ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
-           "* %^t %^{prompt}")
-          ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
-           "* %^t %^{prompt}")
-          ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
-           "* %^t %^{prompt}")
-          ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
-           "* %^t %^{prompt}")
-          ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
-           "* %^t %^{prompt}")
-          ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
-           "* %^t %^{prompt}")
-          ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
-           "* %^t %^{prompt}")
-          ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-           "* %^t %^{prompt}")
-          ))
+    (setq org-capture-templates
+          '(("m" "movilidad")
+            ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
+             "* %^t %^{prompt}")
+            ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
+             "* %^t %^{prompt}")
+            ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
+             "* %^t %^{prompt}")
+            ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
+             "* %^t %^{prompt}")
+            ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
+             "* %^t %^{prompt}")
+            ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
+             "* %^t %^{prompt}")
+            ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
+             "* %^t %^{prompt}")
+            ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
+             "* %^t %^{prompt}")
+            ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
+             "* %^t %^{prompt}")
+            ))
 
-  ;; the appointment notification facility
-  ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
-  (setq appt-message-warning-time 15 ; warn 15 min in advance
-        appt-display-interval 5      ; repeat every 5 min
-        appt-display-mode-line t     ; show in the modeline
-        appt-display-format 'window) ; use our func
-  (appt-activate 1)              ; active appt (appointment notification)
-  (display-time)                 ; time display is required for this...
+    ;; the appointment notification facility
+    ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
+    (setq appt-message-warning-time 15 ; warn 15 min in advance
+          appt-display-interval 5      ; repeat every 5 min
+          appt-display-mode-line t     ; show in the modeline
+          appt-display-format 'window) ; use our func
+    (appt-activate 1)              ; active appt (appointment notification)
+    (display-time)                 ; time display is required for this...
 
-  ;; update appt each time agenda is opened
-  (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+    ;; update appt each time agenda is opened
+    (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-  ;; commented out because I prefer using sauron buffer instead of a popup window.
-  ;; (defun mine-appt-display (min-to-app new-time msg)
-  ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-  ;; (setq appt-disp-window-function (function mine-appt-display))
-  )
+    ;; commented out because I prefer using sauron buffer instead of a popup window.
+    ;; (defun mine-appt-display (min-to-app new-time msg)
+    ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+    ;; (setq appt-disp-window-function (function mine-appt-display))
+    ))
 
 (use-package eldoc
   :config
@@ -564,7 +566,7 @@
   :bind (("C-c e" . esk-eval-and-replace)))
 
 (use-package minimap
-  ;; :bind (("<f11>" . mine-minimap-toggle))
+  :bind (("<f11>" . mine-minimap-toggle))
   )
 
 ;; ido-like behavior for M-x
