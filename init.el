@@ -193,12 +193,6 @@
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
 
-;; keybindings for navigating lisp code
-(global-set-key (kbd "M-<right>") 'forward-sexp)  ; defaults to right-word, same as C-<right>
-(global-set-key (kbd "M-<left>") 'backward-sexp)  ; defaults to left-word, same as C-<left>
-(global-set-key (kbd "M-<up>") 'backward-up-list)
-(global-set-key (kbd "M-<down>") 'down-list)
-
 ;; Use a minor mode that makes my keybindings globally override and
 ;; take precedence over all other bindings for that key, that is,
 ;; override all major/minor mode maps and make sure my binding is
@@ -375,6 +369,7 @@
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
         sauron                          ; notification of events (org, mail, etc)
+        smartparens                     ;
         smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
@@ -417,6 +412,11 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
+(use-package dired+)
+(use-package dired
+  :config
+  (progn
+    (setq dired-listing-switches "-alh")))
 (use-package dired-x)  ; makes dired-jump available with C-x C-j from the start
 (use-package dired-aux
   :init
@@ -755,6 +755,13 @@
     (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
     ))
 
+(use-package paredit
+  :config
+  (progn
+    (add-hook 'clojure-mode-hook 'paredit-mode)
+    (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+    (add-hook 'lisp-interaction-mode-hook 'paredit-mode)))
+
 ;; git within emacs
 (use-package magit)
 
@@ -767,8 +774,9 @@
 
 (use-package auto-complete-config
   :config
-  (ac-config-default)
-  (setq ac-auto-start 4))               ; only offer when 4 chars have been typed
+  (progn
+    (ac-config-default)
+    (setq ac-auto-start 4)))              ; only offer when 4 chars have been typed
 
 (use-package openwith
   :init
