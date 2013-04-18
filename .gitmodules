@@ -13,3 +13,6 @@
 [submodule "external/jedi"]
 	path = external/jedi
 	url = https://github.com/tkf/emacs-jedi.git
+[submodule "external/web-mode"]
+	path = external/web-mode
+	url = https://github.com/fxbois/web-mode.git
