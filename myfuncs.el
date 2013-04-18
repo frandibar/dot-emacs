@@ -653,3 +653,13 @@ http://emacsredux.com/"
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
+
+;; use the following functions to specify a font for a mode
+;; i.e. (add-hook 'help-mode-hook 'mine-use-proportional-font)
+(defun mine-use-proportional-font ()
+  "Switch the current buffer to a proportional font."
+  (face-remap-add-relative 'default '(:family "FreeSans")))
+
+(defun mine-use-monospace-font ()
+  "Switch the current buffer to a monospace font."
+  (face-remap-add-relative 'default '(:family "Monospace")))
