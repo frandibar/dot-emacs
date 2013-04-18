@@ -830,6 +830,12 @@
   (progn
     (multiple-cursors-mode)))
 
+(use-package web-mode
+  :config
+  (progn
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))))
+
 ;; load initializations for this site
 (use-package init-local)
 
