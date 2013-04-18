@@ -162,7 +162,7 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-(global-set-key (kbd "<f12>") 'view-mode)
+;; (global-set-key (kbd "<f12>") 'view-mode)
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 
 (global-set-key (kbd "<esc>") 'keyboard-quit)
@@ -365,6 +365,7 @@
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
+        multiple-cursors
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
@@ -673,7 +674,7 @@
 ;;   C-u C-. jump to char
 ;;   C-u C-u C-. jump to line
 (use-package ace-jump-mode
-  :bind ("C-." . ace-jump-mode)
+  :bind ("<f12>" . ace-jump-mode)
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
@@ -759,8 +760,10 @@
   :config
   (progn
     (add-hook 'clojure-mode-hook 'paredit-mode)
-    (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook 'paredit-mode)))
+    ;; don't know these lines also activate it for other modes
+    ;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+    ;; (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
+    ))
 
 ;; git within emacs
 (use-package magit)
@@ -818,7 +821,14 @@
 
 (use-package auto-highlight-symbol
   :init
-  (global-auto-highlight-symbol-mode t))
+  (progn
+    (global-auto-highlight-symbol-mode t)))
+
+(use-package multiple-cursors
+  :bind (("C-C C-C" . mc/edit-lines))
+  :config
+  (progn
+    (multiple-cursors-mode)))
 
 ;; load initializations for this site
 (use-package init-local)
