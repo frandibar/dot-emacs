@@ -781,6 +781,7 @@
     (ac-config-default)
     (setq ac-auto-start 4)))              ; only offer when 4 chars have been typed
 
+;; in dired mode, matching files are opened in external program
 (use-package openwith
   :init
   (progn
@@ -788,7 +789,7 @@
           '(("\\.pdf\\'" "evince" (file))
             ("\\.mp3\\'" "xmms" (file))
             ("\\.sgf\\'" "quarry" (file))
-            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\)\\'" "mplayer" ("-idx" file))
+            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\)\\'" "mplayer" ("-idx" file))
             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
           )
     (openwith-mode t)))
