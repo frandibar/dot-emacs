@@ -531,8 +531,9 @@
 (use-package eldoc
   :config
   (progn
-    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)))
+    (let ((modes '(lisp-interaction-mode-hook
+                   emacs-lisp-mode-hook)))
+      (mapcar (lambda (m) (add-hook m 'turn-on-eldoc-mode)) modes))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -565,10 +566,14 @@
   :init
   (progn
     ;; view greek letter lambda
-    (add-hook 'emacs-lisp-mode-hook 'mine-greek-lambda)
-    (add-hook 'python-mode-hook 'mine-greek-lambda)
-    (add-hook 'python-mode-hook (lambda () (linum-mode 1)))
-    (add-hook 'c++-mode-hook (lambda () (linum-mode 1)))
+    (let ((modes '(python-mode-hook
+                   emacs-lisp-mode-hook)))
+      (mapcar (lambda (m) (add-hook m 'mine-greek-lambda)) modes))
+    ;; show line numbers
+    (let ((modes '(python-mode-hook
+                   c++-mode-hook
+                   c-mode-hook)))
+      (mapcar (lambda (m) (add-hook m (lambda () (linum-mode 1)))) modes))
     ))
 
 (use-package starter-kit-defuns
@@ -765,7 +770,7 @@
   :config
   (progn
     (add-hook 'clojure-mode-hook 'paredit-mode)
-    ;; don't know these lines also activate it for other modes
+    ;; don't know why these lines also activate it for other modes
     ;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
     ;; (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
     ))
