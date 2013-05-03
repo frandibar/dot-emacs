@@ -253,6 +253,7 @@ same thing.  Similar to 'Y' in vim."
   (setq isearch-string mine-isearch-initial-string)
   (isearch-search-and-update))
 
+; TODO: fix, fails when operating on last buffer occurrence
 (defun mine-isearch-forward-at-point (&optional regexp-p no-recursive-edit)
   "Interactive search forward for the symbol at point."
   (interactive "P\np")
@@ -263,7 +264,7 @@ same thing.  Similar to 'Y' in vim."
           (isearch-forward regexp-p no-recursive-edit)
         (setq mine-isearch-initial-string (buffer-substring begin end))
         (add-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
-        (goto-char end)
+;        (goto-char end)
         (isearch-forward regexp-p no-recursive-edit)))))
 
 (defun mine-window-horizontal-to-vertical ()
@@ -664,3 +665,9 @@ http://emacsredux.com/"
 (defun mine-use-monospace-font ()
   "Switch the current buffer to a monospace font."
   (face-remap-add-relative 'default '(:family "Monospace")))
+
+(defun mine-remove-crln ()
+  "Removes CRLF (^M) in file"
+  (interactive)
+  (save-excursion
+    (replace-string (string 13) "" nil (point-min) (point-max))))
