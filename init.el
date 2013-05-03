@@ -541,7 +541,7 @@
 ;; FIXME: had to use require, if not only the keybinded functions are loaded
 (require 'myfuncs)
 (use-package myfuncs
-  :defer nil                           ; this doesn't work
+  :defer nil                                       ; this doesn't work
   :bind (("M-S-SPC" . mine-select-current-line)
          ("M-S-<up>" . mine-move-text-up)
          ("M-S-<down>" . mine-move-text-down)
@@ -551,8 +551,9 @@
 
          ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
          ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
-         ("C-6" . mine-fast-buffer-switch)
-         ("C-8" . mine-isearch-forward-at-point)
+         ("C-5" . mine-match-paren)                ; similar to vim's %
+         ("C-6" . mine-fast-buffer-switch)         ; similar to vim's ^
+         ("C-8" . mine-isearch-forward-at-point)   ; similar to vim's *
          ;; FIXME: doesn't override calc-copy-as-kill in calc-mode
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
 
@@ -602,9 +603,6 @@
     (key-chord-define-global "LL" 'mine-point-to-bottom)
 
     (key-chord-define-global "PP" 'mine-copy-current-line)
-
-    (key-chord-define-global "**" 'mine-isearch-forward-at-point)
-    (key-chord-define-global "%%" 'mine-match-paren)
 
     (key-chord-define-global "RR" 'point-to-register)
     (key-chord-define-global "JJ" 'jump-to-register)

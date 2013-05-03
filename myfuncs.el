@@ -263,6 +263,7 @@ same thing.  Similar to 'Y' in vim."
           (isearch-forward regexp-p no-recursive-edit)
         (setq mine-isearch-initial-string (buffer-substring begin end))
         (add-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
+        (goto-char end)
         (isearch-forward regexp-p no-recursive-edit)))))
 
 (defun mine-window-horizontal-to-vertical ()
