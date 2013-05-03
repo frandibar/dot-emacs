@@ -462,6 +462,9 @@
 (setq c-default-style "stroustrup"
       c-basic-offset 4)
 
+(use-package c++-mode
+  :bind (("M-s" . mine-switch-cpp-h-file)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG mode
 (use-package org
@@ -498,6 +501,8 @@
              "* %^t %^{prompt}")
             ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
              "* %^t %^{prompt}")
+            ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
+             "* %^t %^{prompt}")
             ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
              "* %^t %^{prompt}")
             ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
@@ -522,6 +527,7 @@
     ;; (setq appt-disp-window-function (function mine-appt-display))
     ))
 
+;; show function arglist or variable docstring in echo area
 (use-package eldoc
   :config
   (progn
@@ -546,6 +552,7 @@
          ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
          ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
          ("C-6" . mine-fast-buffer-switch)
+         ("C-8" . mine-isearch-forward-at-point)
          ;; FIXME: doesn't override calc-copy-as-kill in calc-mode
          ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
 
@@ -789,7 +796,7 @@
           '(("\\.pdf\\'" "evince" (file))
             ("\\.mp3\\'" "xmms" (file))
             ("\\.sgf\\'" "quarry" (file))
-            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\)\\'" "mplayer" ("-idx" file))
+            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
           )
     (openwith-mode t)))
