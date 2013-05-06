@@ -284,17 +284,13 @@
     ;; show buffers into the following groups
     (setq ibuffer-saved-filter-groups
           '(("default"
-             ("dired" (mode . dired-mode))
              ("clojure" (mode . clojure-mode))
-             ("python" (mode . python-mode))
+             ("dired" (mode . dired-mode))
+             ("emacs" (name . "^*"))
              ("elisp" (mode . emacs-lisp-mode))
-             ("org" (mode . org-mode))
-             ("sql" (mode . sql-mode))
-             ("mu4e" (or
-                      (mode . mu4e-compose-mode)
-                      (mode . mu4e-headers-mode)
-                      (mode . mu4e-view-mode)
-                      (mode . mu4e-main-mode)))
+             ("c/c++" (or
+                      (mode . c++-mode)
+                      (mode . c-mode)))
              ("gnus" (or
                       (mode . message-mode)
                       (mode . bbdb-mode)
@@ -305,7 +301,14 @@
                       (name . "^\\.bbdb$")
                       (name . "^\\.newsrc-dribble")))
              ("man" (name . "^*Man "))
-             ("emacs" (name . "^*"))
+             ("mu4e" (or
+                      (mode . mu4e-compose-mode)
+                      (mode . mu4e-headers-mode)
+                      (mode . mu4e-view-mode)
+                      (mode . mu4e-main-mode)))
+             ("org" (mode . org-mode))
+             ("python" (mode . python-mode))
+             ("sql" (mode . sql-mode))
              ("xml" (mode . nxml-mode)))))
 
     ;; don't show empty groups
