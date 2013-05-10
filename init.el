@@ -167,6 +167,8 @@
 
 (global-set-key (kbd "<esc>") 'keyboard-quit)
 
+(global-set-key (kbd "<f12>") 'ido-switch-buffer)
+
 (global-set-key (kbd "M-n") 'View-scroll-line-forward)
 (global-set-key (kbd "M-p") 'View-scroll-line-backward)
 
@@ -582,9 +584,10 @@
 (use-package starter-kit-defuns
   :bind (("C-c e" . esk-eval-and-replace)))
 
-(use-package minimap
-  :bind (("<f11>" . mine-minimap-toggle))
-  )
+;; commented out because I don't use it.
+;; (use-package minimap
+;;   :bind (("<f11>" . mine-minimap-toggle))
+;;   )
 
 ;; ido-like behavior for M-x
 (use-package smex
@@ -687,7 +690,7 @@
 ;;   C-u C-. jump to char
 ;;   C-u C-u C-. jump to line
 (use-package ace-jump-mode
-  :bind ("<f12>" . ace-jump-mode)
+  :bind ("<f11>" . ace-jump-mode)
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
