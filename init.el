@@ -177,9 +177,6 @@
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
 
-;; key to show line numbers
-;(global-set-key (kbd "C-c C-g") 'global-linum-mode)
-
 ;; by default, emacs binds M-z to zap-to-char. I prefer binding it to
 ;; zap-up-to-char, but the latter is not loaded by default (it's in
 ;; misc.el instead of simple.el)
@@ -255,9 +252,6 @@
 ;; enable fast file/buffer switching mode
 (ido-mode t)
 
-;; adjust line number width
-(setq linum-format "%4d")
-
 ;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
@@ -279,6 +273,14 @@
 
 ;; ignore case when reading a file name completion
 (setq read-file-name-completion-ignore-case t)
+
+;; settings for all programming modes
+;; show line numbers
+(add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
+;; adjust line number width
+(setq linum-format "%4d")
+;; enable separation of camel case words
+(add-hook 'prog-mode-hook 'subword-mode)
 
 (use-package ibuffer
   :config
@@ -574,11 +576,6 @@
     (let ((modes '(python-mode-hook
                    emacs-lisp-mode-hook)))
       (mapcar (lambda (m) (add-hook m 'mine-greek-lambda)) modes))
-    ;; show line numbers
-    (let ((modes '(python-mode-hook
-                   c++-mode-hook
-                   c-mode-hook)))
-      (mapcar (lambda (m) (add-hook m (lambda () (linum-mode 1)))) modes))
     ))
 
 (use-package starter-kit-defuns
