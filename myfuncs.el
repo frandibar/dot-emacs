@@ -671,3 +671,14 @@ http://emacsredux.com/"
   (interactive)
   (save-excursion
     (replace-string (string 13) "" nil (point-min) (point-max))))
+
+
+(defadvice ido-find-file (after find-file-sudo activate)
+  "Find file as root if necessary.
+Ropen the selected file as root (you’ll be prompted for your sudo password)
+if you don’t have write permissions for it.
+
+Extracted from http://emacsredux.com/blog/2013/04/21/edit-files-as-root/"
+  (unless (and buffer-file-name
+               (file-writable-p buffer-file-name))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
