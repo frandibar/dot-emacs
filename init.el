@@ -735,15 +735,14 @@
 
 ;; toggles between the shell buffer and current buffer
 (use-package shell-toggle-patched
+  :bind (("<f5>" . shell-toggle))
   :config
   (progn
     (autoload 'shell-toggle "shell-toggle"
       "Toggles between the shell buffer and whatever buffer you are editing." t)
     (autoload 'shell-toggle-cd "shell-toggle"
       "Pops up a shell-buffer and insert a \"cd <file-dir>\" command." t)
-    (setq shell-toggle-launch-shell 'shell-toggle-eshell)
-    (global-set-key (kbd "<f5>") 'shell-toggle)
-    ))
+    (setq shell-toggle-launch-shell 'shell-toggle-eshell)))
 
 ;; Slime allows navigation to the symbol at point (using M-.), and the
 ;; ability to pop back to previous marks (using M-,).  This plugin
@@ -845,8 +844,9 @@
 (use-package web-mode
   :config
   (progn
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))))
+    (dolist (mode '("\\.html?\\'"
+                    "\\.xml\\'"))
+      (add-to-list 'auto-mode-alist `(,mode . web-mode)))))
 
 ;; load initializations for this site
 (use-package init-local)
@@ -859,7 +859,7 @@
 ;; view-mode
 (add-hook 'help-mode-hook '(lambda () (view-mode t)))
 
-;; avoid being asked when opening not so large files
+;; avoid being asked when opening large files
 ;; i.e. video files are handled by external program
 (setq large-file-warning-threshold nil)
 
