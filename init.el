@@ -52,7 +52,7 @@
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
-(setq-default major-mode 'lisp-interaction-mode)
+;(setq-default major-mode 'lisp-interaction-mode)    ; override default fundamental-mode
 
 (use-package eshell
   :config
@@ -538,9 +538,9 @@
 (use-package eldoc
   :config
   (progn
-    (let ((modes '(lisp-interaction-mode-hook
-                   emacs-lisp-mode-hook)))
-      (mapcar (lambda (m) (add-hook m 'turn-on-eldoc-mode)) modes))))
+    (dolist (mode '(lisp-interaction-mode-hook
+                    emacs-lisp-mode-hook))
+      (add-hook mode 'turn-on-eldoc-mode))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -573,10 +573,9 @@
   :init
   (progn
     ;; view greek letter lambda
-    (let ((modes '(python-mode-hook
-                   emacs-lisp-mode-hook)))
-      (mapcar (lambda (m) (add-hook m 'mine-greek-lambda)) modes))
-    ))
+    (dolist (mode '(python-mode-hook
+                    emacs-lisp-mode-hook))
+      (add-hook mode 'mine-greek-lambda))))
 
 (use-package starter-kit-defuns
   :bind (("C-c e" . esk-eval-and-replace)))
@@ -772,11 +771,10 @@
 (use-package paredit
   :config
   (progn
-    (add-hook 'clojure-mode-hook 'paredit-mode)
-    ;; don't know why these lines also activate it for other modes
-    ;; (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-    ;; (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
-    ))
+    (dolist (mode '(clojure-mode-hook
+                    emacs-lisp-mode-hook
+                    lisp-interaction-mode-hook))
+      (add-hook mode 'paredit-mode))))
 
 ;; git within emacs
 (use-package magit)
@@ -786,7 +784,7 @@
 
 ;; cd with bookmark navigation
 ;; use M-x cv RET or directly from shell
-(use-package cdargs)
+;(use-package cdargs)  ; not using it
 
 (use-package auto-complete-config
   :config
