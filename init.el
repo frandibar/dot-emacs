@@ -346,6 +346,7 @@
     ;; here go the packages that should be installed
     (defvar prelude-packages
       '(
+        ack                             ; interface to ack-like source code search tools
         ace-jump-mode                   ; quick cursor location
         auto-complete
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
