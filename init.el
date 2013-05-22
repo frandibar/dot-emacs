@@ -112,18 +112,6 @@
 ;; show matching parentheses
 (show-paren-mode t)
 
-;; (use-package highlight-parentheses
-;;   :config
-;;   (progn
-;;     (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
-;;     (add-hook 'lisp-interaction-mode-hook 'highlight-parentheses-mode)
-;;     (add-hook 'scheme-mode-hook 'highlight-parentheses-mode)
-;;     ;; highlight expression (instead of enclosing parens)
-;;     ;; when over an opening paren or after closing one
-;;     (setq hl-paren-colors (quote ("turquoise1" "green" "yellow" "orange")))
-;;     (setq show-paren-style 'expression)
-;;     ))
-
 ;; hide tool bar and menu bar and scroll bar
 (tool-bar-mode -1)
 (menu-bar-mode t)
@@ -368,7 +356,6 @@
         ggtags                          ; GNU Global source code tagging system
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
-        highlight-parentheses           ; highlight surrounding parentheses
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
@@ -401,15 +388,6 @@
         slime                           ; Superior Lisp Interaction Mode for Emacs
         slime-clj                       ;         slime extensions for swank-clj
         slime-repl                      ; Read-Eval-Print Loop written in Emacs Lisp
-
-        ;; once used but fell in disuse
-        ;; iy-go-to-char                   ; advance to char like `f' in vim (using my funcs instead)
-        ;; highlight-symbol
-        ;; workgroups
-        ;; wrap-region
-        ;; mark-multiple                   ; A library that sorta lets you mark several regions at once
-        ;; mark-more-like-this             ; Mark additional regions in buffer matching current region.
-        ;; dot-mode                        ; minor mode to repeat typing or commands
 
         "A list of packages to ensure are installed at launch.")
 
@@ -802,7 +780,9 @@
             ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
           )
-    (openwith-mode t)))
+    (add-hook 'dired-mode-hook (lambda () (openwith-mode t)))
+    ;(openwith-mode t)
+    ))
 
 ;; enable project management for all modes
 ;; root dir must have a file named .projectile to be considered a project
