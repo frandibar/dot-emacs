@@ -60,6 +60,8 @@
     ;; the eshell directory holds alias definitions and history information
     (setq eshell-history-size 1280)
     (setq eshell-directory-name "~/.emacs.d/eshell")
+    ;; expand '.' and '..' (removing them from default value)
+    (setq eshell-cmpl-dir-ignore "\\`\\(CVS\\)/\\'")
     (setq eshell-cmpl-ignore-case t)
     ;; by default eshell does completion the Emacs way: cycle through all
     ;; the possible values. Bash instead complete as much as possible, and
@@ -96,6 +98,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; APPEARANCE SETTINGS
 
+;; hide tool bar and scroll bar, show the menu bar
+(menu-bar-mode t)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; hide splash screen
+(setq inhibit-splash-screen t)
+
 ;; set window title to buffer-file-name
 (setq frame-title-format '("" "emacs - %b - " buffer-file-name))
 
@@ -112,17 +122,9 @@
 ;; show matching parentheses
 (show-paren-mode t)
 
-;; hide tool bar and menu bar and scroll bar
-(tool-bar-mode -1)
-(menu-bar-mode t)
-(set-scroll-bar-mode nil)
-
 ;; show line and column number in the mode line
 (line-number-mode 1)
 (column-number-mode 1)
-
-;; hide splash screen
-(setq inhibit-splash-screen t)
 
 ;; show blank screen on startup
 (setq initial-scratch-message nil)
@@ -337,19 +339,24 @@
   :config
   (progn
     (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-    (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/") t)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/#packages/") t)
     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+    ;; activate all the packages (in particular autoloads)
     (package-initialize)
+
+    ;; fetch the list of available packages
     (when (not package-archive-contents)
       (package-refresh-contents))
 
-    ;; here go the packages that should be installed
+    ;; packages we want to install
     (defvar prelude-packages
       '(
         ack                             ; interface to ack-like source code search tools
         ace-jump-mode                   ; quick cursor location
         auto-complete
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
+        browse-kill-ring                ; interactively insert items from kill-ring
         dired+                          ; extensions to dired
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
@@ -385,17 +392,17 @@
         clojure-mode
         clojure-test-mode
         elein                           ; running leiningen commands from emacs
-        nrepl                           ; Client for Clojure nREPL
-        slime                           ; Superior Lisp Interaction Mode for Emacs
-        slime-clj                       ;         slime extensions for swank-clj
-        slime-repl                      ; Read-Eval-Print Loop written in Emacs Lisp
+        nrepl                           ; client for clojure nrepl
+        slime                           ; superior lisp interaction mode for emacs
+        slime-clj                       ; slime extensions for swank-clj
+        slime-repl                      ; read-eval-print loop written in emacs lisp
+        )
+      "A list of packages to install at launch.")
 
-        "A list of packages to ensure are installed at launch.")
-
-      (dolist (p prelude-packages)
-        (unless (package-installed-p p)
-          (package-install p))))
-    ))
+    ;; install missing packages
+    (dolist (p prelude-packages)
+      (unless (package-installed-p p)
+        (package-install p)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
