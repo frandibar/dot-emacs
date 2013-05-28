@@ -682,3 +682,13 @@ Extracted from http://emacsredux.com/blog/2013/04/21/edit-files-as-root/"
   (unless (and buffer-file-name
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+
+(defun mine-cmp-pairs (fn x y)
+  "Returns a list ((fn x1 y1) (fn x2 y2) ... (fn xn yn)) for X = (x1 x2 ... xn) and Y = (y1 y2 ... yn).
+Both lists must have same length."
+  (if (= (length x) (length y))
+    (if x
+        (cons (funcall fn (car x) (car y)) (mine-cmp-pairs fn (cdr x) (cdr y)))
+      '())
+    (error "Lists must have same size.")))
