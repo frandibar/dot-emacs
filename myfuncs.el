@@ -692,3 +692,17 @@ Both lists must have same length."
         (cons (funcall fn (car x) (car y)) (mine-cmp-pairs fn (cdr x) (cdr y)))
       '())
     (error "Lists must have same size.")))
+
+;; smarter move to BOL:
+;; upon C-a, move to first char in line, if pressed again, move to BOL
+;; extracted from http://irreal.org/blog/?p=1946
+(defadvice move-beginning-of-line (around smarter-bol activate)
+  ;; Move to requested line if needed.
+  (let ((arg (or (ad-get-arg 0) 1)))
+    (when (/= arg 1)
+      (forward-line (1- arg))))
+  ;; Move to indentation on first call, then to actual BOL on second.
+  (let ((pos (point)))
+    (back-to-indentation)
+    (when (= pos (point))
+      ad-do-it)))

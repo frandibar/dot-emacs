@@ -577,6 +577,11 @@
          ("M-X" . smex-major-mode-commands)
          ("C-c C-c M-x" . execute-extended-command))) ; this is the old M-x
 
+(use-package smartparens
+  :config
+  (progn
+    (smartparens-global-mode t)))
+
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
   :commands yasnippet
@@ -824,7 +829,7 @@
     (global-auto-highlight-symbol-mode t)))
 
 (use-package multiple-cursors
-  :bind (("C-C C-C" . mc/edit-lines))
+  :bind (("M-m" . mc/edit-lines))
   :config
   (progn
     (multiple-cursors-mode)))
