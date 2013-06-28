@@ -12,15 +12,8 @@
 ;; Lisp libraries (`.el' and `.elc' files) are installed.
 (add-to-list 'load-path "~/.emacs.d")
 
-;; add the bundles directory and it's 1st level subdirectories to the load-path variable
-(let ((base "~/.emacs.d/external"))
-  (add-to-list 'load-path base)
-  (dolist (f (directory-files base))
-    (let ((name (concat base "/" f)))
-      (when (and (file-directory-p name)
-                 (not (equal f ".."))
-                 (not (equal f ".")))
-        (add-to-list 'load-path name)))))
+(let ((default-directory "~/.emacs.d"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; Use `list-load-path-shadows' to display a list of external Emacs
 ;; Lisp files that shadow Emacs builtins (listing potential load path
@@ -94,6 +87,9 @@
 
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)
+
+;; don't let the cursor go into minibuffer prompt (default behavior allows copying prompt)
+(setq minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; APPEARANCE SETTINGS
@@ -377,11 +373,13 @@
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
+        ws-trim                         ; tools and minor mode to trim whitespace on text lines
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
 
         ;; python setup
         flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
+        flymake-cursor                  ; show flymake messages in the minibuffer after delay
         ipython                         ; add support for ipython in python-mode
         pyflakes                        ; run python pyflakes checker and output to grep buffer
         python-pep8                     ; minor mode for running `pep8'
@@ -397,6 +395,7 @@
         slime-clj                       ; slime extensions for swank-clj
         slime-repl                      ; read-eval-print loop written in emacs lisp
         )
+
       "A list of packages to install at launch.")
 
     ;; install missing packages
@@ -580,7 +579,7 @@
 (use-package smartparens
   :config
   (progn
-    (smartparens-global-mode t)))
+    (smartparens-global-mode nil)))     ; interferes with paredit
 
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
@@ -689,14 +688,31 @@
     (use-package python-pep8)
     (use-package python-pylint)))
 
-;; ;; python autocompletion
-;; (use-package jedi
-;;   :config
-;;   (progn
-;;     ;; (add-hook 'python-mode-hook 'jedi:setup)     ; FIXME: epc not working
-;;     (add-hook 'python-mode-hook 'jedi:ac-setup)     ; alternatively, only if autocompletion needed
-;;     (setq jedi:setup-keys t)
-;;   ))
+(use-package flymake
+  :config
+  (progn
+    (require 'flymake-cursor)
+    ; make sure pyflakes is loaded, and make it work for unnamed buffers
+    (add-to-list
+     'flymake-allowed-file-name-masks
+     '("\\.py\\'" (lambda ()
+                    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                                       'flymake-create-temp-inplace))
+                           (local-file (file-relative-name temp-file (file-name-directory
+                                                                      buffer-file-name))))
+                      (list "pyflakes" (list local-file))))))))
+
+;; python autocompletion
+(use-package jedi
+  :init
+  (progn
+    (add-hook 'python-mode-hook 'jedi:setup)
+    ;(define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
+    )
+  :config
+  (progn
+    (setq jedi:setup-keys t))
+  )
 
 ;; load sunrise commander, a mix between dired and midnight commander.
 (use-package sunrise-commander
@@ -841,6 +857,16 @@
                     "\\.xml\\'"))
       (add-to-list 'auto-mode-alist `(,mode . web-mode)))))
 
+(use-package direx)
+
+;; for trimming whitespace
+(use-package ws-trim
+  :config
+  (progn
+    (setq-default ws-trim-level 1)  ; only modified lines are trimmed
+    (global-ws-trim-mode 1))
+  )
+
 ;; load initializations for this site
 (use-package init-local)
 
@@ -848,7 +874,9 @@
 ;; HOOKS
 
 ;; delete trailing whitespace upon saving
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; update: replaced with ws-trim mode to allow trimming modified lines only
+;(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;; view-mode
 (add-hook 'help-mode-hook '(lambda () (view-mode t)))
 

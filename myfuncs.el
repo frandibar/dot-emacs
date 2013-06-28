@@ -706,3 +706,13 @@ Both lists must have same length."
     (back-to-indentation)
     (when (= pos (point))
       ad-do-it)))
+
+(defun byte-compile-current-buffer ()
+  "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists.
+Extracted from http://ergoemacs.org/emacs/emacs_byte_compile.html"
+  (interactive)
+  (when (and (eq major-mode 'emacs-lisp-mode)
+             (file-exists-p (byte-compile-dest-file buffer-file-name)))
+    (byte-compile-file buffer-file-name)))
+
+(add-hook 'after-save-hook 'byte-compile-current-buffer)
