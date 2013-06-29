@@ -85,6 +85,9 @@
 (cua-selection-mode t)
 ;;(setq cua-keep-region-after-copy t)
 
+;; sentences end with single space, so fix sentence navigation.
+(setq sentence-end-double-space nil)
+
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)
 
@@ -177,6 +180,8 @@
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
+
+(global-set-key (kbd "RET") 'newline-and-indent)
 
 ;; Use a minor mode that makes my keybindings globally override and
 ;; take precedence over all other bindings for that key, that is,
