@@ -324,15 +324,14 @@
        ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
        ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
        (t (format "%8d" (buffer-size)))))
-    )
 
-  ;; modify the default ibuffer-formats
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 18 18 :left :elide) " "
-                (size-h 9 -1 :right) " "
-                (mode 16 16 :left :elide) " "
-                filename-and-process))))
+    ;; modify the default ibuffer-formats
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 50 50 :left :elide) " "
+                  (size-h 9 -1 :right) " "
+                  (mode 16 16 :left :elide) " "
+                  filename-and-process)))))
 
 ;; add additional package repositories.
 ;; the default elpa.gnu.org are all FSF signed.
