@@ -241,7 +241,7 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; enable fast file/buffer switching mode
-(ido-mode t)
+;(ido-mode t)               ; use helm instead
 
 ;; enable functions that are disabled by default
 (put 'narrow-to-region 'disabled nil)
@@ -339,7 +339,7 @@
   :config
   (progn
     (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-    (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/#packages/") t)
+    (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
     ;; activate all the packages (in particular autoloads)
@@ -364,6 +364,7 @@
         ggtags                          ; GNU Global source code tagging system
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
+        helm                            ; incremental and narrowing framework
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
@@ -870,6 +871,21 @@
     (setq-default ws-trim-level 1)  ; only modified lines are trimmed
     (global-ws-trim-mode 1))
   )
+
+(use-package helm-config
+  :bind (("<f1>" . helm-M-x))
+  :config
+  (progn
+    (define-key global-map [remap find-file] 'helm-find-files)
+    (define-key global-map [remap occur] 'helm-occur)
+    (define-key global-map [remap list-buffers] 'helm-buffers-list)
+    (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+    (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
+    ))
+
+;; TODO: remove this require, don't know how to enable helm without the require
+(require 'helm-mode)
+(helm-mode 1)
 
 ;; load initializations for this site
 (use-package init-local)
