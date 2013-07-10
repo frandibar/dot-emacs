@@ -45,8 +45,6 @@
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
-;(setq-default major-mode 'lisp-interaction-mode)    ; override default fundamental-mode
-
 (use-package eshell
   :config
   (progn
@@ -137,9 +135,6 @@
 ;; highlight tabs and trailing spaces
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 ;;(global-whitespace-mode 1)
-
-;; interactive name completion for describe-function, describe-variable, etc.
-(icomplete-mode 1)
 
 ;; turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
 (winner-mode 1)
@@ -630,18 +625,6 @@
 ;; but also take your `\documentclass' and `\usepackage' commands into account.
 (setq Tex-parse-self t)
 
-;; Enable workgroups if any saved workgroups are found
-(use-package workgroups
-  :disabled t                           ; not using it
-  :config
-  (progn
-    (setq wg-morph-on nil)
-    (let ((file "~/.emacs.d/workgroups"))
-      (when (file-exists-p file)
-        (workgroups-mode 1)
-        (wg-load file)))
-    ))
-
 (use-package undo-tree
   :config
   (global-undo-tree-mode))
@@ -867,6 +850,7 @@
   :bind (("<f12>" . helm-mini))
   :config
   (progn
+    (autoload 'helm-mode "helm-config")
     (define-key global-map [remap execute-extended-command] 'helm-M-x)
     (define-key global-map [remap find-file] 'helm-find-files)
     (define-key global-map [remap occur] 'helm-occur)
@@ -875,8 +859,6 @@
     (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
     ))
 
-;; TODO: remove this require, don't know how to enable helm without the require
-(require 'helm-mode)
 (helm-mode 1)
 
 ;; load initializations for this site
