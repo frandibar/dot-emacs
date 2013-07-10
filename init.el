@@ -156,8 +156,6 @@
 
 (global-set-key (kbd "<esc>") 'keyboard-quit)
 
-(global-set-key (kbd "<f12>") 'ido-switch-buffer)
-
 (global-set-key (kbd "M-n") 'View-scroll-line-forward)
 (global-set-key (kbd "M-p") 'View-scroll-line-backward)
 
@@ -374,7 +372,6 @@
         projectile                      ; project management
         sauron                          ; notification of events (org, mail, etc)
         smartparens                     ;
-        smex                            ; ido like behavior for M-x
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
@@ -574,12 +571,6 @@
 ;; (use-package minimap
 ;;   :bind (("<f11>" . mine-minimap-toggle))
 ;;   )
-
-;; ido-like behavior for M-x
-(use-package smex
-  :bind (("M-x" . smex)                 ; overrides default execute-extended-command
-         ("M-X" . smex-major-mode-commands)
-         ("C-c C-c M-x" . execute-extended-command))) ; this is the old M-x
 
 (use-package smartparens
   :config
@@ -873,9 +864,10 @@
   )
 
 (use-package helm-config
-  :bind (("<f1>" . helm-M-x))
+  :bind (("<f12>" . helm-mini))
   :config
   (progn
+    (define-key global-map [remap execute-extended-command] 'helm-M-x)
     (define-key global-map [remap find-file] 'helm-find-files)
     (define-key global-map [remap occur] 'helm-occur)
     (define-key global-map [remap list-buffers] 'helm-buffers-list)
