@@ -96,33 +96,6 @@ Similar to 'L' in vim."
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-(defun mine-back-to (arg char)
-  "Take cursor back to ARGth CHAR if it exists, if not, do nothing.
-Similar to 'F' in vim.
-Case sensitiveness depends on `case-fold-search'."
-  (interactive "p\ncGo back to char: ")
-  (let ((curr (point))
-        end)
-    (move-beginning-of-line 1)
-    (setq end (point))
-    (goto-char curr)  ; because we moved to beginning of line
-    (search-backward (char-to-string char) end t arg)))
-
-(defun mine-advance-to (arg char)
-  "Advance cursor to ARGth CHAR in current line if it exists, if not, do nothing.
-Similar to 'f' in vim.
-Case sensitiveness depends on `case-fold-search'."
-  (interactive "p\ncAdvance to char: ")
-  (let ((curr (point))
-        end)
-    (move-end-of-line 1)
-    (setq end (point))
-    (goto-char (1+ curr))  ; because we moved to end of line
-    (if (= curr end)
-        (backward-char)
-      (progn (search-forward (char-to-string char) end t arg)
-             (backward-char)))))      ; since point was set after the ocurrence
-
 ;; convert a buffer from DOS `^M' end of lines to Unix end of lines
 (defun mine-dos-to-unix ()
   "Cut all visible ^M from the current buffer."
@@ -516,7 +489,8 @@ http://emacsredux.com/"
   "Reformat xml using xmllint"
   (interactive)
   ;; use xmllint instead of sgml-pretty-print because it's output is nicer
-  (call-process-region (point-min) (point-max) "/usr/bin/xmllint" t t t "--format" "-"))
+  (call-process-region (point-min) (point-max) "/usr/bin/xmllint" t t t "--format" "-")
+  (web-mode))
 
 
 (defun mine-toggle-folding-level (level)

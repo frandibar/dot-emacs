@@ -83,7 +83,7 @@
 (cua-selection-mode t)
 ;;(setq cua-keep-region-after-copy t)
 
-;; sentences end with single space, so fix sentence navigation.
+;; sentences end with single space, so this fixes sentence navigation commands.
 (setq sentence-end-double-space nil)
 
 ;; insert matching pairs of brackets
@@ -347,6 +347,7 @@
       '(
         ack                             ; interface to ack-like source code search tools
         ace-jump-mode                   ; quick cursor location
+        all                             ; edit all lines matching a given regexp
         auto-complete
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
         browse-kill-ring                ; interactively insert items from kill-ring
@@ -358,6 +359,7 @@
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         helm                            ; incremental and narrowing framework
+        jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         minimap                         ; view code from far away
@@ -366,7 +368,7 @@
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
         sauron                          ; notification of events (org, mail, etc)
-        smartparens                     ;
+        ;smartparens                     ;
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
@@ -567,34 +569,16 @@
 ;;   :bind (("<f11>" . mine-minimap-toggle))
 ;;   )
 
-(use-package smartparens
-  :config
-  (progn
-    (smartparens-global-mode nil)))     ; interferes with paredit
+;; (use-package smartparens
+;;   :config
+;;   (progn
+;;     (smartparens-global-mode nil)))     ; interferes with paredit
 
 (use-package yasnippet
   :disabled t                ; takes too long to load and I don't use it
   :commands yasnippet
   :config
   (yas/global-mode 1))
-
-(use-package key-chord
-  :config
-  (progn
-    (key-chord-mode 1)
-    ;; preferably, use upper case to avoid delay when typing
-    (key-chord-define-global "FG" 'mine-advance-to)
-    (key-chord-define-global "FD" 'mine-back-to)
-
-    (key-chord-define-global "HH" 'mine-point-to-top)
-    (key-chord-define-global "MM" 'mine-point-to-middle)
-    (key-chord-define-global "LL" 'mine-point-to-bottom)
-
-    (key-chord-define-global "PP" 'mine-copy-current-line)
-
-    (key-chord-define-global "RR" 'point-to-register)
-    (key-chord-define-global "JJ" 'jump-to-register)
-    ))
 
 ;; encryption settings
 (use-package org-crypt
@@ -659,6 +643,8 @@
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
+(use-package jump-char)
+
 (use-package ipython
   :disabled t                           ; TODO
   :config
@@ -680,6 +666,15 @@
                            (local-file (file-relative-name temp-file (file-name-directory
                                                                       buffer-file-name))))
                       (list "pyflakes" (list local-file))))))))
+
+;; autocheck for python
+(use-package flymake-python-pyflakes
+  :config
+  (progn
+    (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
+
+;; TODO: why was this here?
+;(use-package direx)
 
 ;; python autocompletion
 (use-package jedi
@@ -797,7 +792,8 @@
 ;; except for git repos. This file has entries with patterns to ignore files
 (use-package projectile
   :config
-  (projectile-global-mode))
+  ;(projectile-global-mode)
+  )
 
 ;; mu4e mail client
 (use-package init-mail)
@@ -836,8 +832,6 @@
                     "\\.xml\\'"))
       (add-to-list 'auto-mode-alist `(,mode . web-mode)))))
 
-(use-package direx)
-
 ;; for trimming whitespace
 (use-package ws-trim
   :config
@@ -846,20 +840,40 @@
     (global-ws-trim-mode 1))
   )
 
-(use-package helm-config
+(use-package helm
   :bind (("<f12>" . helm-mini))
+  :init
+  (progn
+    (helm-mode 1)
+    (use-package helm-config
+      :config
+      (progn
+        ;(autoload 'helm-mode "helm-config")
+        (define-key global-map [remap execute-extended-command] 'helm-M-x)
+        (define-key global-map [remap find-file] 'helm-find-files)
+        (define-key global-map [remap occur] 'helm-occur)
+        (define-key global-map [remap list-buffers] 'helm-buffers-list)
+        (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+        (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
+        ))))
+
+(use-package key-chord
   :config
   (progn
-    (autoload 'helm-mode "helm-config")
-    (define-key global-map [remap execute-extended-command] 'helm-M-x)
-    (define-key global-map [remap find-file] 'helm-find-files)
-    (define-key global-map [remap occur] 'helm-occur)
-    (define-key global-map [remap list-buffers] 'helm-buffers-list)
-    (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-    (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
-    ))
+    (key-chord-mode 1)
+    ;; preferably, use upper case to avoid delay when typing
+    (key-chord-define-global "FG" 'jump-char-forward)
+    (key-chord-define-global "GF" 'jump-char-backward)
 
-(helm-mode 1)
+    (key-chord-define-global "HH" 'mine-point-to-top)
+    (key-chord-define-global "MM" 'mine-point-to-middle)
+    (key-chord-define-global "LL" 'mine-point-to-bottom)
+
+    (key-chord-define-global "PP" 'mine-copy-current-line)
+
+    (key-chord-define-global "RR" 'point-to-register)
+    (key-chord-define-global "JJ" 'jump-to-register)
+    ))
 
 ;; load initializations for this site
 (use-package init-local)
