@@ -359,6 +359,7 @@
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         helm                            ; incremental and narrowing framework
+        iedit                           ;
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
@@ -368,10 +369,10 @@
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
         sauron                          ; notification of events (org, mail, etc)
-        ;smartparens                     ;
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
+        wrap-region                     ; enclose region with pairs
         ws-trim                         ; tools and minor mode to trim whitespace on text lines
         yasnippet                       ; a template system
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
@@ -825,6 +826,9 @@
   (progn
     (multiple-cursors-mode)))
 
+;; This package could be replaced with multiple-cursors, but mc isn't working well
+(use-package iedit)
+
 (use-package web-mode
   :config
   (progn
@@ -862,8 +866,8 @@
   (progn
     (key-chord-mode 1)
     ;; preferably, use upper case to avoid delay when typing
-    (key-chord-define-global "FG" 'jump-char-forward)
-    (key-chord-define-global "GF" 'jump-char-backward)
+    (key-chord-define-global "FF" 'jump-char-forward)
+    (key-chord-define-global "DD" 'jump-char-backward)
 
     (key-chord-define-global "HH" 'mine-point-to-top)
     (key-chord-define-global "MM" 'mine-point-to-middle)
