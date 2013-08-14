@@ -359,7 +359,6 @@
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         helm                            ; incremental and narrowing framework
-        iedit                           ;
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
@@ -821,13 +820,14 @@
     (global-auto-highlight-symbol-mode t)))
 
 (use-package multiple-cursors
-  :bind (("M-m" . mc/edit-lines))
-  :config
-  (progn
-    (multiple-cursors-mode)))
+  :bind (("M-m" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-;" . mc/mark-all-like-this)) ; binding used by iedit
+  )
 
-;; This package could be replaced with multiple-cursors, but mc isn't working well
-(use-package iedit)
+;; using multiple-cursors instead
+;(use-package iedit)
 
 (use-package web-mode
   :config
