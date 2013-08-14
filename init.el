@@ -46,6 +46,7 @@
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
 (use-package eshell
+  :bind (("C-u" . mine-eshell-kill-line))
   :config
   (progn
     ;; the eshell directory holds alias definitions and history information

@@ -681,6 +681,11 @@ Both lists must have same length."
     (when (= pos (point))
       ad-do-it)))
 
+(defun mine-eshell-kill-line ()
+  (interactive)
+  (eshell-bol)
+  (kill-line))
+
 (defun byte-compile-current-buffer ()
   "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists.
 Extracted from http://ergoemacs.org/emacs/emacs_byte_compile.html"
