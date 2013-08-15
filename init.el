@@ -46,7 +46,6 @@
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
 (use-package eshell
-  :bind (("C-u" . mine-eshell-kill-line))
   :config
   (progn
     ;; the eshell directory holds alias definitions and history information
@@ -66,7 +65,8 @@
     (add-hook 'eshell-first-time-mode-hook
               (lambda () (setq eshell-visual-commands
                           (append '("mutt" "vim" "screen" "lftp" "ipython" "telnet" "ssh" "htop")
-                                  eshell-visual-commands))))
+                                  eshell-visual-commands))
+                (local-set-key (kbd "C-u") 'mine-eshell-kill-line)))
     ))
 
 ;; this allows (among other things) entering unicode chars in the minibuffer
@@ -552,8 +552,6 @@
 
          ("M-C" . mine-toggle-case)
          ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
-
-         ("S-<return>" . mine-smart-open-line)
          )
   :init
   (progn
