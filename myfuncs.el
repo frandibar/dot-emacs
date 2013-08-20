@@ -452,15 +452,6 @@ http://ergoemacs.org/emacs/modernization_mark-word.html"
   (beginning-of-line) ; move to end of line
   (set-mark (line-end-position)))
 
-(defun mine-greek-lambda ()
-  "Visualize greek letter lambda as a single letter.
-Extracted from
-http://unix.stackexchange.com/questions/30039/emacs-how-to-insert-instead-of-lambda-in-scheme-mode"
-  (font-lock-add-keywords nil `(("\\<lambda\\>"
-                                 (0 (progn (compose-region (match-beginning 0) (match-end 0)
-                                                           ,(make-char 'greek-iso8859-7 107))
-                                           nil))))))
-
 (defun mine-filename-to-clipboard ()
   "Copy the current buffer file name to the clipboard.
 Extracted from

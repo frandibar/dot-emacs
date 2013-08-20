@@ -353,6 +353,7 @@
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
         browse-kill-ring                ; interactively insert items from kill-ring
         dired+                          ; extensions to dired
+        edit-list                       ; edit list symbols easily in buffer
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
         expand-region                   ; increase selected region by semantic units
@@ -368,6 +369,7 @@
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
         projectile                      ; project management
+        purty-mode                      ; replace greek words with letters
         sauron                          ; notification of events (org, mail, etc)
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
@@ -552,13 +554,7 @@
 
          ("M-C" . mine-toggle-case)
          ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
-         )
-  :init
-  (progn
-    ;; view greek letter lambda
-    (dolist (mode '(python-mode-hook
-                    emacs-lisp-mode-hook))
-      (add-hook mode 'mine-greek-lambda))))
+         ))
 
 (use-package starter-kit-defuns
   :bind (("C-c e" . esk-eval-and-replace)))
@@ -877,6 +873,13 @@
     (key-chord-define-global "RR" 'point-to-register)
     (key-chord-define-global "JJ" 'jump-to-register)
     ))
+
+(use-package purty-mode
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'purty-mode)))
+
+(use-package edit-list)
 
 ;; load initializations for this site
 (use-package init-local)
