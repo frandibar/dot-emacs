@@ -874,12 +874,23 @@
     (key-chord-define-global "JJ" 'jump-to-register)
     ))
 
+;; show greek char for lambda in programming modes
 (use-package purty-mode
   :config
   (progn
+    ;; only replace lambda
+    (setq purty-regexp-symbol-pairs nil)
+    (purty-add-pair (purty-enhance-pair '("lambda" . "λ")))
     (add-hook 'prog-mode-hook 'purty-mode)))
 
 (use-package edit-list)
+
+(use-package re-builder
+  :config
+  (progn
+   ;; avoid double backlash escaping when editing regexp
+   ;; see http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
+   (setq reb-re-syntax 'string)))
 
 ;; load initializations for this site
 (use-package init-local)
