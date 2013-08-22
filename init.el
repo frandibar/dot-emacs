@@ -374,6 +374,8 @@
         shift-text                      ; move text in 4 directions
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
+        use-package                     ; replacement for require
+        web-mode                        ; major mode for html
         wgrep                           ; writable grep buffer and apply the changes to files
         wrap-region                     ; enclose region with pairs
         ws-trim                         ; tools and minor mode to trim whitespace on text lines
@@ -408,48 +410,41 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired mode
-(use-package dired+)
 (use-package dired
   :config
   (progn
+    ;; show all, long, no group, human readable file size
+    ;; if there is a dired buffer displayed in the next window, use its
+    ;; current subdir as target, instead of the current subdir of this dired buffer.
+    (setq dired-dwim-target t)
+
+    ;; allow dired to be able to delete or copy a whole dir.  “always”
+    ;; means no asking. “top” means ask once. Any other symbol means ask
+    ;; each and every time for a dir and subdir.
+    (setq dired-recursive-copies (quote always))
+    (setq dired-recursive-deletes (quote top))
+
+    ;; ;; make Enter and ^ (parent dir) to use the same buffer
+    (add-hook 'dired-mode-hook
+              (lambda ()
+                (define-key dired-mode-map (kbd "<return>")
+                  'dired-find-alternate-file)               ; was dired-advertised-find-file
+                (define-key dired-mode-map (kbd "^")
+                  (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
+                ))
+
+
+    ;; use M-o to toggle viewing files
+    (setq dired-omit-files
+          (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
+                  (seq bol "." (not (any "."))) ;; dot-files
+                  (seq bol ".pyc" eol)          ;; python compiled
+                  (seq bol ".pyo" eol)          ;; python object
+                  (seq bol ".o" eol))))         ;; object files
+
     (setq dired-listing-switches "-alh")))
 (use-package dired-x)  ; makes dired-jump available with C-x C-j from the start
-(use-package dired-aux
-  :init
-  ;; to uncompress a .zip file, add "zip" to the variable
-  ;; 'dired-compress-file-suffixes
-  (add-to-list 'dired-compress-file-suffixes '("\\.zip\\'" ".zip" "unzip"))
-
-  ;; if there is a dired buffer displayed in the next window, use its
-  ;; current subdir as target, instead of the current subdir of this dired buffer.
-  (setq dired-dwim-target t)
-
-  ;; allow dired to be able to delete or copy a whole dir.  “always”
-  ;; means no asking. “top” means ask once. Any other symbol means ask
-  ;; each and every time for a dir and subdir.
-  (setq dired-recursive-copies (quote always))
-  (setq dired-recursive-deletes (quote top))
-
-  ;; ;; make Enter and ^ (parent dir) to use the same buffer
-  ;; (add-hook 'dired-mode-hook
-  ;;           (lambda ()
-  ;;             (define-key dired-mode-map (kbd "<return>")
-  ;;               'dired-find-alternate-file)               ; was dired-advertised-find-file
-  ;;             (define-key dired-mode-map (kbd "^")
-  ;;               (lambda () (interactive) (find-alternate-file ".."))) ; was dired-up-directory
-  ;;             ))
-
-  ;; show all, long, no group, human readable file size
-  (setq dired-listing-switches "-algh")
-
-  ;; use M-o to toggle viewing files
-  (setq dired-omit-files
-        (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
-                (seq bol "." (not (any "."))) ;; dot-files
-                (seq bol ".pyc" eol)          ;; python compiled
-                (seq bol ".pyo" eol)          ;; python object
-                (seq bol ".o" eol))))         ;; object files
-  )
+(use-package dired+)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
