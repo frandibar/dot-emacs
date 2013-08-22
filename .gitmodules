@@ -1,18 +1,6 @@
 [submodule "external/command-log-mode"]
 	path = external/command-log-mode
 	url = https://github.com/lewang/command-log-mode.git
-[submodule "external/emacs-calfw"]
-	path = external/emacs-calfw
-	url = https://github.com/kiwanami/emacs-calfw.git
 [submodule "external/sunrise-commander"]
 	path = external/sunrise-commander
 	url = https://github.com/escherdragon/sunrise-commander.git
-[submodule "external/use-package"]
-	path = external/use-package
-	url = https://github.com/jwiegley/use-package.git
-[submodule "external/jedi"]
-	path = external/jedi
-	url = https://github.com/tkf/emacs-jedi.git
-[submodule "external/web-mode"]
-	path = external/web-mode
-	url = https://github.com/fxbois/web-mode.git
