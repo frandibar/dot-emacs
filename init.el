@@ -371,6 +371,7 @@
         projectile                      ; project management
         purty-mode                      ; replace greek words with letters
         sauron                          ; notification of events (org, mail, etc)
+        shift-text                      ; move text in 4 directions
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         wgrep                           ; writable grep buffer and apply the changes to files
@@ -538,8 +539,6 @@
 (use-package myfuncs
   :defer nil                                       ; this doesn't work
   :bind (("M-S-SPC" . mine-select-current-line)
-         ("M-S-<up>" . mine-move-text-up)
-         ("M-S-<down>" . mine-move-text-down)
 
          ("C-c C-a" . mine-increment-number-at-point)
          ("C-c C-x" . mine-decrement-number-at-point)
@@ -809,10 +808,17 @@
     (sr-hide)
     ))
 
-(use-package auto-highlight-symbol
-  :init
-  (progn
-    (global-auto-highlight-symbol-mode t)))
+(use-package shift-text
+  :bind (("M-S-<up>" . shift-text-up)
+         ("M-S-<down>" . shift-text-down)
+         ("M-S-<right>" . shift-text-right)
+         ("M-S-<left>" . shift-text-left)))
+
+;; commented out since keybindings interfere with shift-text
+;; (use-package auto-highlight-symbol
+;;   :init
+;;   (progn
+;;     (global-auto-highlight-symbol-mode t)))
 
 (use-package multiple-cursors
   :bind (("M-m" . mc/edit-lines)
