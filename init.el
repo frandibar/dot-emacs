@@ -451,14 +451,18 @@
                 (seq bol ".o" eol))))         ;; object files
   )
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ mode
-;; set indentation style for c++-mode
-(setq c-default-style "stroustrup"
-      c-basic-offset 4)
+(use-package cc-mode
+  :config
+  (progn
+    (dolist (mode-map '(c-mode-map c++-mode-map))
+      (define-key (symbol-value mode-map) (kbd "M-s") 'mine-switch-cpp-h-file))
+    ;; set indentation style for c++-mode
+    (setq c-default-style "stroustrup"
+          c-basic-offset 4)))
 
-(use-package c++-mode
-  :bind (("M-s" . mine-switch-cpp-h-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG mode
