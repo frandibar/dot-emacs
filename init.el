@@ -353,6 +353,7 @@
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
         browse-kill-ring                ; interactively insert items from kill-ring
         dired+                          ; extensions to dired
+        direx                           ; tree directory explorer
         edit-list                       ; edit list symbols easily in buffer
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
