@@ -10,8 +10,7 @@
 (defun mine-backward-up-sexp (arg)
   "Added because existing function backward-up-list won't work when point is between double quotes.
 
-Extracted from
-http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs"
+Extracted from URL `http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs'."
   (interactive "p")
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
@@ -254,9 +253,8 @@ Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs"
     (goto-char buf-point)))
 
 (defun mine-semnav-up (arg)
-  "Extracted from
-http://xahlee.org/emacs/modernization_mark-word.html by Nikolaj
-Schumacher, 2008-10-20. Released under GPL."
+  "Extracted from URL `http://xahlee.org/emacs/modernization_mark-word.html'
+by Nikolaj Schumacher, 2008-10-20. Released under GPL."
   (interactive "p")
   (when (nth 3 (syntax-ppss))
     (if (> arg 0)
@@ -410,16 +408,14 @@ User buffers are those not starting with * nor in dired-mode."
 
 (defun mine-select-current-line ()
   "Select the current line.
-Extracted from
-http://ergoemacs.org/emacs/modernization_mark-word.html"
+Extracted from URL `http://ergoemacs.org/emacs/modernization_mark-word.html'."
   (interactive)
   (beginning-of-line) ; move to end of line
   (set-mark (line-end-position)))
 
 (defun mine-filename-to-clipboard ()
   "Copy the current buffer file name to the clipboard.
-Extracted from
-http://emacsredux.com/"
+Extracted from URL `http://emacsredux.com'."
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
                       default-directory
@@ -456,8 +452,7 @@ http://emacsredux.com/"
   "Toggle the letter case of current word or text selection.
 Toggles between: “all lower”, “Init Caps”, “ALL CAPS”.
 
-Extracted from http://ergoemacs.org/emacs/modernization_upcase-word.html
-"
+Extracted from URL `http://ergoemacs.org/emacs/modernization_upcase-word.html'."
   (interactive)
   (let (p1 p2 (deactivate-mark nil) (case-fold-search nil))
     (if (region-active-p)
@@ -488,7 +483,7 @@ Extracted from http://ergoemacs.org/emacs/modernization_upcase-word.html
 ;; must start with `eshell/' so it can be called as `clear' from the eshell prompt
 (defun eshell/clear ()
   "Clears the eshell buffer.
-Extracted from http://www.khngai.com/emacs/eshell.php"
+Extracted from URL `http://www.khngai.com/emacs/eshell.php'."
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)))
@@ -567,8 +562,7 @@ Based on http://www.emacswiki.org/emacs/MiniMap"
 (defun mine-smart-open-line ()
   "Insert an empty line after the current line.
 Position the cursor at its beginning, according to the current mode.
-Extracted from
-http://emacsredux.com/"
+Extracted from URL `http://emacsredux.com'."
   (interactive)
   (move-end-of-line nil)
   (newline-and-indent))
@@ -595,7 +589,7 @@ http://emacsredux.com/"
 Ropen the selected file as root (you’ll be prompted for your sudo password)
 if you don’t have write permissions for it.
 
-Extracted from http://emacsredux.com/blog/2013/04/21/edit-files-as-root/"
+Extracted from URL `http://emacsredux.com/blog/2013/04/21/edit-files-as-root'."
   (unless (and buffer-file-name
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
@@ -631,7 +625,7 @@ Both lists must have same length."
 
 (defun byte-compile-current-buffer ()
   "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists.
-Extracted from http://ergoemacs.org/emacs/emacs_byte_compile.html"
+Extracted from URL `http://ergoemacs.org/emacs/emacs_byte_compile.html'."
   (interactive)
   (when (and (eq major-mode 'emacs-lisp-mode)
              (file-exists-p (byte-compile-dest-file buffer-file-name)))
@@ -648,7 +642,7 @@ Extracted from http://ergoemacs.org/emacs/emacs_byte_compile.html"
   "Replace PREFIX with REP visually on this buffer.
 
 PREFIX is simply displayed as REP, but not actually replaced with REP.
-Extracted from http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix/"
+Extracted from URL `http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix/'."
   (interactive "sVisually replace this long prefix: \nsWith this short prefix: ")
   (font-lock-add-keywords
    nil `((
