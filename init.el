@@ -361,6 +361,7 @@
         ggtags                          ; GNU Global source code tagging system
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
+        grep-a-lot                      ; each grep in a new buffer
         helm                            ; incremental and narrowing framework
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
@@ -373,6 +374,7 @@
         purty-mode                      ; replace greek words with letters
         sauron                          ; notification of events (org, mail, etc)
         shift-text                      ; move text in 4 directions
+        smartscan                       ; jump between symbols at point
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         use-package                     ; replacement for require
@@ -897,6 +899,12 @@
    ;; avoid double backlash escaping when editing regexp
    ;; see http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
    (setq reb-re-syntax 'string)))
+
+(use-package grep-a-lot)
+
+(use-package smartscan
+  :config
+  (global-smartscan-mode 1))
 
 ;; load initializations for this site
 (use-package init-local)

@@ -638,3 +638,28 @@ Extracted from http://ergoemacs.org/emacs/emacs_byte_compile.html"
     (byte-compile-file buffer-file-name)))
 
 (add-hook 'after-save-hook 'byte-compile-current-buffer)
+
+;; make long prefixes display as shorter prefixes
+(defface mine-prefix
+  '((t (:foreground "grey50")))
+  "Face for simplified prefixes.")
+
+(defun mine-simplify-prefix (prefix rep)
+  "Replace PREFIX with REP visually on this buffer.
+
+PREFIX is simply displayed as REP, but not actually replaced with REP.
+Extracted from http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-lisp-package-namespace-prefix/"
+  (interactive "sVisually replace this long prefix: \nsWith this short prefix: ")
+  (font-lock-add-keywords
+   nil `((
+          ;; ;; not sure why these don't work
+          ;; ,(rx-to-string `(group word-boundary ,prefix word-boundary))
+          ;; ,(rx-to-string `(: word-boundary ,prefix word-boundary))
+          ;; ,(rx-to-string `(: ,prefix))
+
+          ,(rx-to-string `(group ,prefix))
+
+          (0 (progn (put-text-property (match-beginning 0) (match-end 0)
+                                       'display ,rep)
+                    'mine-prefix)))))
+  (font-lock-fontify-buffer))
