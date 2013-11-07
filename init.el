@@ -73,6 +73,7 @@
 (setq enable-recursive-minibuffers t)
 (setq minibuffer-depth-indicate-mode t)  ;; add depth count to minibuffer (useful when recursive)
 
+(setq shell-file-name "/bin/bash")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BEHAVIOR SETTINGS
@@ -159,6 +160,8 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 
 (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
+
+(global-set-key (kbd "M-i") 'imenu)
 
 ;; by default, emacs binds M-z to zap-to-char. I prefer binding it to
 ;; zap-up-to-char, but the latter is not loaded by default (it's in
