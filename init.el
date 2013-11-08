@@ -270,6 +270,9 @@
 ;; enable separation of camel case words
 (add-hook 'prog-mode-hook 'subword-mode)
 
+(add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
+
+
 (use-package ibuffer
   :config
   (progn
