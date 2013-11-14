@@ -357,6 +357,7 @@
         all                             ; edit all lines matching a given regexp
         auto-complete
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
+        back-button                     ; visual navigation through mark-ring
         browse-kill-ring                ; interactively insert items from kill-ring
         dired+                          ; extensions to dired
         direx                           ; tree directory explorer
@@ -911,6 +912,13 @@
 (use-package smartscan
   :config
   (global-smartscan-mode 1))
+
+;; visual navigation through mark rings
+;; bindings C-x C-<left>/<right> for global mark ring
+;; bindings C-x <left>/<right> for buffer local mark ring
+(use-package back-button
+  :config
+  (back-button-mode 1))
 
 ;; load initializations for this site
 (use-package init-local)
