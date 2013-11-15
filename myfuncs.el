@@ -530,15 +530,6 @@ eshell-prompt-function-long)"
         (move-dir-to-trash name)
       (move-file-to-trash name))))
 
-(defun mine-minimap-toggle ()
-  "Toggle minimap for current buffer.
-Based on http://www.emacswiki.org/emacs/MiniMap"
-  (interactive)
-  (if (or (not (boundp 'minimap-bufname))
-          (null minimap-bufname))
-      (minimap-create)
-    (minimap-kill)))
-
 (defun mine-scissors ()
   (interactive)
   (insert "8<--------8<--------8<--------8<--------8<--------8<--------8<--------8<--------"))

@@ -374,8 +374,8 @@
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
-        minimap                         ; view code from far away
         multiple-cursors
+        nurumacs                        ; smooth scrolling and minimap
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
         powerline                       ; fancy mode line
@@ -568,11 +568,6 @@
 
 (use-package starter-kit-defuns
   :bind (("C-c e" . esk-eval-and-replace)))
-
-;; commented out because I don't use it.
-;; (use-package minimap
-;;   :bind (("<f11>" . mine-minimap-toggle))
-;;   )
 
 ;; (use-package smartparens
 ;;   :config
@@ -920,17 +915,17 @@
 ;; bindings C-x <left>/<right> for buffer local mark ring
 (use-package back-button
   :config
-  (back-button-mode -1)) ;; enable with 1 (disabled because keybindings clash with windmove)
+  (back-button-mode -1)) ;; enable with 1 (TODO: disabled because keybindings clash with windmove)
 
 (use-package diminish
   :config
   (progn
+    (diminish 'helm-mode)
+    (diminish 'ws-trim-mode)
+    (diminish 'eldoc-mode)
     (diminish 'undo-tree-mode " τ")
-    (diminish 'eldoc-mode " δ")
     (diminish 'paredit-mode " ρ")
     (diminish 'purty-mode " λ")
-    (diminish 'helm-mode " ͱ")
-    (diminish 'ws-trim-mode " σ")
     (diminish 'auto-complete-mode " γ")
     (diminish 'elisp-slime-nav-mode " ζ")
     (diminish 'flymake-mode " φ")
@@ -994,6 +989,11 @@
     (setq powerline-default-separator 'wave)
     (powerline-default-theme)
     ))
+
+(use-package nurumacs
+  :config
+  ;(setq nurumacs-map nil)  ; disable minimap
+  )
 
 ;; load initializations for this site
 (use-package init-local)
