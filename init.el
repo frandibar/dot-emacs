@@ -359,6 +359,7 @@
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
         back-button                     ; visual navigation through mark-ring
         browse-kill-ring                ; interactively insert items from kill-ring
+        diminish                        ; tweak modline display for minor modes
         dired+                          ; extensions to dired
         direx                           ; tree directory explorer
         edit-list                       ; edit list symbols easily in buffer
@@ -377,6 +378,7 @@
         multiple-cursors
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
+        powerline                       ; fancy mode line
         projectile                      ; project management
         purty-mode                      ; replace greek words with letters
         sauron                          ; notification of events (org, mail, etc)
@@ -918,7 +920,80 @@
 ;; bindings C-x <left>/<right> for buffer local mark ring
 (use-package back-button
   :config
-  (back-button-mode 1))
+  (back-button-mode -1)) ;; enable with 1 (disabled because keybindings clash with windmove)
+
+(use-package diminish
+  :config
+  (progn
+    (diminish 'undo-tree-mode " τ")
+    (diminish 'eldoc-mode " δ")
+    (diminish 'paredit-mode " ρ")
+    (diminish 'purty-mode " λ")
+    (diminish 'helm-mode " ͱ")
+    (diminish 'ws-trim-mode " σ")
+    (diminish 'auto-complete-mode " γ")
+    (diminish 'elisp-slime-nav-mode " ζ")
+    (diminish 'flymake-mode " φ")
+    ))
+
+(use-package powerline
+  :config
+  (progn
+    ;; Extra mode line faces
+    (make-face 'mode-line-read-only-face)
+    (make-face 'mode-line-modified-face)
+    (make-face 'mode-line-folder-face)
+    (make-face 'mode-line-filename-face)
+    (make-face 'mode-line-position-face)
+    (make-face 'mode-line-mode-face)
+    (make-face 'mode-line-minor-mode-face)
+    (make-face 'mode-line-process-face)
+    (make-face 'mode-line-80col-face)
+
+    (set-face-attribute 'mode-line-inactive nil
+                        :foreground "gray60" :background "gray20"
+                        :inverse-video nil
+                        :box '(:line-width 6 :color "gray20" :style nil))
+    (set-face-attribute 'mode-line nil
+                        :foreground "gray80" :background "gray40"
+                        :inverse-video nil
+                        :box '(:line-width 6 :color "gray40" :style nil))
+
+    (set-face-attribute 'mode-line-read-only-face nil
+                        :inherit 'mode-line-face
+                        :foreground "#4271ae"
+                        :box '(:line-width 2 :color "#4271ae"))
+    (set-face-attribute 'mode-line-modified-face nil
+                        :inherit 'mode-line-face
+                        :foreground "#c82829"
+                        :background "#ffffff"
+                        :box '(:line-width 2 :color "#c82829"))
+    (set-face-attribute 'mode-line-folder-face nil
+                        :inherit 'mode-line-face
+                        :foreground "gray60")
+    (set-face-attribute 'mode-line-filename-face nil
+                        :inherit 'mode-line-face
+                        :foreground "#eab700"
+                        :weight 'bold)
+    (set-face-attribute 'mode-line-position-face nil
+                        :inherit 'mode-line-face
+                        :family "Menlo" :height 100)
+    (set-face-attribute 'mode-line-mode-face nil
+                        :inherit 'mode-line-face
+                        :foreground "gray80")
+    (set-face-attribute 'mode-line-minor-mode-face nil
+                        :inherit 'mode-line-mode-face
+                        :foreground "gray40"
+                        :height 110)
+    (set-face-attribute 'mode-line-process-face nil
+                        :inherit 'mode-line-face
+                        :foreground "#718c00")
+    (set-face-attribute 'mode-line-80col-face nil
+                        :inherit 'mode-line-position-face
+                        :foreground "black" :background "#eab700")
+    (setq powerline-default-separator 'wave)
+    (powerline-default-theme)
+    ))
 
 ;; load initializations for this site
 (use-package init-local)
