@@ -923,6 +923,7 @@
     (diminish 'helm-mode)
     (diminish 'ws-trim-mode)
     (diminish 'eldoc-mode)
+    (diminish 'wrap-region-mode " ω")
     (diminish 'undo-tree-mode " τ")
     (diminish 'paredit-mode " ρ")
     (diminish 'purty-mode " λ")
@@ -986,8 +987,56 @@
     (set-face-attribute 'mode-line-80col-face nil
                         :inherit 'mode-line-position-face
                         :foreground "black" :background "#eab700")
+
     (setq powerline-default-separator 'wave)
-    (powerline-default-theme)
+
+    (defun mine-powerline-theme ()
+      "Theme based on powerline-default-theme"
+      (interactive)
+      (setq-default mode-line-format
+                    '("%e"
+                      (:eval
+                       (let* ((active (powerline-selected-window-active))
+                              (mode-line (if active 'mode-line 'mode-line-inactive))
+                              (face1 (if active 'powerline-active1 'powerline-inactive1))
+                              (face2 (if active 'powerline-active2 'powerline-inactive2))
+                              (separator-left (intern (format "powerline-%s-%s"
+                                                              powerline-default-separator
+                                                              (car powerline-default-separator-dir))))
+                              (separator-right (intern (format "powerline-%s-%s"
+                                                               powerline-default-separator
+                                                               (cdr powerline-default-separator-dir))))
+                              (lhs (list (powerline-raw "%*" nil 'l)
+                                         (powerline-buffer-size nil 'l)
+                                         (powerline-raw mode-line-mule-info nil 'l)
+                                         (funcall separator-left face2 face1)
+                                         (powerline-buffer-id face1 'l)
+                                         (funcall separator-left face1 face2)
+                                         (when (and (boundp 'which-func-mode) which-func-mode)
+                                           (powerline-raw (nth 1 which-func-format) nil 'l))  ; use nth to remove brackets
+                                         (powerline-raw " ")
+                                         (funcall separator-left mode-line face1)
+                                         (when (boundp 'erc-modified-channels-object)
+                                           (powerline-raw erc-modified-channels-object face1 'l))
+                                         (powerline-major-mode face1 'l)
+                                         (powerline-process face1)
+                                         (powerline-minor-modes face1 'l)
+                                         (powerline-narrow face1 'l)
+                                         (powerline-raw " " face1)
+                                         (funcall separator-left face1 face2)
+                                         (powerline-vc face2 'r)))
+                              (rhs (list (funcall separator-right face2 face1)
+                                         (powerline-raw "%4l" face1 'l)
+                                         (powerline-raw ":" face1 'l)
+                                         (powerline-raw "%3c" face1 'r)
+                                         (funcall separator-right face1 mode-line)
+                                         (powerline-raw " ")
+                                         (powerline-raw "%6p" nil 'r)
+                                         (powerline-hud face2 face1))))
+                         (concat (powerline-render lhs)
+                                 (powerline-fill face2 (powerline-width rhs))
+                                 (powerline-render rhs)))))))
+    (mine-powerline-theme)
     ))
 
 (use-package nurumacs
