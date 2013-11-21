@@ -133,8 +133,19 @@ TODO: doesn't work when inside variations."
       (string (col (aref coords 0))
               (row (substring coords 1))))))
 
-(defun sgf/mirror (coord)
+(defun sgf/mirror-coord (coord)
   (+ ?a (- ?s coord)))
+
+(defun sgf/mirror ()
+  "Mirrors the board along the vertical axis."
+  (interactive)
+  (save-excursion
+    (goto-char 1)
+    (while (search-forward-regexp "\\[\\([a-s]\\)\\([a-s]\\)\\]" nil t)
+      (replace-match (concat "["
+                             (char-to-string (sgf/mirror-coord (string-to-char (match-string 1))))
+                             (match-string 2)
+                             "]") t nil))))
 
 (defun sgf/rotate180 ()
   (interactive)
@@ -142,8 +153,8 @@ TODO: doesn't work when inside variations."
     (goto-char 1)
     (while (search-forward-regexp "\\[\\([a-s]\\)\\([a-s]\\)\\]" nil t)
       (replace-match (concat "["
-                             (char-to-string (sgf/mirror (string-to-char (match-string 1))))
-                             (char-to-string (sgf/mirror (string-to-char (match-string 2))))
+                             (char-to-string (sgf/mirror-coord (string-to-char (match-string 1))))
+                             (char-to-string (sgf/mirror-coord (string-to-char (match-string 2))))
                              "]") t nil))))
 
 (defun sgf/view-in-external-program ()
