@@ -1,0 +1,38 @@
+(defun sgf-read-property (prop)
+  (save-excursion
+    (point-min)
+    (re-search-forward (format "%s\\[\\([ :\\+\\.()a-zA-Z0-9\\-]+\\)\\]" prop))
+    (match-string 1)))
+
+(defun sgf-rename-igs-file-dired ()
+  (interactive)
+  (let* ((oldname (dired-file-name-at-point))
+         (newname (sgf-rename-igs-file oldname)))
+    (rename-file oldname newname)
+    (message (format "Renamed file %s to %s" oldname newname))
+    (revert-buffer)
+    (goto-char (point-min))
+    (search-forward newname)))
+
+(defun sgf-rename-igs-file (filename)
+  (let ((owm openwith-mode))
+    (openwith-mode -1)
+    (find-file filename)
+    (let ((black (sgf-read-property "PB"))
+          (white (sgf-read-property "PW"))
+          (date (sgf-read-property "DT"))
+          (result (sgf-read-property "RE")))
+      (kill-buffer)
+      (openwith-mode owm)
+      (format "%s_%s(B)_vs_%s(W)_%s.sgf" date black white (s-replace "+" "p" result)))))
+
+(defun sgf-mark-wins ()
+  (interactive)
+  (dired-mark-files-regexp "frandibar(B).*_Bp")
+  (dired-mark-files-regexp "frandibar(W).*_Wp"))
+
+(defun sgf-mark-lost ()
+  (interactive)
+  (dired-mark-files-regexp "frandibar(B).*_Wp")
+  (dired-mark-files-regexp "frandibar(W).*_Bp"))
+
