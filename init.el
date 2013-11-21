@@ -795,9 +795,6 @@
   ;(projectile-global-mode)
   )
 
-;; mu4e mail client
-(use-package init-mail)
-
 (use-package sauron
   :bind (("C-c s" . sauron-toggle-hide-show)
          ("C-c t" . sauron-clear))
@@ -812,7 +809,22 @@
                 (sr-show)))
     (sauron-start)
     (sr-hide)
+
+    (defun sauron-clear ()
+      "Override original sauron-clear. This version avoids asking, and hides buffer automatically.
+TODO: use defadvice instead."
+      (interactive)
+      (when
+          (and sr-buffer (buffer-live-p sr-buffer))
+        (with-current-buffer sr-buffer
+          (let ((inhibit-read-only t))
+            (erase-buffer)))
+        (message nil)
+        (sr-hide)))
     ))
+
+;; mu4e mail client
+(use-package init-mail)
 
 (use-package shift-text
   :bind (("M-S-<up>" . shift-text-up)
@@ -923,6 +935,7 @@
     (diminish 'helm-mode)
     (diminish 'ws-trim-mode)
     (diminish 'eldoc-mode)
+    ;(diminish 'binary-overwrite-mode " BO")  ; error?
     (diminish 'wrap-region-mode " ω")
     (diminish 'undo-tree-mode " τ")
     (diminish 'paredit-mode " ρ")
@@ -988,7 +1001,7 @@
                         :inherit 'mode-line-position-face
                         :foreground "black" :background "#eab700")
 
-    (setq powerline-default-separator 'wave)
+    (setq powerline-default-separator 'slant)
 
     (defun mine-powerline-theme ()
       "Theme based on powerline-default-theme"
