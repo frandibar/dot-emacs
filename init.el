@@ -803,6 +803,9 @@
     (setq sauron-separate-frame nil)
     ;; allow the script to find the D-Bus session bus, even when running outside its session.
     (setq sauron-dbus-cookie t)
+    (setq sauron-max-line-length nil)   ; don't truncate lines
+    (setq sauron-column-alist '((timestamp . 20)
+                                (message)))
     ;; pop up window when an event occurs
     (add-hook 'sauron-event-added-functions
               (lambda (origin prio msg &optional props)
@@ -1019,7 +1022,7 @@ TODO: use defadvice instead."
                               (separator-right (intern (format "powerline-%s-%s"
                                                                powerline-default-separator
                                                                (cdr powerline-default-separator-dir))))
-                              (lhs (list (powerline-raw "%*" nil 'l)
+                              (lhs (list (powerline-raw "%*" nil 'l)  ; print flags % if read only, * if modified
                                          (powerline-buffer-size nil 'l)
                                          (powerline-raw mode-line-mule-info nil 'l)
                                          (funcall separator-left face2 face1)
@@ -1037,15 +1040,22 @@ TODO: use defadvice instead."
                                          (powerline-narrow face1 'l)
                                          (powerline-raw " " face1)
                                          (funcall separator-left face1 face2)
-                                         (powerline-vc face2 'r)))
+                                         (powerline-vc face2 'r)
+                                         (powerline-raw global-mode-string) ; this is to show messages filter in mu4e
+                                         ))
                               (rhs (list (funcall separator-right face2 face1)
+                                         ;; line : col / position in buffer %
                                          (powerline-raw "%4l" face1 'l)
                                          (powerline-raw ":" face1 'l)
                                          (powerline-raw "%3c" face1 'r)
                                          (funcall separator-right face1 mode-line)
                                          (powerline-raw " ")
                                          (powerline-raw "%6p" nil 'r)
-                                         (powerline-hud face2 face1))))
+                                         (powerline-hud face2 face1)
+                                         (powerline-raw " ")
+                                         ;; TODO: I want to display message icon but not the time
+                                         ;(powerline-raw display-time-string)  ; to show new message icon
+                                   )))
                          (concat (powerline-render lhs)
                                  (powerline-fill face2 (powerline-width rhs))
                                  (powerline-render rhs)))))))
