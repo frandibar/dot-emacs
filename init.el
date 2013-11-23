@@ -357,7 +357,7 @@
         all                             ; edit all lines matching a given regexp
         auto-complete
         auto-highlight-symbol           ; automatic highlighting current symbol minor mode
-        back-button                     ; visual navigation through mark-ring
+        ;back-button                     ; visual navigation through mark-ring
         browse-kill-ring                ; interactively insert items from kill-ring
         diminish                        ; tweak modline display for minor modes
         dired+                          ; extensions to dired
@@ -928,9 +928,10 @@ TODO: use defadvice instead."
 ;; visual navigation through mark rings
 ;; bindings C-x C-<left>/<right> for global mark ring
 ;; bindings C-x <left>/<right> for buffer local mark ring
-(use-package back-button
-  :config
-  (back-button-mode -1)) ;; enable with 1 (TODO: disabled because keybindings clash with windmove)
+;; TODO: disabled because keybindings clash with windmove
+;; (use-package back-button
+;;   :config
+;;   (back-button-mode 1))
 
 (use-package diminish
   :config
