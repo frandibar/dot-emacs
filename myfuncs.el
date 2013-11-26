@@ -650,3 +650,21 @@ Extracted from URL `http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-
                                        'display ,rep)
                     'mine-prefix)))))
   (font-lock-fontify-buffer))
+
+(defun backward-up-list+-1 ()
+  "go to left of )"
+  "Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
+  (interactive)
+  (backward-up-list)
+  (forward-char))
+
+(define-key lisp-mode-shared-map (kbd "C-M-9") 'backward-up-list+-1)
+
+(defun up-list+-1 ()
+  "go to right of ("
+  "Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
+  (interactive)
+  (up-list)
+  (backward-char))
+
+(define-key lisp-mode-shared-map (kbd "C-M-0") 'up-list+-1)
