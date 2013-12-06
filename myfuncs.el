@@ -307,9 +307,11 @@ is easy to get content inside HTML tags."
     ))
 
 (defun mine-close-buffer-and-window ()
-  "Kills buffer and window. Asks for confirmation if buffer is not associated to a file."
+  "Kills buffer and window. Asks for confirmation if buffer is not associated to a file nor is a dired buffer."
   (interactive)
-  (when (or (buffer-file-name) (yes-or-no-p "Do you wish to kill buffer?"))
+  (when (or (buffer-file-name)
+            (equal major-mode 'dired-mode)
+            (yes-or-no-p "Do you wish to kill buffer?"))
     (kill-buffer)
     (delete-window)))
 
