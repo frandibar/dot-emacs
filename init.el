@@ -283,6 +283,7 @@
              ("dired" (mode . dired-mode))
              ("emacs" (name . "^*"))
              ("elisp" (mode . emacs-lisp-mode))
+             ("javascript" (mode . js-mode))
              ("c/c++" (or
                       (mode . c++-mode)
                       (mode . c-mode)))
@@ -360,6 +361,7 @@
         ;back-button                     ; visual navigation through mark-ring
         browse-kill-ring                ; interactively insert items from kill-ring
         diminish                        ; tweak modline display for minor modes
+        discover                        ; help popup
         dired+                          ; extensions to dired
         direx                           ; tree directory explorer
         edit-list                       ; edit list symbols easily in buffer
@@ -1042,6 +1044,7 @@ TODO: use defadvice instead."
                                          (powerline-raw " " face1)
                                          (funcall separator-left face1 face2)
                                          (powerline-vc face2 'r)
+                                         (powerline-raw " " face2)
                                          (powerline-raw global-mode-string) ; this is to show messages filter in mu4e
                                          ))
                               (rhs (list (funcall separator-right face2 face1)
@@ -1067,6 +1070,10 @@ TODO: use defadvice instead."
   :config
   ;(setq nurumacs-map nil)  ; disable minimap
   )
+
+(use-package discover
+  :config
+  (global-discover-mode 1))
 
 ;; load initializations for this site
 (use-package init-local)
