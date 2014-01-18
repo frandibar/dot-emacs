@@ -10,6 +10,8 @@
 ;;   automatically to proper form (and the node gets named in original coordinates).
 ;; - adding a move in between other moves fixes forward moves so
 ;;   that the same player cannot appear twice in a row (doesn't work for variants)
+;; TODO: allow performing rotate and mirror to file in dired mode
+;; FIXME: when rotating comments are removed?
 
 (defvar sgf-mode-hook nil)
 
