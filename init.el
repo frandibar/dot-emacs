@@ -372,6 +372,7 @@
         git-gutter                      ; show git changes in left margin
         graphviz-dot-mode               ; mode for the dot-language used by graphviz
         grep-a-lot                      ; each grep in a new buffer
+        guide-key                       ; guide the following key bindings automatically and dynamically
         helm                            ; incremental and narrowing framework
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
@@ -413,9 +414,9 @@
         slime                           ; superior lisp interaction mode for emacs
         slime-clj                       ; slime extensions for swank-clj
         slime-repl                      ; read-eval-print loop written in emacs lisp
-        )
 
-      "A list of packages to install at launch.")
+
+        "A list of packages to install at launch."))
 
     ;; install missing packages
     (dolist (p prelude-packages)
@@ -1074,6 +1075,15 @@ TODO: use defadvice instead."
 (use-package discover
   :config
   (global-discover-mode 1))
+
+(use-package guide-key
+  :config
+  (progn
+    (guide-key-mode 1)
+    (setq guide-key/idle-delay 0.1)
+    (setq guide-key/recursive-key-sequence-flag t)
+    (setq guide-key/guide-key-sequence
+          '((org-mode "C-c C-x")))))
 
 ;; load initializations for this site
 (use-package init-local)
