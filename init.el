@@ -390,6 +390,7 @@
         typing                          ; a game for fast typers
         undo-tree                       ; treat undo history as a tree
         use-package                     ; replacement for require
+        visual-regexp                   ; regexp/replace command for Emacs with interactive visual feedback
         web-mode                        ; major mode for html
         wgrep                           ; writable grep buffer and apply the changes to files
         wrap-region                     ; enclose region with pairs
@@ -1084,6 +1085,11 @@ TODO: use defadvice instead."
     (setq guide-key/recursive-key-sequence-flag t)
     (setq guide-key/guide-key-sequence
           '((org-mode "C-c C-x")))))
+
+(use-package visual-regexp
+  :config
+  (progn
+    (define-key global-map (kbd "M-%") 'vr/query-replace))) ; override default keybinding for query-replace
 
 ;; load initializations for this site
 (use-package init-local)
