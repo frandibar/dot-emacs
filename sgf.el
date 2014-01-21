@@ -1,10 +1,10 @@
 (defun sgf-read-property (prop)
   (save-excursion
     (point-min)
-    (re-search-forward (format "%s\\[\\([ :\\+\\.()a-zA-Z0-9\\-]+\\)\\]" prop))
+    (re-search-forward (format "%s\\[\\([ :\\+\\.(),a-zA-Z0-9\\-]+\\)\\]" prop))
     (match-string 1)))
 
-(defun sgf-rename-igs-file-dired ()
+(defun sgf-rename-file-dired ()
   (interactive)
   (let* ((oldname (dired-file-name-at-point))
          (newname (sgf-rename-igs-file oldname)))
@@ -14,7 +14,7 @@
     (goto-char (point-min))
     (search-forward newname)))
 
-(defun sgf-rename-igs-file (filename)
+(defun sgf-rename-file (filename)
   (let ((owm openwith-mode))
     (openwith-mode -1)
     (find-file filename)
