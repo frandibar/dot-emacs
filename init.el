@@ -403,8 +403,8 @@
         flymake-cursor                  ; show flymake messages in the minibuffer after delay
         ipython                         ; add support for ipython in python-mode
         pyflakes                        ; run python pyflakes checker and output to grep buffer
-        python-pep8                     ; minor mode for running `pep8'
-        python-pylint                   ; minor mode for running `pylint'
+        python-pep8                     ; minor mode for running pep8
+        python-pylint                   ; minor mode for running pylint
         epc                             ; an RPC stack for the Emacs Lisp (needed for jedi)
 
         ;; clojure setup
@@ -415,9 +415,9 @@
         slime                           ; superior lisp interaction mode for emacs
         slime-clj                       ; slime extensions for swank-clj
         slime-repl                      ; read-eval-print loop written in emacs lisp
+        )
 
-
-        "A list of packages to install at launch."))
+      "A list of packages to install at launch.")
 
     ;; install missing packages
     (dolist (p prelude-packages)
@@ -885,6 +885,10 @@ TODO: use defadvice instead."
         (define-key global-map [remap list-buffers] 'helm-buffers-list)
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
+
+        ; avoid showing up when using winner mode
+        (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
+        (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
 
 (use-package key-chord
