@@ -1,7 +1,7 @@
 (defun sgf-read-property (prop)
   (save-excursion
     (point-min)
-    (re-search-forward (format "%s\\[\\([ :\\+\\.(),a-zA-Z0-9\\-]+\\)\\]" prop))
+    (re-search-forward (format "%s\\[\\([ :\\+\\.(),a-zA-Z0-9_\\-]+\\)\\]" prop))
     (match-string 1)))
 
 (defun sgf-rename-file-dired ()
