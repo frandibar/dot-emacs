@@ -270,6 +270,26 @@
 ;; enable separation of camel case words
 (add-hook 'prog-mode-hook 'subword-mode)
 
+;; enable tags for gnu global
+(use-package ggtags
+  :config
+  (add-hook 'prog-mode-hook 'ggtags-mode))
+
+(use-package helm-gtags
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'helm-gtags-mode)
+    (eval-after-load "helm-gtags"
+      '(progn
+         (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+         (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+         (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+         (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+         (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+         (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+         (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))))
+
+;; fish-shell configuration files
 (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
 
@@ -281,6 +301,7 @@
           '(("default"
              ("clojure" (mode . clojure-mode))
              ("dired" (mode . dired-mode))
+             ("grep" (mode . grep-mode)) ; must go before emacs rule
              ("emacs" (name . "^*"))
              ("elisp" (mode . emacs-lisp-mode))
              ("javascript" (mode . js-mode))
@@ -348,7 +369,7 @@
 
     ;; fetch the list of available packages
     (when (not package-archive-contents)
-      (package-refresh-contents))
+      package-refresh-contents)
 
     ;; packages we want to install
     (defvar prelude-packages
@@ -374,6 +395,7 @@
         grep-a-lot                      ; each grep in a new buffer
         guide-key                       ; guide the following key bindings automatically and dynamically
         helm                            ; incremental and narrowing framework
+        helm-gtags                      ; helm interface for gnu global
         jump-char                       ; fast navigation by char with repeat search
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
