@@ -27,6 +27,12 @@
 (let ((default-directory  "/usr/local/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
+;; OS specific settings
+;; On OS X, use command key as meta, and option key as ctrl
+(when (eq system-type 'darwin)
+  (setq ns-alternate-modifier 'control
+        ns-command-modifier 'meta))
+
 ;; The `use-package' declaration macro allows isolating package
 ;; configuration in a way that is performance-oriented and tidy.
 (require 'use-package)   ; in order to use `use-package' instead of `require'
@@ -99,8 +105,9 @@
 
 ;; hide tool bar and scroll bar, show the menu bar
 (menu-bar-mode t)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
 
 ;; hide splash screen
 (setq inhibit-splash-screen t)
@@ -400,7 +407,7 @@
         key-chord                       ; map pairs of simultaneously pressed keys to commands
         magit                           ; control git from emacs
         multiple-cursors
-        nurumacs                        ; smooth scrolling and minimap
+        ;; nurumacs                        ; smooth scrolling and minimap
         openwith                        ; open files with external programs
         paredit                         ; minor mode for editing parentheses
         powerline                       ; fancy mode line
@@ -421,6 +428,7 @@
         zenburn-theme                   ; low contrast color theme (not zenburn-emacs)
 
         ;; python setup
+        jedi                            ; python autocompletion
         flymake-python-pyflakes         ; a filemake handler for python-mode using pyflakes
         flymake-cursor                  ; show flymake messages in the minibuffer after delay
         ipython                         ; add support for ipython in python-mode
@@ -644,9 +652,9 @@
   :bind ("C-=" . er/expand-region))
 
 ;; Wrap Region is a minor mode for Emacs that wraps a region with
-;; punctuations. For example select a region and press `(' to wrap it
-;; around parentheses.  For "tagged" markup modes, such as HTML and
-;; XML, it wraps with tags.
+;; punctuations. For example select a region and press left paren to
+;; wrap it around parentheses. For "tagged" markup modes, such as HTML
+;; and XML, it wraps with tags.
 (use-package wrap-region
   :config
   (wrap-region-global-mode t))
@@ -726,8 +734,8 @@
 (use-package bookmark
   :config
   (progn
-    (bookmark-bmenu-list)
-    (switch-to-buffer "*Bookmark List*")
+    ;(bookmark-bmenu-list)
+    ;(switch-to-buffer "*Bookmark List*")
     ))
 
 ;; Change the default naming of buffers to include parts of the file name (directory names) until the buffer names are unique.
@@ -1094,10 +1102,10 @@ TODO: use defadvice instead."
     (mine-powerline-theme)
     ))
 
-(use-package nurumacs
-  :config
-  ;(setq nurumacs-map nil)  ; disable minimap
-  )
+;; (use-package nurumacs
+;;   :config
+;;   ;(setq nurumacs-map nil)  ; disable minimap
+;;   )
 
 (use-package discover
   :config
