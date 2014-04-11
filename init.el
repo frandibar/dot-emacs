@@ -27,12 +27,6 @@
 (let ((default-directory  "/usr/local/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; OS specific settings
-;; On OS X, use command key as meta, and option key as ctrl
-(when (eq system-type 'darwin)
-  (setq ns-alternate-modifier 'control
-        ns-command-modifier 'meta))
-
 ;; The `use-package' declaration macro allows isolating package
 ;; configuration in a way that is performance-oriented and tidy.
 (require 'use-package)   ; in order to use `use-package' instead of `require'
@@ -48,6 +42,20 @@
 ;; as much as you can get away with on the `:config' side.
 
 ;; `use-package' also adds `describe-personal-keybindings'
+
+
+;; OS specific settings
+
+;; On OS X, use command key as meta, and option key as ctrl
+(when (eq system-type 'darwin)
+  (setq ns-alternate-modifier 'control
+        ns-command-modifier 'meta))
+
+;(when (memq window-system '(mac ns))
+;  (use-package exec-path-from-shell
+;    :config
+;     (progn
+;       (exec-path-from-shell-initialize))))
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
@@ -395,6 +403,7 @@
         edit-list                       ; edit list symbols easily in buffer
         elisp-slime-nav                 ; make M-. and M-, work in elisp like they do in slime
         eshell-manual                   ; an updated manual for Eshell
+        exec-path-from-shell            ; get environment variables such as $PATH from the shell
         expand-region                   ; increase selected region by semantic units
         ggtags                          ; GNU Global source code tagging system
         git-gutter                      ; show git changes in left margin
@@ -520,8 +529,7 @@
     (setq org-agenda-span 14)
     (setq org-log-into-drawer t)
 
-    (setq org-agenda-files (quote ("~/Dropbox/core/agenda-core.org"
-                                   "~/Dropbox/core/notas.org"
+    (setq org-agenda-files (quote ("~/Dropbox/core/notas.org"
                                    "~/Dropbox/docs/cumples.org"
                                    "~/Dropbox/docs/agenda-personal.org")))
 
@@ -544,9 +552,7 @@
             ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
              "* %^t %^{prompt}")
             ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
-             "* %^t %^{prompt}")
-            ("c" "core" entry (file+headline "~/Dropbox/core/agenda-core.org" "core")
-             "* %^t %^{prompt}")
+             "* %^t %^{")
             ))
 
     ;; the appointment notification facility
@@ -940,13 +946,14 @@ TODO: use defadvice instead."
     ))
 
 ;; show greek char for lambda in programming modes
-(use-package purty-mode
-  :config
-  (progn
-    ;; only replace lambda
-    (setq purty-regexp-symbol-pairs nil)
-    (purty-add-pair (purty-enhance-pair '("lambda" . "λ")))
-    (add-hook 'prog-mode-hook 'purty-mode)))
+;; TODO: commented out as it breaks comments in python
+;; (use-package purty-mode
+;;   :config
+;;   (progn
+;;     ;; only replace lambda
+;;     (setq purty-regexp-symbol-pairs nil)
+;;     (purty-add-pair (purty-enhance-pair '("lambda" . "λ")))
+;;     (add-hook 'prog-mode-hook 'purty-mode)))
 
 (use-package edit-list)
 
@@ -981,7 +988,7 @@ TODO: use defadvice instead."
     (diminish 'wrap-region-mode " ω")
     (diminish 'undo-tree-mode " τ")
     (diminish 'paredit-mode " ρ")
-    (diminish 'purty-mode " λ")
+;   (diminish 'purty-mode " λ")
     (diminish 'auto-complete-mode " γ")
     (diminish 'elisp-slime-nav-mode " ζ")
     (diminish 'flymake-mode " φ")
