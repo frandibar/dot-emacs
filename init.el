@@ -27,9 +27,6 @@
 (let ((default-directory  "/usr/local/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; Aquamacs specific
-(setq user-emacs-directory "~/.emacs.d/")
-
 ;; add additional package repositories.
 ;; the default elpa.gnu.org are all FSF signed.
 (require 'package)
@@ -48,34 +45,25 @@
   ;; packages we want to install
   (defvar prelude-packages
     '(
+      ;; misc packages
       ack                     ; interface to ack-like source code search tools
+      ack-and-a-half          ; needed for ack in projectile
       ace-jump-mode           ; quick cursor location
       all                     ; edit all lines matching a given regexp
       auto-complete
-      auto-highlight-symbol   ; automatic highlighting current symbol minor mode
-      ;; back-button          ; visual navigation through mark-ring
       browse-kill-ring        ; interactively insert items from kill-ring
       diminish                ; tweak modline display for minor modes
       discover                ; help popup
       dired+                  ; extensions to dired
       direx                   ; tree directory explorer
       edit-list               ; edit list symbols easily in buffer
-      elisp-slime-nav         ; make M-. and M-, work in elisp like they do in slime
-      eshell-manual           ; an updated manual for Eshell
       exec-path-from-shell    ; get environment variables such as $PATH from the shell
       expand-region           ; increase selected region by semantic units
       ggtags                  ; GNU Global source code tagging system
-      git-gutter              ; show git changes in left margin
-      graphviz-dot-mode       ; mode for the dot-language used by graphviz
-      grep-a-lot              ; each grep in a new buffer
       guide-key               ; guide the following key bindings automatically and dynamically
-      jump-char               ; fast navigation by char with repeat search
-      key-chord               ; map pairs of simultaneously pressed keys to commands
-      magit                   ; control git from emacs
       multiple-cursors
-      ;; nurumacs             ; smooth scrolling and minimap
+      nav                     ; left pane file browser
       openwith                ; open files with external programs
-      paredit                 ; minor mode for editing parentheses
       powerline               ; fancy mode line
       projectile              ; project management
       pretty-lambdada         ; replace greek words with letters
@@ -83,8 +71,6 @@
       shift-text              ; move text in 4 directions
       smartscan               ; jump between symbols at point
       tabbar-ruler            ; prettier buffer tabs
-      typing                  ; a game for fast typers
-      use-package             ; a replacement for require
       undo-tree               ; treat undo history as a tree
       use-package             ; replacement for require
       visual-regexp           ; regexp/replace command for Emacs with interactive visual feedback
@@ -92,26 +78,29 @@
       wgrep                   ; writable grep buffer and apply the changes to files
       wrap-region             ; enclose region with pairs
       ws-trim                 ; tools and minor mode to trim whitespace on text lines
-      yasnippet               ; a template system
 
-      ;; python setup
-      jedi                    ; python autocompletion
+      ;; casual
+      typing                  ; a game for fast typers
+
+      ;; git specific
+      git-gutter-fringe       ; show git changes in left margin
+      magit                   ; control git from emacs
+
+      ;; elisp specific
+      elisp-slime-nav         ; make M-. and M-, work in elisp like they do in slime
+      paredit                 ; minor mode for editing parentheses
+      slime                   ; superior lisp interaction mode for emacs
+      slime-repl              ; read-eval-print loop written in emacs lisp
+
+      ;; python specific
       flymake-python-pyflakes ; a filemake handler for python-mode using pyflakes
       flymake-cursor          ; show flymake messages in the minibuffer after delay
+      jedi                    ; python autocompletion
       ipython                 ; add support for ipython in python-mode
       pyflakes                ; run python pyflakes checker and output to grep buffer
       python-pep8             ; minor mode for running pep8
       python-pylint           ; minor mode for running pylint
       epc                     ; an RPC stack for the Emacs Lisp (needed for jedi)
-
-      ;; clojure setup
-      clojure-mode
-      clojure-test-mode
-      elein                   ; running leiningen commands from emacs
-      nrepl                   ; client for clojure nrepl
-      slime                   ; superior lisp interaction mode for emacs
-      slime-clj               ; slime extensions for swank-clj
-      slime-repl              ; read-eval-print loop written in emacs lisp
 
       ;; helm & plugins
       helm                    ; incremental and narrowing framework
@@ -119,19 +108,40 @@
       helm-pydoc              ; pydoc with helm interface
       helm-package            ; list elpa packages with helm
       helm-git                ; helm extension for git
-      ))
+      )
 
-  ;; install missing packages
-  (dolist (p prelude-packages)
-    (unless (package-installed-p p)
-      (package-install p))))
+    ;; The following packages fell in disuse for some reason.
+    ;; grep-a-lot              ; each grep in a new buffer
+    ;;                         ; I replaced grep with ack
+    ;; nurumacs                ; smooth scrolling and minimap
+    ;;                         ; nice, but it felt slow
+    ;; auto-highlight-symbol   ; automatic highlighting current symbol minor mode
+    ;; back-button             ; visual navigation through mark-ring
+
+    ;; clojure specific
+    ;; clojure-mode
+    ;; clojure-test-mode
+    ;; elein                   ; running leiningen commands from emacs
+    ;; nrepl                   ; client for clojure nrepl
+    ;; slime-clj               ; slime extensions for swank-clj
+
+    ;; graphviz-dot-mode       ; mode for the dot-language used by graphviz
+    ;; eshell-manual           ; an updated manual for Eshell
+    ;; jump-char               ; fast navigation by char with repeat search
+    ;; key-chord               ; map pairs of simultaneously pressed keys to commands
+    ;; yasnippet               ; a template system
+
+    ;; install missing packages
+    (dolist (p prelude-packages)
+      (unless (package-installed-p p)
+        (package-install p)))))
 
 ;; The `use-package' declaration macro allows isolating package
 ;; configuration in a way that is performance-oriented and tidy.
 (require 'use-package)   ; in order to use `use-package' instead of `require'
 
-;; ;; `use-package' loads a package only if it's available, if not, a
-;; ;; warning is logged in the *Messages* buffer. If it succeeds, a
+;; `use-package' loads a package only if it's available, if not, a
+;; warning is logged in the *Messages* buffer. If it succeeds, a
 ;; message about "Loading foo" is logged, along with the time it took
 ;; to load if it was over 0.01s.
 
@@ -145,18 +155,24 @@
 
 ;; OS specific settings
 
+;; FIXME: this workaround is pretty ugly
+(setenv "PATH" "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin")
+
 ;; On OS X, use command key as meta, and option key as ctrl
 ;; I commented this code because I prefer remapping using KeyRemap4MacBook software
 ;; (when (eq system-type 'darwin)
 ;;   (setq ns-alternate-modifier 'control
 ;;         ns-command-modifier 'meta))
 
-;; TODO: what was this for?
-;; ;(when (memq window-system '(mac ns))
-;; ;  (use-package exec-path-from-shell
-;; ;    :config
-;; ;     (progn
-;; ;       (exec-path-from-shell-initialize))))
+;; On OS X the $PATH environment variable and `exec-path' used by a
+;; windowed Emacs instance will usually be the system-wide default
+;; path, rather than that seen in a terminal window.
+;; FIXME: this should work but it doesn't
+;; (when (memq window-system '(mac ns))
+;;   (use-package exec-path-from-shell
+;;     :config
+;;     (progn
+;;       (exec-path-from-shell-initialize))))
 
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
@@ -194,20 +210,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BEHAVIOR SETTINGS
 
-;; ;; Copy/paste behavior
-;; ;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
-;; ;(cua-mode t)
-;; ;; use cua mode for rectangle selection
-;; (cua-selection-mode t)
-;; ;;(setq cua-keep-region-after-copy t)
+;; Copy/paste behavior
+;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
+;;(cua-mode t)
+;; use cua mode for rectangle selection
+(cua-selection-mode t)
+;;(setq cua-keep-region-after-copy t)
 
-;; ;; sentences end with single space, so this fixes sentence navigation commands.
-;; (setq sentence-end-double-space nil)
+;; sentences end with single space, so this fixes sentence navigation commands.
+(setq sentence-end-double-space nil)
 
 ;; insert matching pairs of brackets
 ;; (electric-pair-mode)
 
-;; ;; don't let the cursor go into minibuffer prompt (default behavior allows copying prompt)
+;; don't let the cursor go into minibuffer prompt (default behavior allows copying prompt)
 ;; (setq minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
 
 ;; turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
@@ -249,9 +265,9 @@
 ;; set font size
 (set-face-attribute 'default nil :height 110)
 
-;; ;; highlight tabs and trailing spaces
-;; (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
-;; ;;(global-whitespace-mode 1)
+;; highlight tabs and trailing spaces
+(setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
+(global-whitespace-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; KEYBINDINGS
@@ -292,34 +308,34 @@
 
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-;; ;; Use a minor mode that makes my keybindings globally override and
-;; ;; take precedence over all other bindings for that key, that is,
-;; ;; override all major/minor mode maps and make sure my binding is
-;; ;; always in effect.  In order to avoid precedence over other minor
-;; ;; modes, it should go first on the list minor-mode-map-alist.
-;; ;; Extracted from
-;; ;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
-;; ;; (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-;; ;; (define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
-;; ;; (define-minor-mode my-keys-minor-mode
-;; ;;   "A minor mode so that my key settings override annoying major modes."
-;; ;;   t " my-keys" 'my-keys-minor-mode-map)
+;; Use a minor mode that makes my keybindings globally override and
+;; take precedence over all other bindings for that key, that is,
+;; override all major/minor mode maps and make sure my binding is
+;; always in effect.  In order to avoid precedence over other minor
+;; modes, it should go first on the list minor-mode-map-alist.
+;; Extracted from
+;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
+;; (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+;; (define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
+;; (define-minor-mode my-keys-minor-mode
+;;   "A minor mode so that my key settings override annoying major modes."
+;;   t " my-keys" 'my-keys-minor-mode-map)
 
-;; ;; (my-keys-minor-mode 1)
+;; (my-keys-minor-mode 1)
 
-;; ;; ;; but turn off the overridings in the minibuffer
-;; ;; (add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
-;; ;; ;; Make my keybindings retain precedence, even if subsequently-loaded
-;; ;; ;; libraries bring in new keymaps of their own. Because keymaps can be
-;; ;; ;; generated at compile time, load seemed like the best place to do
-;; ;; ;; this.
-;; ;; (defadvice load (after give-my-keybindings-priority)
-;; ;;   "Try to ensure that my keybindings always have priority."
-;; ;;   (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
-;; ;;       (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
-;; ;;         (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
-;; ;;         (add-to-list 'minor-mode-map-alist mykeys))))
-;; ;; (ad-activate 'load)
+;; ;; but turn off the overridings in the minibuffer
+;; (add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
+;; ;; Make my keybindings retain precedence, even if subsequently-loaded
+;; ;; libraries bring in new keymaps of their own. Because keymaps can be
+;; ;; generated at compile time, load seemed like the best place to do
+;; ;; this.
+;; (defadvice load (after give-my-keybindings-priority)
+;;   "Try to ensure that my keybindings always have priority."
+;;   (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
+;;       (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
+;;         (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
+;;         (add-to-list 'minor-mode-map-alist mykeys))))
+;; (ad-activate 'load)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
@@ -501,8 +517,8 @@
 ;; (use-package dired+)
 
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; C++ mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; C++ mode
 ;; (use-package cc-mode
 ;;   :config
 ;;   (progn
@@ -529,7 +545,8 @@
     (setq org-log-into-drawer t)
 
     (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
-                                   "~/Dropbox/docs/agenda-personal.org")))
+                                   "~/Dropbox/docs/agenda-personal.org"
+                                   "~/xapo/agenda.org")))
 
     (setq org-capture-templates
           '(("m" "movilidad")
@@ -537,38 +554,30 @@
              "* %^t %^{prompt}")
             ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
              "* %^t %^{prompt}")
-            ("mu" "monociclo" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "monociclo")
-             "* %^t %^{prompt}")
-            ("mb" "bici" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "bici")
-             "* %^t %^{prompt}")
-            ("b" "banco" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "banco")
-             "* %^t %^{prompt}")
             ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
-             "* %^t %^{prompt}")
-            ("s" "compras" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "compras")
              "* %^t %^{prompt}")
             ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
              "* %^t %^{prompt}")
-            ("x" "programming" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "programming")
+            ("x" "xapo" entry (file+headline "~/xapo/agenda.org" "xapo")
              "* %^t %^{")
             ))
 
-;;     ;; the appointment notification facility
-;;     ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
-;;     (setq appt-message-warning-time 15 ; warn 15 min in advance
-;;           appt-display-interval 5      ; repeat every 5 min
-;;           appt-display-mode-line t     ; show in the modeline
-;;           appt-display-format 'window) ; use our func
-;;     (appt-activate 1)              ; active appt (appointment notification)
-;;     (display-time)                 ; time display is required for this...
+    ;;     ;; the appointment notification facility
+    ;;     ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
+    ;;     (setq appt-message-warning-time 15 ; warn 15 min in advance
+    ;;           appt-display-interval 5      ; repeat every 5 min
+    ;;           appt-display-mode-line t     ; show in the modeline
+    ;;           appt-display-format 'window) ; use our func
+    ;;     (appt-activate 1)              ; active appt (appointment notification)
+    ;;     (display-time)                 ; time display is required for this...
 
-;;     ;; update appt each time agenda is opened
-;;     (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+    ;;     ;; update appt each time agenda is opened
+    ;;     (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
 
-;;     ;; commented out because I prefer using sauron buffer instead of a popup window.
-;;     ;; (defun mine-appt-display (min-to-app new-time msg)
-;;     ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-;;     ;; (setq appt-disp-window-function (function mine-appt-display))
+    ;;     ;; commented out because I prefer using sauron buffer instead of a popup window.
+    ;;     ;; (defun mine-appt-display (min-to-app new-time msg)
+    ;;     ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
+    ;;     ;; (setq appt-disp-window-function (function mine-appt-display))
     ))
 
 ;; show function arglist or variable docstring in echo area
@@ -642,9 +651,9 @@
 ;; # -*- buffer-auto-save-file-name: nil; -*-
 ;; Excluding the crypt tag from inheritance prevents already encrypted text being encrypted again.
 
-;; ;; latex settings
-;; ;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
-;; ;; but also take your `\documentclass' and `\usepackage' commands into account.
+;; latex settings
+;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
+;; but also take your `\documentclass' and `\usepackage' commands into account.
 ;; (setq Tex-parse-self t)
 
 (use-package undo-tree
@@ -655,7 +664,6 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; FIXME aquamacs replaces selected region with new text
 ;; Wrap Region is a minor mode for Emacs that wraps a region with
 ;; punctuations. For example select a region and press left paren to
 ;; wrap it around parentheses. For "tagged" markup modes, such as HTML
@@ -672,47 +680,47 @@
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
+;; FIXME: not working
 ;; (use-package ipython
-;;   :disabled t                           ; TODO
 ;;   :config
 ;;   (progn
 ;;     (use-package starter-kit-defuns)
 ;;     (use-package python-pep8)
 ;;     (use-package python-pylint)))
 
-;; (use-package flymake
-;;   :config
-;;   (progn
-;;     (require 'flymake-cursor)
-;;     ; make sure pyflakes is loaded, and make it work for unnamed buffers
-;;     (add-to-list
-;;      'flymake-allowed-file-name-masks
-;;      '("\\.py\\'" (lambda ()
-;;                     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                                        'flymake-create-temp-inplace))
-;;                            (local-file (file-relative-name temp-file (file-name-directory
-;;                                                                       buffer-file-name))))
-;;                       (list "pyflakes" (list local-file))))))))
+(use-package flymake
+  :config
+  (progn
+    (require 'flymake-cursor)
+    ;; make sure pyflakes is loaded, and make it work for unnamed buffers
+    (add-to-list
+     'flymake-allowed-file-name-masks
+     '("\\.py\\'" (lambda ()
+                    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                                       'flymake-create-temp-inplace))
+                           (local-file (file-relative-name temp-file (file-name-directory
+                                                                      buffer-file-name))))
+                      (list "pyflakes" (list local-file))))))))
 
-;; ;; autocheck for python
-;; (use-package flymake-python-pyflakes
-;;   :config
-;;   (progn
-;;     (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
+;; autocheck for python
+(use-package flymake-python-pyflakes
+  :config
+  (progn
+    (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
 
 ;; python autocompletion
 (use-package jedi
   :init
   (progn
     (add-hook 'python-mode-hook 'jedi:setup)
-    ;(define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
+    ;; (define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
     )
   :config
   (progn
     (setq jedi:setup-keys t))
   )
 
-;; ;; load sunrise commander, a mix between dired and midnight commander.
+;; load sunrise commander, a mix between dired and midnight commander.
 ;; (use-package sunrise-commander
 ;;   :commands sunrise
 ;;   :config
@@ -720,7 +728,7 @@
 ;;     (use-package sunrise-x-tree)
 ;;     (use-package sunrise-x-buttons)))
 
-;; ;; show bookmarks on startup
+;; show bookmarks on startup
 ;; (use-package bookmark
 ;;   :config
 ;;   (progn
@@ -785,6 +793,16 @@
 (use-package magit
   :bind (("M-g s" . magit-status)))
 
+;; git-gutter.el does not work with linum-mode but
+;; git-gutter-fringe.el can work with linum-mode. In contrast,
+;; git-gutter-fringe.el does not work in tty frame(emacs -nw), but
+;; git-gutter.el can work in tty frame.
+(use-package git-gutter-fringe
+  :config
+  (global-git-gutter-mode 1)
+  ;;(setq git-gutter-fr:side 'right-fringe)
+  )
+
 ;; allows changing files directly from grep buffer
 (use-package wgrep)
 
@@ -813,13 +831,13 @@
 ;;     ;(openwith-mode t)
 ;;     ))
 
-;; ;; enable project management for all modes
-;; ;; root dir must have a file named .projectile to be considered a project
-;; ;; except for git repos. This file has entries with patterns to ignore files
-;; (use-package projectile
-;;   :config
-;;   ;(projectile-global-mode)
-;;   )
+;; enable project management for all modes
+;; root dir must have a file named .projectile to be considered a project
+;; except for git repos. This file has entries with patterns to ignore files
+(use-package projectile
+  :config
+  (projectile-global-mode)
+  )
 
 ;; (use-package sauron
 ;;   :bind (("C-c s" . sauron-toggle-hide-show)
@@ -861,11 +879,11 @@
          ("M-S-<right>" . shift-text-right)
          ("M-S-<left>" . shift-text-left)))
 
-;; ;; commented out since keybindings interfere with shift-text
-;; ;; (use-package auto-highlight-symbol
-;; ;;   :init
-;; ;;   (progn
-;; ;;     (global-auto-highlight-symbol-mode t)))
+;; commented out since keybindings interfere with shift-text
+;; (use-package auto-highlight-symbol
+;;   :init
+;;   (progn
+;;     (global-auto-highlight-symbol-mode t)))
 
 (use-package multiple-cursors
   :bind (("M-m" . mc/edit-lines)
@@ -897,7 +915,7 @@
     (use-package helm-config
       :config
       (progn
-        ;(autoload 'helm-mode "helm-config")
+                                        ;(autoload 'helm-mode "helm-config")
         (define-key global-map [remap execute-extended-command] 'helm-M-x)
         (define-key global-map [remap find-file] 'helm-find-files)
         (define-key global-map [remap occur] 'helm-occur)
@@ -905,7 +923,7 @@
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
 
-        ; avoid showing up when using winner mode
+                                        ; avoid showing up when using winner mode
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
@@ -938,38 +956,22 @@
 (use-package re-builder
   :config
   (progn
-   ;; avoid double backlash escaping when editing regexp
-   ;; see http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
-   (setq reb-re-syntax 'string)))
+    ;; avoid double backlash escaping when editing regexp
+    ;; see http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
+    (setq reb-re-syntax 'string)))
 
-(use-package grep-a-lot)
-
-;; (use-package smartscan
-;;   :config
-;;   (global-smartscan-mode 1))
-
-;; ;; visual navigation through mark rings
-;; ;; bindings C-x C-<left>/<right> for global mark ring
-;; ;; bindings C-x <left>/<right> for buffer local mark ring
-;; ;; TODO: disabled because keybindings clash with windmove
-;; ;; (use-package back-button
-;; ;;   :config
-;; ;;   (back-button-mode 1))
-
-(use-package diminish
+(use-package smartscan
   :config
-  (progn
-    (diminish 'helm-mode)
-    (diminish 'ws-trim-mode)
-    (diminish 'eldoc-mode)
-    ;; (diminish 'binary-overwrite-mode " BO")  ; error?
-    (diminish 'wrap-region-mode " ω")
-    (diminish 'undo-tree-mode " τ")
-    (diminish 'paredit-mode " ρ")
-    (diminish 'auto-complete-mode " γ")
-    ;; (diminish 'elisp-slime-nav-mode " ζ")
-    ;; (diminish 'flymake-mode " φ")
-    ))
+  (global-smartscan-mode 1))
+
+;; visual navigation through mark rings
+;; bindings C-x C-<left>/<right> for global mark ring
+;; bindings C-x <left>/<right> for buffer local mark ring
+;; TODO: disabled because keybindings clash with windmove
+;; (use-package back-button
+;;   :config
+;;   (back-button-mode 1))
+
 
 (use-package powerline
   :config
@@ -1078,36 +1080,36 @@
                                          (powerline-hud face2 face1)
                                          (powerline-raw " ")
                                          ;; TODO: I want to display message icon but not the time
-                                         ;(powerline-raw display-time-string)  ; to show new message icon
-                                   )))
+                                        ;(powerline-raw display-time-string)  ; to show new message icon
+                                         )))
                          (concat (powerline-render lhs)
                                  (powerline-fill face2 (powerline-width rhs))
                                  (powerline-render rhs)))))))
     (mine-powerline-theme)
     ))
 
-;; ;; (use-package nurumacs
-;; ;;   :config
-;; ;;   ;(setq nurumacs-map nil)  ; disable minimap
-;; ;;   )
+;; (use-package nurumacs
+;;   :config
+;;   ;(setq nurumacs-map nil)  ; disable minimap
+;;   )
 
 (use-package discover
   :config
   (global-discover-mode 1))
 
-;; (use-package guide-key
-;;   :config
-;;   (progn
-;;     (guide-key-mode 1)
-;;     (setq guide-key/idle-delay 0.1)
-;;     (setq guide-key/recursive-key-sequence-flag t)
-;;     (setq guide-key/guide-key-sequence
-;;           '((org-mode "C-c C-x")))))
+(use-package guide-key
+  :config
+  (progn
+    (guide-key-mode 1)
+    (setq guide-key/idle-delay 0.1)
+    (setq guide-key/recursive-key-sequence-flag t)
+    (setq guide-key/guide-key-sequence
+          '((org-mode "C-c C-x")))))
 
-;; (use-package visual-regexp
-;;   :config
-;;   (progn
-;;     (define-key global-map (kbd "M-%") 'vr/query-replace))) ; override default keybinding for query-replace
+(use-package visual-regexp
+  :config
+  (progn
+    (define-key global-map (kbd "M-%") 'vr/query-replace))) ; override default keybinding for query-replace
 
 ;; Prettify tabs for tabbar-mode
 (use-package tabbar-ruler
@@ -1126,17 +1128,37 @@
     (tabbar-install-faces)         ; this is because if they where already installed, the previous line was set too late
     ))
 
+(use-package nav)
+
+(use-package diminish
+  :config
+  (progn
+    (diminish 'helm-mode)
+    (diminish 'helm-gtags-mode)
+    (diminish 'elisp-slime-nav-mode " s")
+;   (diminish 'magit-auto-revert-mode)
+    (diminish 'ggtags-mode " §")
+    (diminish 'ws-trim-mode)
+    (diminish 'eldoc-mode)
+    ;; (diminish 'binary-overwrite-mode " BO")  ; error?
+    (diminish 'wrap-region-mode " ω")
+    (diminish 'undo-tree-mode " τ")
+    (diminish 'paredit-mode " ρ")
+    (diminish 'auto-complete-mode " γ")
+    ;; (diminish 'elisp-slime-nav-mode " ζ")
+    ;; (diminish 'flymake-mode " φ")
+    ))
 ;; load initializations for this site
 (use-package init-local)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HOOKS
 
-;; ;; view-mode
+;; view-mode
 ;; (add-hook 'help-mode-hook '(lambda () (view-mode t)))
 
-;; ;; avoid being asked when opening large files
-;; ;; i.e. video files are handled by external program
+;; avoid being asked when opening large files
+;; i.e. video files are handled by external program
 ;; (setq large-file-warning-threshold nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1164,9 +1186,9 @@
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
 
-;; ;; FIXME: check why I get an error when using emacs-init-time
-;; ;; show load time in *Messages* buffer
-;; ;; FIXME: broke when upgrading to 24.3
-;; ;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
-;; ;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
-;; ;; (message (concat "My init file loaded in " (emacs-init-time)))
+;; FIXME: check why I get an error when using emacs-init-time
+;; show load time in *Messages* buffer
+;; FIXME: broke when upgrading to 24.3
+;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
+;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
+;; (message (concat "My init file loaded in " (emacs-init-time)))
