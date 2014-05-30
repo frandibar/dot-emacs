@@ -93,11 +93,12 @@
       slime-repl              ; read-eval-print loop written in emacs lisp
 
       ;; python specific
-      flymake-python-pyflakes ; a filemake handler for python-mode using pyflakes
       flymake-cursor          ; show flymake messages in the minibuffer after delay
-      jedi                    ; python autocompletion
+      flymake-python-pyflakes ; a filemake handler for python-mode using pyflakes
       ipython                 ; add support for ipython in python-mode
+      jedi                    ; python autocompletion
       pyflakes                ; run python pyflakes checker and output to grep buffer
+      python-mode             ; mode from the python community
       python-pep8             ; minor mode for running pep8
       python-pylint           ; minor mode for running pylint
       epc                     ; an RPC stack for the Emacs Lisp (needed for jedi)
@@ -108,6 +109,7 @@
       helm-pydoc              ; pydoc with helm interface
       helm-package            ; list elpa packages with helm
       helm-git                ; helm extension for git
+      helm-projectile         ; helm extension for projectile
       )
 
     ;; The following packages fell in disuse for some reason.
@@ -680,13 +682,15 @@
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
-;; FIXME: not working
-;; (use-package ipython
-;;   :config
-;;   (progn
-;;     (use-package starter-kit-defuns)
-;;     (use-package python-pep8)
-;;     (use-package python-pylint)))
+(use-package python-mode)
+
+;; works with python-mode from the python community, not gnus python mode
+(use-package ipython
+  :config
+  (progn
+    (use-package starter-kit-defuns)
+    (use-package python-pep8)
+    (use-package python-pylint)))
 
 (use-package flymake
   :config
@@ -912,10 +916,12 @@
   :init
   (progn
     (helm-mode 1)
+    (use-package helm-projectile)
+    (use-package helm-git)
     (use-package helm-config
       :config
       (progn
-                                        ;(autoload 'helm-mode "helm-config")
+        ;;(autoload 'helm-mode "helm-config")
         (define-key global-map [remap execute-extended-command] 'helm-M-x)
         (define-key global-map [remap find-file] 'helm-find-files)
         (define-key global-map [remap occur] 'helm-occur)
@@ -923,7 +929,7 @@
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
 
-                                        ; avoid showing up when using winner mode
+        ;; avoid showing up when using winner mode
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
@@ -1136,7 +1142,7 @@
     (diminish 'helm-mode)
     (diminish 'helm-gtags-mode)
     (diminish 'elisp-slime-nav-mode " s")
-;   (diminish 'magit-auto-revert-mode)
+    (diminish 'magit-auto-revert-mode)
     (diminish 'ggtags-mode " §")
     (diminish 'ws-trim-mode)
     (diminish 'eldoc-mode)
@@ -1145,6 +1151,10 @@
     (diminish 'undo-tree-mode " τ")
     (diminish 'paredit-mode " ρ")
     (diminish 'auto-complete-mode " γ")
+    (diminish 'git-gutter-mode)
+    (diminish 'global-whitespace-mode)
+    (diminish 'projectile-mode)
+    (diminish 'guide-key-mode)
     ;; (diminish 'elisp-slime-nav-mode " ζ")
     ;; (diminish 'flymake-mode " φ")
     ))
