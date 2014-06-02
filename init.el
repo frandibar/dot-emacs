@@ -19,128 +19,23 @@
 ;; Lisp files that shadow Emacs builtins (listing potential load path
 ;; problems).
 
-;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+;; Add the site-lisp directory recursively to the load-path variable (needed when compiled only)
 (let ((default-directory "/usr/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+;; Add the site-lisp directory recursively to the load-path variable (needed when compiled only)
 (let ((default-directory  "/usr/local/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; add additional package repositories.
-;; the default elpa.gnu.org are all FSF signed.
-(require 'package)
-(progn
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-  ;; activate all the packages (in particular autoloads)
-  (package-initialize)
-
-  ;; fetch the list of available packages
-  (when (not package-archive-contents)
-    (package-refresh-contents))
-
-  ;; packages we want to install
-  (defvar prelude-packages
-    '(
-      ;; misc packages
-      ack                     ; interface to ack-like source code search tools
-      ack-and-a-half          ; needed for ack in projectile
-      ace-jump-mode           ; quick cursor location
-      all                     ; edit all lines matching a given regexp
-      auto-complete
-      browse-kill-ring        ; interactively insert items from kill-ring
-      diminish                ; tweak modline display for minor modes
-      discover                ; help popup
-      dired+                  ; extensions to dired
-      direx                   ; tree directory explorer
-      edit-list               ; edit list symbols easily in buffer
-      exec-path-from-shell    ; get environment variables such as $PATH from the shell
-      expand-region           ; increase selected region by semantic units
-      ggtags                  ; GNU Global source code tagging system
-      guide-key               ; guide the following key bindings automatically and dynamically
-      multiple-cursors
-      nav                     ; left pane file browser
-      openwith                ; open files with external programs
-      powerline               ; fancy mode line
-      projectile              ; project management
-      pretty-lambdada         ; replace greek words with letters
-      sauron                  ; notification of events (org, mail, etc)
-      shift-text              ; move text in 4 directions
-      smartscan               ; jump between symbols at point
-      tabbar-ruler            ; prettier buffer tabs
-      undo-tree               ; treat undo history as a tree
-      use-package             ; replacement for require
-      visual-regexp           ; regexp/replace command for Emacs with interactive visual feedback
-      web-mode                ; major mode for html
-      wgrep                   ; writable grep buffer and apply the changes to files
-      wrap-region             ; enclose region with pairs
-      ws-trim                 ; tools and minor mode to trim whitespace on text lines
-
-      ;; casual
-      typing                  ; a game for fast typers
-
-      ;; git specific
-      git-gutter-fringe       ; show git changes in left margin
-      magit                   ; control git from emacs
-
-      ;; elisp specific
-      elisp-slime-nav         ; make M-. and M-, work in elisp like they do in slime
-      paredit                 ; minor mode for editing parentheses
-      slime                   ; superior lisp interaction mode for emacs
-      slime-repl              ; read-eval-print loop written in emacs lisp
-
-      ;; python specific
-      flymake-cursor          ; show flymake messages in the minibuffer after delay
-      flymake-python-pyflakes ; a filemake handler for python-mode using pyflakes
-      ipython                 ; add support for ipython in python-mode
-      jedi                    ; python autocompletion
-      pyflakes                ; run python pyflakes checker and output to grep buffer
-      python-mode             ; mode from the python community
-      python-pep8             ; minor mode for running pep8
-      python-pylint           ; minor mode for running pylint
-      epc                     ; an RPC stack for the Emacs Lisp (needed for jedi)
-
-      ;; helm & plugins
-      helm                    ; incremental and narrowing framework
-      helm-gtags              ; helm interface for gnu global
-      helm-pydoc              ; pydoc with helm interface
-      helm-package            ; list elpa packages with helm
-      helm-git                ; helm extension for git
-      helm-projectile         ; helm extension for projectile
-      )
-
-    ;; The following packages fell in disuse for some reason.
-    ;; grep-a-lot              ; each grep in a new buffer
-    ;;                         ; I replaced grep with ack
-    ;; nurumacs                ; smooth scrolling and minimap
-    ;;                         ; nice, but it felt slow
-    ;; auto-highlight-symbol   ; automatic highlighting current symbol minor mode
-    ;; back-button             ; visual navigation through mark-ring
-
-    ;; clojure specific
-    ;; clojure-mode
-    ;; clojure-test-mode
-    ;; elein                   ; running leiningen commands from emacs
-    ;; nrepl                   ; client for clojure nrepl
-    ;; slime-clj               ; slime extensions for swank-clj
-
-    ;; graphviz-dot-mode       ; mode for the dot-language used by graphviz
-    ;; eshell-manual           ; an updated manual for Eshell
-    ;; jump-char               ; fast navigation by char with repeat search
-    ;; key-chord               ; map pairs of simultaneously pressed keys to commands
-    ;; yasnippet               ; a template system
-
-    ;; install missing packages
-    (dolist (p prelude-packages)
-      (unless (package-installed-p p)
-        (package-install p)))))
+;; Package Manager
+;; See ~Cask~ file for its configuration
+;; https://github.com/cask/cask
+(require 'cask "~/.emacs.d/.cask/24.3.1/elpa/cask-20140523.744/cask.el")
+(cask-initialize)
 
 ;; The `use-package' declaration macro allows isolating package
 ;; configuration in a way that is performance-oriented and tidy.
-(require 'use-package)   ; in order to use `use-package' instead of `require'
+;; (require 'use-package)   ; in order to use `use-package' instead of `require'
 
 ;; `use-package' loads a package only if it's available, if not, a
 ;; warning is logged in the *Messages* buffer. If it succeeds, a
@@ -154,11 +49,17 @@
 
 ;; `use-package' also adds `describe-personal-keybindings'
 
+(require 'use-package)
+
+;; Keep Cask file in sync with the packages
+;; installed/uninstalled via M-x list-packages
+(use-package pallet)
+
 
 ;; OS specific settings
 
-;; FIXME: this workaround is pretty ugly
-(setenv "PATH" "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin")
+;; FIXME: on OS X, when running Emacs.app, PATH is not set correctly
+(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 
 ;; On OS X, use command key as meta, and option key as ctrl
 ;; I commented this code because I prefer remapping using KeyRemap4MacBook software
@@ -179,95 +80,57 @@
 
 (setq calendar-date-style 'european)         ; dd/mm/yyyy
 
-;; (use-package eshell
-;;   :config
-;;   (progn
-;;     ;; the eshell directory holds alias definitions and history information
-;;     (setq eshell-history-size 1280)
-;;     (setq eshell-directory-name "~/.emacs.d/eshell")
-;;     ;; expand '.' and '..' (removing them from default value)
-;;     (setq eshell-cmpl-dir-ignore "\\`\\(CVS\\)/\\'")
-;;     (setq eshell-cmpl-ignore-case t)
-;;     ;; by default eshell does completion the Emacs way: cycle through all
-;;     ;; the possible values. Bash instead complete as much as possible, and
-;;     ;; then wait for the next charater. This makes eshell behave like Bash
-;;     (setq eshell-cmpl-cycle-completions nil)
-;;     ;; behave more like a terminal
-;;     (setq eshell-scroll-to-bottom-on-output t)
-;;     ;; use ansi-term for these commands, since eshell is not good at
-;;     ;; ansi-colors and control
-;;     (add-hook 'eshell-first-time-mode-hook
-;;               (lambda () (setq eshell-visual-commands
-;;                           (append '("mutt" "vim" "screen" "lftp" "ipython" "telnet" "ssh" "htop")
-;;                                   eshell-visual-commands))
-;;                 (local-set-key (kbd "C-u") 'mine-eshell-kill-line)))
-;;     ))
-
-;; ;; this allows (among other things) entering unicode chars in the minibuffer
-;; (setq enable-recursive-minibuffers t)
-;; (setq minibuffer-depth-indicate-mode t)  ;; add depth count to minibuffer (useful when recursive)
-
 (setq shell-file-name "/bin/bash")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BEHAVIOR SETTINGS
 
-;; Copy/paste behavior
-;; use C-x C-v C-c for copy/pasting (only when a region is selected) and C-z for undo
-;;(cua-mode t)
-;; use cua mode for rectangle selection
+;; Use cua mode for rectangle selection.
 (cua-selection-mode t)
-;;(setq cua-keep-region-after-copy t)
 
-;; sentences end with single space, so this fixes sentence navigation commands.
+;; Sentences end with single space, so this fixes sentence navigation commands.
 (setq sentence-end-double-space nil)
 
-;; insert matching pairs of brackets
-;; (electric-pair-mode)
-
-;; don't let the cursor go into minibuffer prompt (default behavior allows copying prompt)
-;; (setq minibuffer-prompt-properties (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
-
-;; turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
+;; Turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
 (winner-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; APPEARANCE SETTINGS
 
-;; hide tool bar and scroll bar, show the menu bar
+;; Hide tool bar and scroll bar, show the menu bar.
 (menu-bar-mode t)
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (scroll-bar-mode -1))
 
-;; hide splash screen
+;; Hide splash screen.
 (setq inhibit-splash-screen t)
 
-;; ;; set window title to buffer-file-name
+;; Set window title to buffer-file-name.
 (setq frame-title-format '("" "Emacs - %b - " buffer-file-name))
 
-;; highlight cursor line
+;; Highlight cursor line.
 (global-hl-line-mode 1)
 
-;; flash the frame upon C-g
-;; commented out because on OSX shows an ugly square in the middle of the screen
+;; Flash the frame upon C-g.
+;; Commented out because on OSX shows an ugly square in the middle of the screen.
 (setq visible-bell t)
 (setq ring-bell-function #'ignore)      ; avoid beep
 
-;; show matching parentheses
+;; Show matching parentheses.
 (show-paren-mode t)
 
-;; show line and column number in the mode line
+;; Show line and column number in the mode line.
 (line-number-mode 1)
 (column-number-mode 1)
 
-;; show blank screen on startup
+;; Show blank screen on startup.
 (setq initial-scratch-message nil)
 
-;; set font size
+;; Set font size.
 (set-face-attribute 'default nil :height 110)
 
-;; highlight tabs and trailing spaces
+;; Highlight tabs and trailing spaces.
 (setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 (global-whitespace-mode 1)
 
@@ -278,31 +141,24 @@
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-;; (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
-
-;; (global-set-key (kbd "<esc>") 'keyboard-quit)
-
 (global-set-key (kbd "M-n") 'scroll-up-line)
 (global-set-key (kbd "M-p") 'scroll-down-line)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
 
-;; (global-set-key (kbd "C-3") 'follow-delete-other-windows-and-split)
-
-;; useful for jumping to function definitions in buffer
+;; Useful for jumping to function definitions in buffer.
 (global-set-key (kbd "s-i") 'imenu)
 
-;; by default, emacs binds M-z to zap-to-char. I prefer binding it to
+;; By default, emacs binds M-z to zap-to-char. I prefer binding it to
 ;; zap-up-to-char, but the latter is not loaded by default (it's in
-;; misc.el instead of simple.el)
+;; misc.el instead of simple.el).
 (autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
 (global-set-key (kbd "M-z") 'zap-up-to-char)
-;; (global-set-key (kbd "M-Z") 'zap-to-char)
 
-;; use these keybindings for window switching since default ones
+;; Use these keybindings for window switching since default ones
 ;; (windmove-default-keybindings) S-{up,down,left,right}
-;; interfere with org and calendar
+;; interfere with org and calendar.
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
@@ -310,39 +166,10 @@
 
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-;; Use a minor mode that makes my keybindings globally override and
-;; take precedence over all other bindings for that key, that is,
-;; override all major/minor mode maps and make sure my binding is
-;; always in effect.  In order to avoid precedence over other minor
-;; modes, it should go first on the list minor-mode-map-alist.
-;; Extracted from
-;; http://stackoverflow.com/questions/683425/globally-override-key-binding-in-emacs/5340797
-;; (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-;; (define-key my-keys-minor-mode-map (kbd "C-i") 'some-function)
-;; (define-minor-mode my-keys-minor-mode
-;;   "A minor mode so that my key settings override annoying major modes."
-;;   t " my-keys" 'my-keys-minor-mode-map)
-
-;; (my-keys-minor-mode 1)
-
-;; ;; but turn off the overridings in the minibuffer
-;; (add-hook 'minibuffer-setup-hook (lambda() (my-keys-minor-mode 0)))
-;; ;; Make my keybindings retain precedence, even if subsequently-loaded
-;; ;; libraries bring in new keymaps of their own. Because keymaps can be
-;; ;; generated at compile time, load seemed like the best place to do
-;; ;; this.
-;; (defadvice load (after give-my-keybindings-priority)
-;;   "Try to ensure that my keybindings always have priority."
-;;   (if (not (eq (car (car minor-mode-map-alist)) 'my-keys-minor-mode))
-;;       (let ((mykeys (assq 'my-keys-minor-mode minor-mode-map-alist)))
-;;         (assq-delete-all 'my-keys-minor-mode minor-mode-map-alist)
-;;         (add-to-list 'minor-mode-map-alist mykeys))))
-;; (ad-activate 'load)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MISC
 
-;; turn off tab character
+;; Turn off tab character.
 ;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
 ;; set `indent-tabs-mode' to `nil'. This is a per-buffer variable;
 ;; altering the variable affects only the current buffer, but it can be
@@ -350,52 +177,53 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
-;; write backup files to own directory
-;; to disable backups, use (setq backup-inhibited t)
+;; Write backup files to own directory.
+;; To disable backups, use (setq backup-inhibited t).
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
-;; make backups of files, even when they're in version control
+;; Make backups of files, even when they're in version control.
 ;;(setq vc-make-backup-files t)
 
-;; disable auto save
+;; Disable auto save.
 (setq auto-save-default nil)
 
-;; use 'y' or 'n' instead of 'yes' or 'no' for answers
+;; Use 'y' or 'n' instead of 'yes' or 'no' for answers.
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; enable functions that are disabled by default
+;; Enable functions that are disabled by default.
 (put 'narrow-to-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
-;; reload file if changed on disk
+;; Reload file if changed on disk.
 (global-auto-revert-mode 1)
 
-;; display current function name in the mode line
+;; Display current function name in the mode line.
 (which-function-mode t)
 
-;; shut up compile saves
-;; more info: http://www.masteringemacs.org/articles/2012/05/29/compiling-running-scripts-emacs/
+;; Shut up compile saves.
+;; More info: http://www.masteringemacs.org/articles/2012/05/29/compiling-running-scripts-emacs/
 (setq compilation-ask-about-save nil)
-;; don't save *anything*
+;; Don't save *anything*.
 (setq compilation-save-buffers-predicate '(lambda () nil))
 
 (setq delete-by-moving-to-trash t)
 
-;; ignore case when reading a file name completion
+;; Ignore case when reading a file name completion.
 (setq read-file-name-completion-ignore-case t)
 
-;; settings for all programming modes
-;; show line numbers
+;; Settings for all programming modes.
+
+;; Show line numbers.
 (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
-;; adjust line number width
+;; Adjust line number width.
 (setq linum-format "%4d")
-;; enable separation of camel case words
+;; Enable separation of camel case words.
 (add-hook 'prog-mode-hook 'subword-mode)
 
-;; enable tags for gnu global
+;; Enable tags for gnu global.
 (use-package ggtags
   :config
   (add-hook 'prog-mode-hook 'ggtags-mode))
@@ -414,70 +242,8 @@
          (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
          (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))))
 
-;; fish-shell configuration files
+;; Fish shell configuration files.
 (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
-
-;; (use-package ibuffer
-;;   :config
-;;   (progn
-;;     ;; show buffers into the following groups
-;;     (setq ibuffer-saved-filter-groups
-;;           '(("default"
-;;              ("clojure" (mode . clojure-mode))
-;;              ("dired" (mode . dired-mode))
-;;              ("grep" (mode . grep-mode)) ; must go before emacs rule
-;;              ("emacs" (name . "^*"))
-;;              ("elisp" (mode . emacs-lisp-mode))
-;;              ("javascript" (mode . js-mode))
-;;              ("c/c++" (or
-;;                       (mode . c++-mode)
-;;                       (mode . c-mode)))
-;;              ("gnus" (or
-;;                       (mode . message-mode)
-;;                       (mode . bbdb-mode)
-;;                       (mode . mail-mode)
-;;                       (mode . gnus-group-mode)
-;;                       (mode . gnus-summary-mode)
-;;                       (mode . gnus-article-mode)
-;;                       (name . "^\\.bbdb$")
-;;                       (name . "^\\.newsrc-dribble")))
-;;              ("man" (name . "^*Man "))
-;;              ("mu4e" (or
-;;                       (mode . mu4e-compose-mode)
-;;                       (mode . mu4e-headers-mode)
-;;                       (mode . mu4e-view-mode)
-;;                       (mode . mu4e-main-mode)))
-;;              ("org" (mode . org-mode))
-;;              ("python" (mode . python-mode))
-;;              ("sql" (mode . sql-mode))
-;;              ("xml" (mode . nxml-mode)))))
-
-;;     ;; don't show empty groups
-;;     (setq ibuffer-show-empty-filter-groups nil)
-
-;;     ;; use ibuffer instead of list-buffers which I find useless
-;;     (defalias 'list-buffers 'ibuffer)
-
-;;     ;; use the defined groups when entering ibuffer-mode
-;;     (add-hook 'ibuffer-mode-hook
-;;               (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
-
-;;     ;; use human readable Size column instead of original one
-;;     ;; extracted from http://www.emacswiki.org/emacs/IbufferMode
-;;     (define-ibuffer-column size-h
-;;       (:name "Size" :inline t)
-;;       (cond
-;;        ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
-;;        ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
-;;        (t (format "%8d" (buffer-size)))))
-
-;;     ;; modify the default ibuffer-formats
-;;     (setq ibuffer-formats
-;;           '((mark modified read-only " "
-;;                   (name 50 50 :left :elide) " "
-;;                   (size-h 9 -1 :right) " "
-;;                   (mode 16 16 :left :elide) " "
-;;                   filename-and-process)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -485,13 +251,14 @@
 (use-package dired
   :config
   (progn
-    ;; show all, long, no group, human readable file size
-    ;; if there is a dired buffer displayed in the next window, use its
-    ;; current subdir as target, instead of the current subdir of this dired buffer.
+    ;; Show all, long, no group, human readable file size.
+    ;; If there is a dired buffer displayed in the next window, use
+    ;; its current subdir as target, instead of the current subdir of
+    ;; this dired buffer.
     (setq dired-dwim-target t)
 
-    ;; allow dired to be able to delete or copy a whole dir.  “always”
-    ;; means no asking. “top” means ask once. Any other symbol means ask
+    ;; Allow dired to be able to delete or copy a whole dir.  "always"
+    ;; means no asking. "top" means ask once. Any other symbol means ask
     ;; each and every time for a dir and subdir.
     (setq dired-recursive-copies (quote always))
     (setq dired-recursive-deletes (quote top))
@@ -520,18 +287,6 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; C++ mode
-;; (use-package cc-mode
-;;   :config
-;;   (progn
-;;     (dolist (mode-map '(c-mode-map c++-mode-map))
-;;       (define-key (symbol-value mode-map) (kbd "M-s") 'mine-switch-cpp-h-file))
-;;     ;; set indentation style for c++-mode
-;;     (setq c-default-style "stroustrup"
-;;           c-basic-offset 4)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG mode
 (use-package org
   :config
@@ -540,7 +295,7 @@
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     ;; org-mode clean view
     ;; (setq org-startup-indented t)   ; commented out as it produces flickering
-                                        ; in order to hide the leading stars, set the org-hide face color to background
+                                       ; in order to hide the leading stars, set the org-hide face color to background
     (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
     ;; agenda view of next 14 days
     (setq org-agenda-span 14)
@@ -575,14 +330,9 @@
 
     ;;     ;; update appt each time agenda is opened
     ;;     (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-
-    ;;     ;; commented out because I prefer using sauron buffer instead of a popup window.
-    ;;     ;; (defun mine-appt-display (min-to-app new-time msg)
-    ;;     ;;   (mine-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-    ;;     ;; (setq appt-disp-window-function (function mine-appt-display))
     ))
 
-;; show function arglist or variable docstring in echo area
+;; Show function arglist or variable docstring in echo area.
 (use-package eldoc
   :config
   (progn
@@ -618,18 +368,7 @@
 (use-package starter-kit-defuns
   :bind (("C-c e" . esk-eval-and-replace)))
 
-;; ;; (use-package smartparens
-;; ;;   :config
-;; ;;   (progn
-;; ;;     (smartparens-global-mode nil)))     ; interferes with paredit
-
-;; (use-package yasnippet
-;;   :disabled t                ; takes too long to load and I don't use it
-;;   :commands yasnippet
-;;   :config
-;;   (yas/global-mode 1))
-
-;; encryption settings
+;; Encryption settings.
 (use-package org-crypt
   :commands (org-decrypt-entries
              org-encrypt-entries
@@ -652,11 +391,6 @@
 ;;
 ;; # -*- buffer-auto-save-file-name: nil; -*-
 ;; Excluding the crypt tag from inheritance prevents already encrypted text being encrypted again.
-
-;; latex settings
-;; When adding a new environment with C-c C-s, the list will not only provide standard LaTeX environments,
-;; but also take your `\documentclass' and `\usepackage' commands into account.
-;; (setq Tex-parse-self t)
 
 (use-package undo-tree
   :config
@@ -682,63 +416,71 @@
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
 
-(use-package python-mode)
+;(use-package python-mode)
 
 ;; works with python-mode from the python community, not gnus python mode
-(use-package ipython
-  :config
-  (progn
-    (use-package starter-kit-defuns)
-    (use-package python-pep8)
-    (use-package python-pylint)))
-
-(use-package flymake
-  :config
-  (progn
-    (require 'flymake-cursor)
-    ;; make sure pyflakes is loaded, and make it work for unnamed buffers
-    (add-to-list
-     'flymake-allowed-file-name-masks
-     '("\\.py\\'" (lambda ()
-                    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                                       'flymake-create-temp-inplace))
-                           (local-file (file-relative-name temp-file (file-name-directory
-                                                                      buffer-file-name))))
-                      (list "pyflakes" (list local-file))))))))
-
-;; autocheck for python
-(use-package flymake-python-pyflakes
-  :config
-  (progn
-    (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
-
-;; python autocompletion
-(use-package jedi
-  :init
-  (progn
-    (add-hook 'python-mode-hook 'jedi:setup)
-    ;; (define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
-    )
-  :config
-  (progn
-    (setq jedi:setup-keys t))
-  )
-
-;; load sunrise commander, a mix between dired and midnight commander.
-;; (use-package sunrise-commander
-;;   :commands sunrise
+;; (use-package ipython
 ;;   :config
 ;;   (progn
-;;     (use-package sunrise-x-tree)
-;;     (use-package sunrise-x-buttons)))
+;;     (use-package starter-kit-defuns)
+;;     (use-package python-pep8)
+;;     (use-package python-pylint)))
 
-;; show bookmarks on startup
-;; (use-package bookmark
+;; (use-package flymake
 ;;   :config
 ;;   (progn
-;;     ;(bookmark-bmenu-list)
-;;     ;(switch-to-buffer "*Bookmark List*")
-;;     ))
+;;     (require 'flymake-cursor)
+;;     ;; make sure pyflakes is loaded, and make it work for unnamed buffers
+;;     (add-to-list
+;;      'flymake-allowed-file-name-masks
+;;      '("\\.py\\'" (lambda ()
+;;                     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                                        'flymake-create-temp-inplace))
+;;                            (local-file (file-relative-name temp-file (file-name-directory
+;;                                                                       buffer-file-name))))
+;;                       (list "pyflakes" (list local-file))))))))
+
+;; ;; Autocheck for python.
+;; (use-package flymake-python-pyflakes
+;;   :config
+;;   (progn
+;;     (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
+
+;; ;; python autocompletion
+;; (use-package jedi
+;;   :init
+;;   (progn
+;;     (add-hook 'python-mode-hook 'jedi:setup)
+;;     ;; (define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
+;;     )
+;;   :config
+;;   (progn
+;;     (setq jedi:setup-keys t))
+;;   )
+
+(use-package auto-complete)
+
+(use-package flycheck
+  :config
+  (global-flycheck-mode))
+
+(add-hook 'python-mode-hook (lambda () (flycheck-mode)
+                              (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
+                              (flycheck-select-checker 'python-flake8)))
+
+(use-package elpy
+  ;; Default bindings are overriden by smartscan
+  :bind (("M-C-n" . elpy-nav-forward-definition)    ; default M-n
+         ("M-C-p" . elpy-nav-backward-definition))  ; default M-p
+  :config
+  (progn
+    (elpy-enable)
+    (setq elpy-rpc-backend "jedi")
+    (elpy-clean-modeline)      ; avoid showing minor modes
+    (elpy-use-ipython)
+    (setq elpy-default-minor-modes '(eldoc-mode
+                                     yas-minor-mode
+                                     auto-complete-mode))))
 
 ;; Change the default naming of buffers to include parts of the file
 ;; name (directory names) until the buffer names are unique.
@@ -751,17 +493,6 @@
     (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
     ))
 
-;; ;; toggles between the shell buffer and current buffer
-;; (use-package shell-toggle-patched
-;;   :bind (("<f5>" . shell-toggle))
-;;   :config
-;;   (progn
-;;     (autoload 'shell-toggle "shell-toggle"
-;;       "Toggles between the shell buffer and whatever buffer you are editing." t)
-;;     (autoload 'shell-toggle-cd "shell-toggle"
-;;       "Pops up a shell-buffer and insert a \"cd <file-dir>\" command." t)
-;;     (setq shell-toggle-launch-shell 'shell-toggle-eshell)))
-
 ;; Slime allows navigation to the symbol at point (using M-.), and the
 ;; ability to pop back to previous marks (using M-,).  This plugin
 ;; provides similar navigation for Emacs Lisp, supporting navigation
@@ -772,18 +503,6 @@
     (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
     ))
 
-;; ;; slime for common lisp
-;; (use-package slime
-;;   :disabled t                           ; not using it
-;;   :commands slime-setup
-;;   :config
-;;   (progn
-;;     (setq inferior-lisp-program "/usr/bin/clisp")
-;;     (slime-setup '(slime-fancy))
-
-;;     ;; enable paredit in slime repl
-;;     (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
-;;     ))
 
 (use-package paredit
   :config
@@ -793,7 +512,7 @@
                     lisp-interaction-mode-hook))
       (add-hook mode 'paredit-mode))))
 
-;; git within emacs
+;; Git within emacs.
 (use-package magit
   :bind (("M-g s" . magit-status)))
 
@@ -801,93 +520,45 @@
 ;; git-gutter-fringe.el can work with linum-mode. In contrast,
 ;; git-gutter-fringe.el does not work in tty frame(emacs -nw), but
 ;; git-gutter.el can work in tty frame.
-(use-package git-gutter-fringe
-  :config
-  (global-git-gutter-mode 1)
-  ;;(setq git-gutter-fr:side 'right-fringe)
-  )
+(if window-system                       ; it's nil in console
+    (use-package git-gutter-fringe
+      :config
+      ;;(setq git-gutter-fr:side 'right-fringe)
+      (global-git-gutter-mode 1))
+  (use-package git-gutter
+    :config
+    (global-git-gutter-mode 1)))
 
-;; allows changing files directly from grep buffer
+;; Allows changing files directly from grep buffer.
 (use-package wgrep)
 
-;; ;; cd with bookmark navigation
-;; ;; use M-x cv RET or directly from shell
-;; ;(use-package cdargs)  ; not using it
+;; In dired mode, matching files are opened in external program.
+(use-package openwith
+  :init
+  (progn
+    (setq openwith-associations
+          '(("\\.pdf\\'" "evince" (file))
+            ("\\.mp3\\'" "xmms" (file))
+            ("\\.sgf\\'" "quarry" (file))
+            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
+            ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
+          )
+    (add-hook 'dired-mode-hook (lambda () (openwith-mode t)))
+    ;(openwith-mode t)
+    ))
 
-;; (use-package auto-complete-config
-;;   :config
-;;   (progn
-;;     (ac-config-default)
-;;     (setq ac-auto-start 4)))              ; only offer when 4 chars have been typed
-
-;; ;; in dired mode, matching files are opened in external program
-;; (use-package openwith
-;;   :init
-;;   (progn
-;;     (setq openwith-associations
-;;           '(("\\.pdf\\'" "evince" (file))
-;;             ("\\.mp3\\'" "xmms" (file))
-;;             ("\\.sgf\\'" "quarry" (file))
-;;             ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
-;;             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
-;;           )
-;;     (add-hook 'dired-mode-hook (lambda () (openwith-mode t)))
-;;     ;(openwith-mode t)
-;;     ))
-
-;; enable project management for all modes
-;; root dir must have a file named .projectile to be considered a project
-;; except for git repos. This file has entries with patterns to ignore files
+;; Enable project management for all modes.
+;; Root dir must have a file named .projectile to be considered a project
+;; except for git repos. This file has entries with patterns to ignore files.
 (use-package projectile
   :config
-  (projectile-global-mode)
-  )
-
-;; (use-package sauron
-;;   :bind (("C-c s" . sauron-toggle-hide-show)
-;;          ("C-c t" . sauron-clear))
-;;   :init
-;;   (progn
-;;     (setq sauron-separate-frame nil)
-;;     ;; allow the script to find the D-Bus session bus, even when running outside its session.
-;;     (setq sauron-dbus-cookie t)
-;;     (setq sauron-max-line-length nil)   ; don't truncate lines
-;;     (setq sauron-column-alist '((timestamp . 20)
-;;                                 (message)))
-;;     ;; pop up window when an event occurs
-;;     (add-hook 'sauron-event-added-functions
-;;               (lambda (origin prio msg &optional props)
-;;                 (sr-show)))
-;;     (sauron-start)
-;;     (sr-hide)
-
-;;     (defun sauron-clear ()
-;;       "Override original sauron-clear. This version avoids asking, and hides buffer automatically.
-;; TODO: use defadvice instead."
-;;       (interactive)
-;;       (when
-;;           (and sr-buffer (buffer-live-p sr-buffer))
-;;         (with-current-buffer sr-buffer
-;;           (let ((inhibit-read-only t))
-;;             (erase-buffer)))
-;;         (message nil)
-;;         (sr-hide)))
-;;     ))
-
-;; ;; mu4e mail client
-;; (use-package init-mail)
+  (projectile-global-mode))
 
 (use-package shift-text
   :bind (("M-S-<up>" . shift-text-up)
          ("M-S-<down>" . shift-text-down)
          ("M-S-<right>" . shift-text-right)
          ("M-S-<left>" . shift-text-left)))
-
-;; commented out since keybindings interfere with shift-text
-;; (use-package auto-highlight-symbol
-;;   :init
-;;   (progn
-;;     (global-auto-highlight-symbol-mode t)))
 
 (use-package multiple-cursors
   :bind (("M-m" . mc/edit-lines)
@@ -903,7 +574,7 @@
                     "\\.xml\\'"))
       (add-to-list 'auto-mode-alist `(,mode . web-mode)))))
 
-;; for trimming whitespace
+;; Whitespace trimming.
 (use-package ws-trim
   :config
   (progn
@@ -929,30 +600,12 @@
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
 
-        ;; avoid showing up when using winner mode
+        ;; Avoid showing up when using winner mode.
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
 
-;; (use-package key-chord
-;;   :config
-;;   (progn
-;;     (key-chord-mode 1)
-;;     ;; preferably, use upper case to avoid delay when typing
-;;     (key-chord-define-global "FF" 'jump-char-forward)
-;;     (key-chord-define-global "DD" 'jump-char-backward)
-
-;;     (key-chord-define-global "HH" 'mine-point-to-top)
-;;     (key-chord-define-global "MM" 'mine-point-to-middle)
-;;     (key-chord-define-global "LL" 'mine-point-to-bottom)
-
-;;     (key-chord-define-global "PP" 'mine-copy-current-line)
-
-;;     (key-chord-define-global "RR" 'point-to-register)
-;;     (key-chord-define-global "JJ" 'jump-to-register)
-;;     ))
-
-;; show greek char for lambda in programming modes
+;; Show greek char for lambda in programming modes.
 (use-package pretty-lambdada
   :config
   (add-hook 'prog-mode-hook 'pretty-lambda))
@@ -962,27 +615,18 @@
 (use-package re-builder
   :config
   (progn
-    ;; avoid double backlash escaping when editing regexp
-    ;; see http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
+    ;; Avoid double backlash escaping when editing regexp.
+    ;; See http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
     (setq reb-re-syntax 'string)))
 
 (use-package smartscan
   :config
   (global-smartscan-mode 1))
 
-;; visual navigation through mark rings
-;; bindings C-x C-<left>/<right> for global mark ring
-;; bindings C-x <left>/<right> for buffer local mark ring
-;; TODO: disabled because keybindings clash with windmove
-;; (use-package back-button
-;;   :config
-;;   (back-button-mode 1))
-
-
 (use-package powerline
   :config
   (progn
-    ;; Extra mode line faces
+    ;; Extra mode line faces.
     (make-face 'mode-line-read-only-face)
     (make-face 'mode-line-modified-face)
     (make-face 'mode-line-folder-face)
@@ -1094,11 +738,6 @@
     (mine-powerline-theme)
     ))
 
-;; (use-package nurumacs
-;;   :config
-;;   ;(setq nurumacs-map nil)  ; disable minimap
-;;   )
-
 (use-package discover
   :config
   (global-discover-mode 1))
@@ -1117,13 +756,13 @@
   (progn
     (define-key global-map (kbd "M-%") 'vr/query-replace))) ; override default keybinding for query-replace
 
-;; Prettify tabs for tabbar-mode
+;; Prettify tabs for tabbar-mode.
 (use-package tabbar-ruler
   ;; These bindings are for mac: M-s stand for left hand (alt + command)
   :bind (("M-s-<right>" . tabbar-ruler-forward)
          ("M-s-<left>" . tabbar-ruler-backward)
          ("M-s-<up>" . tabbar-ruler-up)
-         ;; alternatively use tabbar-ruler-move
+         ;; Alternatively use tabbar-ruler-move.
          )
   :config
   (progn
@@ -1136,40 +775,35 @@
 
 (use-package nav)
 
+;; Unique coloring of symbols instead of keywords.
+(use-package color-identifiers-mode
+  :config
+  (global-color-identifiers-mode))
+
 (use-package diminish
   :config
   (progn
-    (diminish 'helm-mode)
-    (diminish 'helm-gtags-mode)
-    (diminish 'elisp-slime-nav-mode " s")
-    (diminish 'magit-auto-revert-mode)
-    (diminish 'ggtags-mode " §")
-    (diminish 'ws-trim-mode)
+    (diminish 'auto-complete-mode " ac")
+    (diminish 'color-identifiers-mode)
     (diminish 'eldoc-mode)
-    ;; (diminish 'binary-overwrite-mode " BO")  ; error?
-    (diminish 'wrap-region-mode " ω")
-    (diminish 'undo-tree-mode " τ")
-    (diminish 'paredit-mode " ρ")
-    (diminish 'auto-complete-mode " γ")
+    (diminish 'elisp-slime-nav-mode " s")
+    (diminish 'ggtags-mode " §")
     (diminish 'git-gutter-mode)
-    (diminish 'global-whitespace-mode)
-    (diminish 'projectile-mode)
+    (diminish 'global-whitespace-mode " _")
     (diminish 'guide-key-mode)
-    ;; (diminish 'elisp-slime-nav-mode " ζ")
-    ;; (diminish 'flymake-mode " φ")
+    (diminish 'helm-gtags-mode)
+    (diminish 'helm-mode)
+    (diminish 'magit-auto-revert-mode)
+    (diminish 'paredit-mode " ρ")
+    (diminish 'projectile-mode " j")
+    (diminish 'undo-tree-mode " τ")
+    (diminish 'wrap-region-mode " ω")
+    (diminish 'ws-trim-mode)
     ))
-;; load initializations for this site
+
+;; Load initializations for this site.
 (use-package init-local)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; HOOKS
-
-;; view-mode
-;; (add-hook 'help-mode-hook '(lambda () (view-mode t)))
-
-;; avoid being asked when opening large files
-;; i.e. video files are handled by external program
-;; (setq large-file-warning-threshold nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; THE FOLLOWING INSTRUCTIONS SHOULD BE PERFORMED LAST,
@@ -1178,13 +812,14 @@
 ;; In order open a file in an existing emacs from a shell, use
 ;; emacsclient -n [file]
 ;; FIXME: avoid starting server if already started
-;; the following code extracted from http://stackoverflow.com/questions/3704962/how-to-know-if-emacs-server-is-running dosn't seem to work
+;; The following code extracted from http://stackoverflow.com/questions/3704962/how-to-know-if-emacs-server-is-running dosn't seem to work.
 
 ;; (unless (and (boundp 'server-process)
 ;;              (memq (process-status server-process) '(connect listen open run)))
 ;;   (server-start))
 
-;; allow editing text boxes from clients such as google chrome (requires "Edit with emacs" extension)
+;; Allow editing text boxes from clients such as google chrome
+;; (requires "Edit with emacs" extension).
 (use-package edit-server
   :if window-system
   :init
@@ -1192,12 +827,12 @@
     (add-hook 'after-init-hook 'server-start t)
     (add-hook 'after-init-hook 'edit-server-start t)))
 
-;; ;; load custom file if present
+;; Load custom file if present.
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file 'noerror)
 
 ;; FIXME: check why I get an error when using emacs-init-time
-;; show load time in *Messages* buffer
+;; Show load time in *Messages* buffer.
 ;; FIXME: broke when upgrading to 24.3
 ;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
 ;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))

@@ -18,3 +18,4 @@ session.*
 tramp
 url
 projectile.cache
+.cask/
