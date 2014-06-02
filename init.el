@@ -1,4 +1,9 @@
+;;; package --- init.el
+
+;;; Commentary:
 ;; MY PERSONAL EMACS CUSTOMIZATION FILE
+
+;;; Code:
 
 ;; Show the time it took to load this file
 (defvar *emacs-load-start-time* (current-time))
@@ -77,8 +82,7 @@
 ;;     (progn
 ;;       (exec-path-from-shell-initialize))))
 
-
-(setq calendar-date-style 'european)         ; dd/mm/yyyy
+(defvar calendar-date-style 'european)       ; dd/mm/yyyy
 
 (setq shell-file-name "/bin/bash")
 
@@ -131,7 +135,7 @@
 (set-face-attribute 'default nil :height 110)
 
 ;; Highlight tabs and trailing spaces.
-(setq whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
+(defvar whitespace-style '(tabs trailing space-before-tab newline indentation empty space-after-tab tab-mark))
 (global-whitespace-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -207,7 +211,7 @@
 ;; More info: http://www.masteringemacs.org/articles/2012/05/29/compiling-running-scripts-emacs/
 (setq compilation-ask-about-save nil)
 ;; Don't save *anything*.
-(setq compilation-save-buffers-predicate '(lambda () nil))
+(defvar compilation-save-buffers-predicate '(lambda () nil))
 
 (setq delete-by-moving-to-trash t)
 
@@ -219,7 +223,7 @@
 ;; Show line numbers.
 (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
 ;; Adjust line number width.
-(setq linum-format "%4d")
+(defvar linum-format "%4d")
 ;; Enable separation of camel case words.
 (add-hook 'prog-mode-hook 'subword-mode)
 
@@ -298,14 +302,14 @@
                                        ; in order to hide the leading stars, set the org-hide face color to background
     (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
     ;; agenda view of next 14 days
-    (setq org-agenda-span 14)
+    (defvar org-agenda-span 14)
     (setq org-log-into-drawer t)
 
     (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
                                    "~/Dropbox/docs/agenda-personal.org"
                                    "~/xapo/agenda.org")))
 
-    (setq org-capture-templates
+    (defvar org-capture-templates
           '(("m" "movilidad")
             ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
              "* %^t %^{prompt}")
@@ -344,8 +348,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; EXTERNAL LIBRARIES
 
-;; ;; FIXME: had to use require, if not only the keybinded functions are loaded
-(require 'myfuncs)
+;; FIXME: had to use require, if not only the keybinded functions are loaded
+(require 'myfuncs "~/.emacs.d/myfuncs.el")
 (use-package myfuncs
   :defer nil                                       ; this doesn't work
   :bind (("M-S-SPC" . mine-select-current-line)
@@ -837,3 +841,6 @@
 ;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
 ;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
 ;; (message (concat "My init file loaded in " (emacs-init-time)))
+
+(provide 'init)
+;;; init.el ends here
