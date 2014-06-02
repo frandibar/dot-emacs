@@ -19,3 +19,6 @@ tramp
 url
 projectile.cache
 .cask/
+.mc-lists.el
+ac-comphist.dat
+projectile-bookmarks.eld
