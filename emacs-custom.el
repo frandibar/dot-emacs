@@ -16,4 +16,5 @@
  '(linum ((t (:inherit (shadow default) :height 0.9))))
  '(mu4e-header-highlight-face ((t (:weight bold))))
  '(mu4e-title-face ((t (:weight bold))))
- '(org-hide ((((background dark)) (:foreground "grey25")))))
+ '(org-hide ((((background dark)) (:foreground "grey25"))))
+ '(which-func ((t (:foreground "light green")))))

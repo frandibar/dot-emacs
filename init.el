@@ -1,46 +1,54 @@
 ;;; package --- init.el
 
 ;;; Commentary:
-;; MY PERSONAL EMACS CUSTOMIZATION FILE
+;; My Emacs customization file.
 
 ;;; Code:
 
-;; Show the time it took to load this file
+;; Show the time it took to load this file.
 (defvar *emacs-load-start-time* (current-time))
 
-(message "Loading my init file...")
+(message "Loading init file...")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; ENVIRONMENT SETTINGS
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Load my functions: `load-path' is a list of directories where Emacs
 ;; Lisp libraries (`.el' and `.elc' files) are installed.
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path user-emacs-directory)
+;(add-to-list 'load-path user-emacs-directory)
 
-(let ((default-directory "~/.emacs.d"))
+;(let ((default-directory user-emacs-directory))
+(let ((default-directory user-emacs-directory))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; Use `list-load-path-shadows' to display a list of external Emacs
 ;; Lisp files that shadow Emacs builtins (listing potential load path
 ;; problems).
 
-;; Add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+;; Add the site-lisp directory recursively to the load-path variable
+;; (needed when compiled only).
 (let ((default-directory "/usr/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; Add the site-lisp directory recursively to the load-path variable (needed when compiled only)
+;; Add the site-lisp directory recursively to the load-path variable
+;; (needed when compiled only)
 (let ((default-directory  "/usr/local/share/emacs/site-lisp"))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; Package Manager
-;; See ~Cask~ file for its configuration
+;; See ~Cask~ file for its configuration.
 ;; https://github.com/cask/cask
 (require 'cask "~/.emacs.d/.cask/24.3.1/elpa/cask-20140523.744/cask.el")
 (cask-initialize)
 
 ;; The `use-package' declaration macro allows isolating package
 ;; configuration in a way that is performance-oriented and tidy.
-;; (require 'use-package)   ; in order to use `use-package' instead of `require'
+;; (require 'use-package) ; in order to use `use-package' instead of
+;; `require'
 
 ;; `use-package' loads a package only if it's available, if not, a
 ;; warning is logged in the *Messages* buffer. If it succeeds, a
@@ -48,22 +56,22 @@
 ;; to load if it was over 0.01s.
 
 ;; `:init' always happens in the case of deferred modules, `:config'
-;; form only run after the module has been loaded by Emacs.
-;; You should keep `:init' forms as simple as possible, and put
-;; as much as you can get away with on the `:config' side.
+;; form only run after the module has been loaded by Emacs. You should
+;; keep `:init' forms as simple as possible, and put as much as you
+;; can get away with on the `:config' side.
 
-;; `use-package' also adds `describe-personal-keybindings'
+;; `use-package' also adds `describe-personal-keybindings'.
 
 (require 'use-package)
 
-;; Keep Cask file in sync with the packages
-;; installed/uninstalled via M-x list-packages
+;; Keep Cask file in sync with the packages.
+;; installed/uninstalled via `list-packages'.
 (use-package pallet)
 
 
-;; OS specific settings
+;; OS specific settings.
 
-;; FIXME: on OS X, when running Emacs.app, PATH is not set correctly
+;; FIXME: on OS X, when running Emacs.app, PATH is not set correctly.
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 
 ;; On OS X, use command key as meta, and option key as ctrl
@@ -82,24 +90,32 @@
 ;;     (progn
 ;;       (exec-path-from-shell-initialize))))
 
-(defvar calendar-date-style 'european)       ; dd/mm/yyyy
+(defvar calendar-date-style 'european)  ; dd/mm/yyyy
 
 (setq shell-file-name "/bin/bash")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; BEHAVIOR SETTINGS
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Use cua mode for rectangle selection.
 (cua-selection-mode t)
 
-;; Sentences end with single space, so this fixes sentence navigation commands.
+;; Sentences end with single space, so this fixes sentence navigation
+;; commands.
 (setq sentence-end-double-space nil)
 
-;; Turn on winner mode, to allow restoring window configuration with C-c ← and C-c →
+;; Turn on winner mode, to allow restoring window configuration with
+;; C-c ← and C-c →
 (winner-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; APPEARANCE SETTINGS
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Hide tool bar and scroll bar, show the menu bar.
 (menu-bar-mode t)
@@ -117,7 +133,6 @@
 (global-hl-line-mode 1)
 
 ;; Flash the frame upon C-g.
-;; Commented out because on OSX shows an ugly square in the middle of the screen.
 (setq visible-bell t)
 (setq ring-bell-function #'ignore)      ; avoid beep
 
@@ -139,14 +154,17 @@
 (global-whitespace-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; KEYBINDINGS
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; When possible, they should start with C-c, and then control again to avoid race
+;; When possible, they should start with C-c, and then C- again to avoid race
 ;; condition between first and second keys.
 ;; This guarantees that they won't be overriden by any mode.
 
-(global-set-key (kbd "M-n") 'scroll-up-line)
-(global-set-key (kbd "M-p") 'scroll-down-line)
+(global-set-key (kbd "s-n") 'scroll-up-line)
+(global-set-key (kbd "s-p") 'scroll-down-line)
 
 (global-set-key (kbd "C-c a") 'org-agenda-list)
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -154,11 +172,15 @@
 ;; Useful for jumping to function definitions in buffer.
 (global-set-key (kbd "s-i") 'imenu)
 
-;; By default, emacs binds M-z to zap-to-char. I prefer binding it to
-;; zap-up-to-char, but the latter is not loaded by default (it's in
+;; By default, emacs binds M-z to `zap-to-char'. I prefer binding it to
+;; `zap-up-to-char', but the latter is not loaded by default (it's in
 ;; misc.el instead of simple.el).
 (autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
 (global-set-key (kbd "M-z") 'zap-up-to-char)
+
+;; Same thing with `forward-to-word'.
+(autoload 'forward-to-word "misc" "Move forward until encountering the beginning of a word.")
+(global-set-key (kbd "M-f") 'forward-to-word)
 
 ;; Use these keybindings for window switching since default ones
 ;; (windmove-default-keybindings) S-{up,down,left,right}
@@ -168,10 +190,25 @@
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
 
+;; Change default behavior of RET to indent according to major mode.
 (global-set-key (kbd "RET") 'newline-and-indent)
 
+;; On OSX, s-x is mapped to `kill-region' so there is no need to remap.
+(global-set-key (kbd "C-w") 'backward-kill-word) ; override `kill-region'
+
+(use-package python
+  :init
+  (progn
+    (defvar inferior-python-mode-map)
+    ;; Behave like in a terminal.
+    (define-key inferior-python-mode-map (kbd "C-p") 'comint-previous-input)
+    (define-key inferior-python-mode-map (kbd "C-n") 'comint-next-input)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; MISC
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Turn off tab character.
 ;; Emacs normally uses both tabs and spaces to indent lines. To use only spaces
@@ -235,18 +272,18 @@
 (use-package helm-gtags
   :config
   (progn
-    (add-hook 'prog-mode-hook 'helm-gtags-mode)
-    (eval-after-load "helm-gtags"
-      '(progn
-         (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-         (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-         (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-         (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
-         (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-         (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-         (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))))
+    (add-hook 'prog-mode-hook 'helm-gtags-mode))
+  :init
+  (progn
+    (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+    (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+    (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+    (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
 
-;; Fish shell configuration files.
+;; Set mode for unknown Fish shell configuration files.
 (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
 
@@ -346,13 +383,16 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; EXTERNAL LIBRARIES
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; FIXME: had to use require, if not only the keybinded functions are loaded
-(require 'myfuncs "~/.emacs.d/myfuncs.el")
+(require 'myfuncs (concat user-emacs-directory "myfuncs.el"))
 (use-package myfuncs
   :defer nil                                       ; this doesn't work
-  :bind (("M-S-SPC" . mine-select-current-line)
+  :bind (("s-S-SPC" . mine-select-current-line)
 
          ("C-c C-a" . mine-increment-number-at-point)
          ("C-c C-x" . mine-decrement-number-at-point)
@@ -362,9 +402,7 @@
          ("C-5" . mine-match-paren)                ; similar to vim's %
          ("C-6" . mine-fast-buffer-switch)         ; similar to vim's ^
          ("C-8" . mine-isearch-forward-at-point)   ; similar to vim's *
-         ;; FIXME: doesn't override calc-copy-as-kill in calc-mode
-         ("M-k" . mine-close-buffer-and-window) ; override kill-sentence
-
+         ;; ("M-k" . mine-close-buffer-and-window)    ; override kill-sentence
          ("M-C" . mine-toggle-case)
          ;; ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
          ))
@@ -374,6 +412,7 @@
 
 ;; Encryption settings.
 (use-package org-crypt
+  ;; create autoloads
   :commands (org-decrypt-entries
              org-encrypt-entries
              org-crypt-use-before-save-magic)
@@ -393,8 +432,9 @@
 ;; start Org.
 ;; To turn it off only locally, you can insert this:
 ;;
-;; # -*- buffer-auto-save-file-name: nil; -*-
-;; Excluding the crypt tag from inheritance prevents already encrypted text being encrypted again.
+;; # -*- buffer-auto-save-file-name: nil; -*- Excluding the crypt tag
+;; from inheritance prevents already encrypted text being encrypted
+;; again.
 
 (use-package undo-tree
   :config
@@ -404,63 +444,21 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; Wrap Region is a minor mode for Emacs that wraps a region with
-;; punctuations. For example select a region and press left paren to
-;; wrap it around parentheses. For "tagged" markup modes, such as HTML
-;; and XML, it wraps with tags.
+;; wrap-region is a minor mode that wraps a region with punctuations.
+;; For example select a region and press left paren to wrap it around
+;; parentheses. For "tagged" markup modes, such as HTML and XML, it
+;; wraps with tags.
 (use-package wrap-region
   :config
   (wrap-region-global-mode t))
 
-;; Ace jump mode is a minor mode of emacs, which help you to move the
-;; cursor to **ANY** position (across window and frame) using at most
-;; 4 key presses.
+;; Ace jump mode is a minor mode, which help you to move the cursor to
+;; **ANY** position (across window and frame) using at most 4 key
+;; presses.
 (use-package ace-jump-mode
-  :bind ("<f11>" . ace-jump-char-mode)
+  :bind ("<f11>" . ace-jump-word-mode)
   :config
   (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
-
-;(use-package python-mode)
-
-;; works with python-mode from the python community, not gnus python mode
-;; (use-package ipython
-;;   :config
-;;   (progn
-;;     (use-package starter-kit-defuns)
-;;     (use-package python-pep8)
-;;     (use-package python-pylint)))
-
-;; (use-package flymake
-;;   :config
-;;   (progn
-;;     (require 'flymake-cursor)
-;;     ;; make sure pyflakes is loaded, and make it work for unnamed buffers
-;;     (add-to-list
-;;      'flymake-allowed-file-name-masks
-;;      '("\\.py\\'" (lambda ()
-;;                     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                                        'flymake-create-temp-inplace))
-;;                            (local-file (file-relative-name temp-file (file-name-directory
-;;                                                                       buffer-file-name))))
-;;                       (list "pyflakes" (list local-file))))))))
-
-;; ;; Autocheck for python.
-;; (use-package flymake-python-pyflakes
-;;   :config
-;;   (progn
-;;     (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)))
-
-;; ;; python autocompletion
-;; (use-package jedi
-;;   :init
-;;   (progn
-;;     (add-hook 'python-mode-hook 'jedi:setup)
-;;     ;; (define-key python-mode-map (kbd "C-c x") 'jedi-direx:pop-to-buffer)
-;;     )
-;;   :config
-;;   (progn
-;;     (setq jedi:setup-keys t))
-;;   )
 
 (use-package auto-complete)
 
@@ -468,9 +466,12 @@
   :config
   (global-flycheck-mode))
 
-(add-hook 'python-mode-hook (lambda () (flycheck-mode)
-                              (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
-                              (flycheck-select-checker 'python-flake8)))
+;; TODO: this should go inside the use-package
+(add-hook 'python-mode-hook
+          (lambda ()
+            (flycheck-mode)
+            (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
+            (flycheck-select-checker 'python-flake8)))
 
 (use-package elpy
   ;; Default bindings are overriden by smartscan
@@ -478,13 +479,15 @@
          ("M-C-p" . elpy-nav-backward-definition))  ; default M-p
   :config
   (progn
-    (elpy-enable)
     (setq elpy-rpc-backend "jedi")
     (elpy-clean-modeline)      ; avoid showing minor modes
-    (elpy-use-ipython)
+    ;; (elpy-use-ipython)
+    (setq python-shell-interpreter-args "-i --colors Linux")
+    (setq python-shell-interpreter "/usr/local/bin/ipython")
     (setq elpy-default-minor-modes '(eldoc-mode
                                      yas-minor-mode
                                      auto-complete-mode))))
+(elpy-enable)
 
 ;; Change the default naming of buffers to include parts of the file
 ;; name (directory names) until the buffer names are unique.
@@ -507,11 +510,11 @@
     (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
     ))
 
-
 (use-package paredit
   :config
   (progn
     (dolist (mode '(clojure-mode-hook
+                    hy-mode-hook
                     emacs-lisp-mode-hook
                     lisp-interaction-mode-hook))
       (add-hook mode 'paredit-mode))))
@@ -556,7 +559,12 @@
 ;; except for git repos. This file has entries with patterns to ignore files.
 (use-package projectile
   :config
-  (projectile-global-mode))
+  (projectile-global-mode)
+  :init
+  (use-package ack-and-a-half
+    :config
+    (setq ack-and-a-half-executable "/usr/local/bin/ack"))
+  )
 
 (use-package shift-text
   :bind (("M-S-<up>" . shift-text-up)
@@ -610,9 +618,10 @@
         ))))
 
 ;; Show greek char for lambda in programming modes.
-(use-package pretty-lambdada
-  :config
-  (add-hook 'prog-mode-hook 'pretty-lambda))
+;; Commented out because indentation is broken
+;; (use-package pretty-lambdada
+;;   :config
+;;   (add-hook 'prog-mode-hook 'pretty-lambda))
 
 (use-package edit-list)
 
@@ -702,8 +711,9 @@
                                                                powerline-default-separator
                                                                (cdr powerline-default-separator-dir))))
                               (lhs (list (powerline-raw "%*" nil 'l)  ; print flags % if read only, * if modified
-                                         (powerline-buffer-size nil 'l)
-                                         (powerline-raw mode-line-mule-info nil 'l)
+                                         ;(powerline-raw mode-line-mule-info nil 'l)
+                                         ;; line : column
+                                         (powerline-raw " %l:%c " face2)
                                          (funcall separator-left face2 face1)
                                          (powerline-buffer-id face1 'l)
                                          (funcall separator-left face1 face2)
@@ -723,15 +733,8 @@
                                          (powerline-raw " " face2)
                                          (powerline-raw global-mode-string) ; this is to show messages filter in mu4e
                                          ))
-                              (rhs (list (funcall separator-right face2 face1)
-                                         ;; line : col / position in buffer %
-                                         (powerline-raw "%4l" face1 'l)
-                                         (powerline-raw ":" face1 'l)
-                                         (powerline-raw "%3c" face1 'r)
-                                         (funcall separator-right face1 mode-line)
-                                         (powerline-raw " ")
-                                         (powerline-raw "%6p" nil 'r)
-                                         (powerline-hud face2 face1)
+                              (rhs (list (powerline-raw "%p" nil 'r)
+                                         (powerline-buffer-size nil 'l)
                                          (powerline-raw " ")
                                          ;; TODO: I want to display message icon but not the time
                                         ;(powerline-raw display-time-string)  ; to show new message icon
@@ -774,7 +777,7 @@
     (setq tabbar-use-images nil)        ; speed up
 
     (setq tabbar-ruler-swap-faces t)    ; revert colors for active/inactive tab
-    (tabbar-install-faces)         ; this is because if they where already installed, the previous line was set too late
+    (tabbar-install-faces)         ; if they where already installed, the previous line was set too late
     ))
 
 (use-package nav)
@@ -791,6 +794,7 @@
     (diminish 'color-identifiers-mode)
     (diminish 'eldoc-mode)
     (diminish 'elisp-slime-nav-mode " s")
+    (diminish 'flycheck-mode " f")
     (diminish 'ggtags-mode " §")
     (diminish 'git-gutter-mode)
     (diminish 'global-whitespace-mode " _")
@@ -832,7 +836,7 @@
     (add-hook 'after-init-hook 'edit-server-start t)))
 
 ;; Load custom file if present.
-(setq custom-file "~/.emacs.d/emacs-custom.el")
+(setq custom-file (concat user-emacs-directory "emacs-custom.el"))
 (load custom-file 'noerror)
 
 ;; FIXME: check why I get an error when using emacs-init-time

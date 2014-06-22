@@ -1,16 +1,16 @@
-; My custom miscellaneous functions
+;;; package --- myfuncs.el
 
-(provide 'myfuncs)
+;;; Commentary:
+;;; My custom miscellaneous functions
 
-(defun mine-find-file-in-this-dir ()
-  "find-file in the dir of current buffer."
-  (interactive)
-  (ido-find-file-in-dir (file-name-directory (buffer-file-name))))
+;;; Code:
 
 (defun mine-backward-up-sexp (arg)
-  "Added because existing function backward-up-list won't work when point is between double quotes.
+  "Added because existing function `backward-up-list' won't work when
+point is between double quotes.
 
-Extracted from URL `http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs'."
+Extracted from URL
+`http://stackoverflow.com/questions/5194417/how-to-mark-the-text-between-the-parentheses-in-emacs'."
   (interactive "p")
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
@@ -29,6 +29,7 @@ It doesn't work if cursor is between double quotes."
 
 (defalias 'dip 'mine-dip)
 
+; FIXME
 (defun mine-vip ()
   "Mark text inside parenthesis (excluding parentheses).
 Similar to vi) in vim.
@@ -42,6 +43,7 @@ It doesn't work if cursor is between double quotes."
 
 (defalias 'vip 'mine-vip)
 
+; FIXME
 (defun mine-vap ()
   "Mark text inside parenthesis (including parenthesis).
 Similar to va) in vim.
@@ -61,6 +63,7 @@ otherwise insert %."
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t (self-insert-command (or arg 1)))))
 
+; FIXME
 (defun mine-toggle-fullscreen ()
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
@@ -77,12 +80,16 @@ Similar to 'M' in vim."
   (push-mark)
   (move-to-window-line nil))
 
+(defalias 'mm 'mine-point-to-middle)
+
 (defun mine-point-to-top ()
   "Put cursor on top line of window.
 Similar to 'H' in vim."
   (interactive)
   (push-mark)
   (move-to-window-line 0))
+
+(defalias 'hh 'mine-point-to-top)
 
 (defun mine-point-to-bottom ()
   "Put cursor at bottom of last visible line.
@@ -91,11 +98,13 @@ Similar to 'L' in vim."
   (push-mark)
   (move-to-window-line -1))
 
+(defalias 'll 'mine-point-to-bottom)
+
 (defun mine-insert-date()
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
-;; convert a buffer from DOS `^M' end of lines to Unix end of lines
+;; Convert a buffer from DOS `^M' end of lines to Unix end of lines.
 (defun mine-dos-to-unix ()
   "Cut all visible ^M from the current buffer."
   (interactive)
@@ -121,10 +130,10 @@ Note: This function overrides variable `buffer-display-table'."
   (aset buffer-display-table ?\^M []))
 
 (defun mine-switch-cpp-h-file ()
+  (interactive)
   "Switches buffer to the corresponding header file (.h) if current buffer
 is a .cpp file, and vice-versa.
 It assumes both files are in the same path. If not, it creates a new file."
-  (interactive)
   (defun alternate-file (cpp-or-h-file)
     (cond ((equal ".h" (substring cpp-or-h-file -2))
            (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 2)) ".cpp"))
@@ -549,7 +558,7 @@ eshell-prompt-function-long)"
 ;      (yes-or-no-p "Are you sure you want to clear the log? "))
     (with-current-buffer sr-buffer
       (let ((inhibit-read-only t))
-	(erase-buffer)))
+    (erase-buffer)))
     (message nil)
 ; added by me
     (sr-hide)))
@@ -577,7 +586,6 @@ Extracted from URL `http://emacsredux.com'."
   (interactive)
   (save-excursion
     (replace-string (string 13) "" nil (point-min) (point-max))))
-
 
 (defadvice ido-find-file (after find-file-sudo activate)
   "Find file as root if necessary.
@@ -654,8 +662,8 @@ Extracted from URL `http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-
   (font-lock-fontify-buffer))
 
 (defun backward-up-list+-1 ()
-  "go to left of )"
-  "Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
+  "Go to left of closing parenthesis.
+Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
   (interactive)
   (backward-up-list)
   (forward-char))
@@ -663,10 +671,77 @@ Extracted from URL `http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-
 (define-key lisp-mode-shared-map (kbd "C-M-9") 'backward-up-list+-1)
 
 (defun up-list+-1 ()
-  "go to right of ("
-  "Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
+  "Go to right of openning parenthesis.
+Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-more-special-features'."
   (interactive)
   (up-list)
   (backward-char))
 
 (define-key lisp-mode-shared-map (kbd "C-M-0") 'up-list+-1)
+
+(defun mine-comment-tests ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search nil))       ; case-sensitive
+      (while (search-forward "def test" nil t)
+        (replace-match "def XXXtest")))
+    ))
+
+
+(defun mine-uncomment-tests ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((case-fold-search nil))       ; case-sensitive
+      (while (search-forward "def XXXtest" nil t)
+        (replace-match "def test")))
+    ))
+
+(defun mine-pdb-break ()
+  (interactive)
+  (insert "import pdb;pdb.set_trace()  # TODO remove\n"))
+
+
+;; Toggle between python buffers and python shell
+;; Extracted from
+;; http://www.masteringemacs.org/articles/2011/02/23/toggling-python-buffers/
+
+(defvar python-last-buffer nil
+  "Name of the Python buffer that last invoked `toggle-between-python-buffers'")
+
+(make-variable-buffer-local 'python-last-buffer)
+
+(defun toggle-between-python-buffers ()
+  "Toggles between a `python-mode' buffer and its inferior Python process
+
+When invoked from a `python-mode' buffer it will switch the
+active buffer to its associated Python process. If the command is
+invoked from a Python process, it will switch back to the `python-mode' buffer."
+  (interactive)
+  ;; check if `major-mode' is `python-mode' and if it is, we check if
+  ;; the process referenced in `python-buffer' is running
+  (if (and (eq major-mode 'python-mode)
+           (processp (get-buffer-process python-buffer)))
+      (progn
+        ;; store a reference to the current *other* buffer; relying
+        ;; on `other-buffer' alone wouldn't be wise as it would never work
+        ;; if a user were to switch away from the inferior Python
+        ;; process to a buffer that isn't our current one.
+        (switch-to-buffer python-buffer)
+        (setq python-last-buffer (other-buffer)))
+    ;; switch back to the last `python-mode' buffer, but only if it
+    ;; still exists.
+    (when (eq major-mode 'inferior-python-mode)
+      (if (buffer-live-p python-last-buffer)
+           (switch-to-buffer python-last-buffer)
+        ;; buffer's dead; clear the variable.
+        (setq python-last-buffer nil)))))
+
+(define-key inferior-python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
+(define-key python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
+
+
+(provide 'myfuncs)
+
+;;; myfuncs.el ends here
