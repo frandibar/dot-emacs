@@ -423,8 +423,8 @@ User buffers are those not starting with * nor in dired-mode."
   "Select the current line.
 Extracted from URL `http://ergoemacs.org/emacs/modernization_mark-word.html'."
   (interactive)
-  (beginning-of-line) ; move to end of line
-  (set-mark (line-end-position)))
+  (end-of-line) ; move to end of line
+  (set-mark (line-beginning-position)))
 
 (defun mine-filename-to-clipboard ()
   "Copy the current buffer file name to the clipboard.
@@ -741,6 +741,11 @@ invoked from a Python process, it will switch back to the `python-mode' buffer."
 (define-key inferior-python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
 (define-key python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
 
+(defun mine-json-format ()
+  "JSON Pretty format for selected region."
+  (interactive)
+  (save-excursion
+    (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
 
 (provide 'myfuncs)
 
