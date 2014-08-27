@@ -747,6 +747,40 @@ invoked from a Python process, it will switch back to the `python-mode' buffer."
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
 
+(defun mine-beginning-of-string ()
+  "Moves to the beginning of a syntactic string
+Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
+  (interactive)
+  (unless (in-string-p)
+    (error "You must be in a string for this command to work"))
+  (while (in-string-p)
+    (forward-char -1))
+  (point))
+
+(defun mine-swap-quotes ()
+  "Swaps the quote symbols in a \\[python-mode] string
+Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
+  (interactive)
+  (save-excursion
+    (let ((bos (save-excursion
+                 (mine-beginning-of-string)))
+          (eos (save-excursion
+                 (mine-beginning-of-string)
+                 (forward-sexp)
+                 (point)))
+          (replacement-char ?\'))
+      (goto-char bos)
+      ;; if the following character is a single quote then the
+      ;; `replacement-char' should be a double quote.
+      (when (eq (following-char) ?\')
+          (setq replacement-char ?\"))
+      (delete-char 1)
+      (insert replacement-char)
+      (goto-char eos)
+      (delete-char -1)
+      (insert replacement-char))))
+
+
 (provide 'myfuncs)
 
 ;;; myfuncs.el ends here
