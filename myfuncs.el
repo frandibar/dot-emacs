@@ -747,13 +747,20 @@ invoked from a Python process, it will switch back to the `python-mode' buffer."
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
 
+(defun mine-point-in-string-p (pt)
+  "Returns t if PT is in a string
+Works in strings enclosed in single quotes, as opposed to `in-string-p'
+Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
+  (eq 'string (syntax-ppss-context (syntax-ppss pt))))
+
+
 (defun mine-beginning-of-string ()
   "Moves to the beginning of a syntactic string
 Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
   (interactive)
-  (unless (in-string-p)
+  (unless (mine-point-in-string-p (point))
     (error "You must be in a string for this command to work"))
-  (while (in-string-p)
+  (while (mine-point-in-string-p (point))
     (forward-char -1))
   (point))
 

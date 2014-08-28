@@ -143,7 +143,7 @@
 (line-number-mode 1)
 (column-number-mode 1)
 
-;; Show blank screen on startup.
+;; Show blank screen on startup (*Scratch* buffer).
 (setq initial-scratch-message nil)
 
 ;; Set font size.
@@ -177,10 +177,12 @@
 ;; misc.el instead of simple.el).
 (autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
 (global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "M-Z") 'zap-to-char)
 
 ;; Same thing with `forward-to-word'.
 (autoload 'forward-to-word "misc" "Move forward until encountering the beginning of a word.")
-(global-set-key (kbd "M-f") 'forward-to-word)
+(global-set-key (kbd "M-f") 'forward-to-word)  ; TODO: use subword variant (subword-forward leaves cursor before word)
+;(global-set-key (kbd "M-f") 'subword-forward)
 
 ;; Use these keybindings for window switching since default ones
 ;; (windmove-default-keybindings) S-{up,down,left,right}
@@ -201,8 +203,11 @@
   (progn
     (defvar inferior-python-mode-map)
     ;; Behave like in a terminal.
-    (define-key inferior-python-mode-map (kbd "C-p") 'comint-previous-input)
-    (define-key inferior-python-mode-map (kbd "C-n") 'comint-next-input)))
+    (define-key inferior-python-mode-map (kbd "C-S-p") 'comint-previous-input)
+    (define-key inferior-python-mode-map (kbd "C-S-n") 'comint-next-input)
+    ;; for some unknown reason using :bind doesn't work
+    (define-key python-mode-map (kbd "C-M-<") 'python-indent-shift-left)
+    (define-key python-mode-map (kbd "C-M->") 'python-indent-shift-right)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -260,15 +265,17 @@
 ;; Show line numbers.
 (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
 ;; Adjust line number width.
-(defvar linum-format "%4d")
+;;(defvar linum-format "%4d")
+
 ;; Enable separation of camel case words.
 (add-hook 'prog-mode-hook 'subword-mode)
 
-;; Enable tags for gnu global.
+;; Emacs frontend to GNU Global source code tagging system.
 (use-package ggtags
   :config
   (add-hook 'prog-mode-hook 'ggtags-mode))
 
+;; GNU GLOBAL helm interface.
 (use-package helm-gtags
   :config
   (progn
@@ -323,12 +330,15 @@
                   (seq bol ".o" eol))))         ;; object files
 
     (setq dired-listing-switches "-alh")))
+
 (use-package dired-x)  ; makes dired-jump available with C-x C-j from the start
+;; Extensions to Dired.
 ;; (use-package dired+)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ORG mode
+;; Outline-based notes management and organizer.
 (use-package org
   :config
   (progn
@@ -436,15 +446,16 @@
 ;; from inheritance prevents already encrypted text being encrypted
 ;; again.
 
+;; Treat undo history as a tree.
 (use-package undo-tree
   :config
   (global-undo-tree-mode))
 
-;; Expand region increases the selected region by semantic units.
+;; Increase selected region by semantic units.
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-;; wrap-region is a minor mode that wraps a region with punctuations.
+;; Wrap text with punctation or tag.
 ;; For example select a region and press left paren to wrap it around
 ;; parentheses. For "tagged" markup modes, such as HTML and XML, it
 ;; wraps with tags.
@@ -452,16 +463,17 @@
   :config
   (wrap-region-global-mode t))
 
-;; Ace jump mode is a minor mode, which help you to move the cursor to
-;; **ANY** position (across window and frame) using at most 4 key
-;; presses.
+;; Move the cursor to **ANY** position (across window and frame) using
+;; at most 4 key presses.
+;; A quick cursor location minor mode.
 (use-package ace-jump-mode
   :bind ("<f11>" . ace-jump-word-mode)
   :config
-  (setq ace-jump-mode-case-fold nil))      ; case sensitive jump mode
+  (setq ace-jump-mode-case-fold nil))   ; case sensitive jump mode
 
 (use-package auto-complete)
 
+;; Modern on-the-fly syntax checking.
 (use-package flycheck
   :config
   (global-flycheck-mode))
@@ -473,6 +485,7 @@
             (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
             (flycheck-select-checker 'python-flake8)))
 
+;; Emacs Python Development Environment.
 (use-package elpy
   ;; Default bindings are overriden by smartscan
   :bind (("M-C-n" . elpy-nav-forward-definition)    ; default M-n
@@ -500,6 +513,7 @@
     (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
     ))
 
+;; Make M-. and M-, work in elisp like they do in slime.
 ;; Slime allows navigation to the symbol at point (using M-.), and the
 ;; ability to pop back to previous marks (using M-,).  This plugin
 ;; provides similar navigation for Emacs Lisp, supporting navigation
@@ -510,6 +524,7 @@
     (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
     ))
 
+;; Minor mode for editing parentheses.
 (use-package paredit
   :config
   (progn
@@ -519,7 +534,7 @@
                     lisp-interaction-mode-hook))
       (add-hook mode 'paredit-mode))))
 
-;; Git within emacs.
+;; Control Git from Emacs.
 (use-package magit
   :bind (("M-g s" . magit-status)))
 
@@ -536,24 +551,25 @@
     :config
     (global-git-gutter-mode 1)))
 
-;; Allows changing files directly from grep buffer.
+;; Writable grep buffer and apply the changes to files.
 (use-package wgrep)
 
 ;; In dired mode, matching files are opened in external program.
-(use-package openwith
-  :init
-  (progn
-    (setq openwith-associations
-          '(("\\.pdf\\'" "evince" (file))
-            ("\\.mp3\\'" "xmms" (file))
-            ("\\.sgf\\'" "quarry" (file))
-            ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
-            ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
-          )
-    (add-hook 'dired-mode-hook (lambda () (openwith-mode t)))
-    ;(openwith-mode t)
-    ))
+;; (use-package openwith
+;;   :init
+;;   (progn
+;;     (setq openwith-associations
+;;           '(("\\.pdf\\'" "evince" (file))
+;;             ("\\.mp3\\'" "xmms" (file))
+;;             ("\\.sgf\\'" "quarry" (file))
+;;             ("\\.\\(?:mpe?g\\|avi\\|wmv\\|flv\\|mp4\\|mov\\|3gp\\|ogv\\)\\'" "mplayer" ("-idx" file))
+;;             ("\\.\\(?:jp?g\\|png\\)\\'" "display" (file)))
+;;           )
+;;     (add-hook 'dired-mode-hook (lambda () (openwith-mode t)))
+;;     ;(openwith-mode t)
+;;     ))
 
+;; Manage and navigate projects in Emacs easily.
 ;; Enable project management for all modes.
 ;; Root dir must have a file named .projectile to be considered a project
 ;; except for git repos. This file has entries with patterns to ignore files.
@@ -561,11 +577,13 @@
   :config
   (projectile-global-mode)
   :init
+  ;; Yet another front-end for ack.
   (use-package ack-and-a-half
     :config
     (setq ack-and-a-half-executable "/usr/local/bin/ack"))
   )
 
+;; Move the region in 4 directions, in a way similar to Eclipse's.
 (use-package shift-text
   :bind (("M-S-<up>" . shift-text-up)
          ("M-S-<down>" . shift-text-down)
@@ -579,6 +597,7 @@
          ("C-;" . mc/mark-all-like-this)) ; binding used by iedit
   )
 
+;; Major mode for editing html templates.
 (use-package web-mode
   :config
   (progn
@@ -586,14 +605,15 @@
                     "\\.xml\\'"))
       (add-to-list 'auto-mode-alist `(,mode . web-mode)))))
 
-;; Whitespace trimming.
+;; Tools and minor mode to trim whitespace on text lines.
 (use-package ws-trim
   :config
   (progn
-    (setq-default ws-trim-level 1)  ; only modified lines are trimmed
+    (setq-default ws-trim-level 1)   ; only modified lines are trimmed
     (global-ws-trim-mode 1))
   )
 
+;; Helm is an Emacs incremental and narrowing framework.
 (use-package helm
   :bind (("<f12>" . helm-mini))
   :init
@@ -612,6 +632,17 @@
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
 
+        ;; Use full screen.
+        (setq helm-full-frame t)
+
+        ;; In OSX, use mdfind instead of locate.
+        (if (eq system-type 'darwin)
+            (setq helm-locate-command "mdfind %s %s"))
+        ;; Ignore some files...
+        (loop for ext in '("\\.elc$" "\\.pyc$")
+              do (add-to-list 'helm-boring-file-regexp-list ext))
+        (global-set-key (kbd "s-t") 'helm-for-files)
+
         ;; Avoid showing up when using winner mode.
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
@@ -623,8 +654,10 @@
 ;;   :config
 ;;   (add-hook 'prog-mode-hook 'pretty-lambda))
 
+;; Edit a single list.
 (use-package edit-list)
 
+;; Building Regexps with visual feedback.
 (use-package re-builder
   :config
   (progn
@@ -632,10 +665,12 @@
     ;; See http://www.masteringemacs.org/articles/2011/04/12/re-builder-interactive-regexp-builder/
     (setq reb-re-syntax 'string)))
 
+;; Jumps between other symbols found at point.
 (use-package smartscan
   :config
   (global-smartscan-mode 1))
 
+;; Customize the mode line.
 (use-package powerline
   :config
   (progn
@@ -745,10 +780,12 @@
     (mine-powerline-theme)
     ))
 
+;; Discover more of Emacs.
 (use-package discover
   :config
   (global-discover-mode 1))
 
+;; Guide the following key bindings automatically and dynamically.
 (use-package guide-key
   :config
   (progn
@@ -758,35 +795,39 @@
     (setq guide-key/guide-key-sequence
           '((org-mode "C-c C-x")))))
 
+;; A regexp/replace command for Emacs with interactive visual feedback.
 (use-package visual-regexp
   :config
   (progn
     (define-key global-map (kbd "M-%") 'vr/query-replace))) ; override default keybinding for query-replace
 
 ;; Prettify tabs for tabbar-mode.
-(use-package tabbar-ruler
-  ;; These bindings are for mac: M-s stand for left hand (alt + command)
-  :bind (("M-s-<right>" . tabbar-ruler-forward)
-         ("M-s-<left>" . tabbar-ruler-backward)
-         ("M-s-<up>" . tabbar-ruler-up)
-         ;; Alternatively use tabbar-ruler-move.
-         )
-  :config
-  (progn
-    (setq tabbar-ruler-global-tabbar t)
-    (setq tabbar-use-images nil)        ; speed up
+;; (use-package tabbar-ruler
+;;   ;; These bindings are for mac: M-s stand for left hand (alt + command)
+;;   :bind (("M-s-<right>" . tabbar-ruler-forward)
+;;          ("M-s-<left>" . tabbar-ruler-backward)
+;;          ("M-s-<up>" . tabbar-ruler-up)
+;;          ;; Alternatively use tabbar-ruler-move.
+;;          )
+;;   :config
+;;   (progn
+;;     (setq tabbar-ruler-global-tabbar t)
+;;     (setq tabbar-use-images nil)        ; speed up
 
-    (setq tabbar-ruler-swap-faces t)    ; revert colors for active/inactive tab
-    (tabbar-install-faces)         ; if they where already installed, the previous line was set too late
-    ))
+;;     (setq tabbar-ruler-swap-faces t)    ; revert colors for active/inactive tab
+;;     (tabbar-install-faces)         ; if they where already installed, the previous line was set too late
+;;     ))
 
+;; Emacs mode for filesystem navigation.
 (use-package nav)
 
+;; Color identifiers based on their names.
 ;; Unique coloring of symbols instead of keywords.
 (use-package color-identifiers-mode
   :config
   (global-color-identifiers-mode))
 
+;; Diminished modes are minor modes with no modeline display.
 (use-package diminish
   :config
   (progn
@@ -808,6 +849,23 @@
     (diminish 'wrap-region-mode " ω")
     (diminish 'ws-trim-mode)
     ))
+
+;; A tree plugin like NerdTree for Vim.
+(use-package neotree
+  :bind (("<f8>" . neotree-toggle)))
+
+;; Efficiently hopping squeezed lines powered by helm interface.
+(use-package helm-swoop
+  :bind (("M-i" . helm-swoop)))
+
+;; Show number of matches in mode-line while searching.
+(use-package anzu
+  :config
+  (progn
+    (global-anzu-mode)))
+
+;(set-face-attribute 'fringe nil :background "dark slate gray")
+;(set-face-attribute 'linum nil :background "dark slate gray")
 
 ;; Load initializations for this site.
 (use-package init-local)
@@ -848,3 +906,4 @@
 
 (provide 'init)
 ;;; init.el ends here
+(put 'narrow-to-page 'disabled nil)

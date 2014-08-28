@@ -44,8 +44,9 @@ PROP-VALUE is it's value."
 
 (defun sgf-get-filename (filename)
   "FILENAME is the file to rename."
-  (let ((owm openwith-mode))
-    (openwith-mode -1)
+  (let ((owm ;openwith-mode
+         ))
+    ;; (openwith-mode -1)
     (find-file filename)
     (let* ((info (parse-sgf-buffer))
            (black (sgf-get-prop "PB" info))
@@ -55,11 +56,12 @@ PROP-VALUE is it's value."
            (date (sgf-get-prop "DT" info))
            (result (sgf-get-prop "RE" info)))
       (kill-buffer)
-      (openwith-mode owm)
+      ;; (openwith-mode owm)
       (format "%s_%s_%s_B_vs_%s_%s_W_%s.sgf" date black black-rank white white-rank result))))
 
 
 (defun sgf-rename-file-dired ()
+  ;; TODO: make it work on all selected files
   "In Dired mode, rename file under cursor."
   (interactive)
   (let* ((oldname (dired-file-name-at-point))
@@ -79,14 +81,18 @@ PROP-VALUE is it's value."
 (defun sgf-mark-wins ()
   "In Dired mode, mark games in which I've won."
   (interactive)
-  (dired-mark-files-regexp "frandibar_B.*_Bp")
-  (dired-mark-files-regexp "frandibar_W.*_Wp"))
+  (dired-mark-files-regexp "frandibar_[0-9kpBC]+_B.*_Bp")
+  (dired-mark-files-regexp "frandibar_[0-9kpBC]+_W.*_Wp")
+  ;; remove misleading message
+  (message ""))
 
 (defun sgf-mark-lost ()
   "In Dired mode, mark games in which I've lost."
   (interactive)
-  (dired-mark-files-regexp "frandibar_B.*_Wp")
-  (dired-mark-files-regexp "frandibar_W.*_Bp"))
+  (dired-mark-files-regexp "frandibar_[0-9kpBC]+_B.*_Wp")
+  (dired-mark-files-regexp "frandibar_[0-9kpBC]+_W.*_Bp")
+  ;; remove misleading message
+  (message ""))
 
 (provide 'sgf)
 ;;; sgf.el ends here
