@@ -827,10 +827,17 @@
   :config
   (global-color-identifiers-mode))
 
+;; Show number of matches in mode-line while searching.
+(use-package anzu
+  :config
+  (progn
+    (global-anzu-mode)))
+
 ;; Diminished modes are minor modes with no modeline display.
 (use-package diminish
   :config
   (progn
+    (diminish 'anzu-mode)
     (diminish 'auto-complete-mode " ac")
     (diminish 'color-identifiers-mode)
     (diminish 'eldoc-mode)
@@ -857,12 +864,6 @@
 ;; Efficiently hopping squeezed lines powered by helm interface.
 (use-package helm-swoop
   :bind (("M-i" . helm-swoop)))
-
-;; Show number of matches in mode-line while searching.
-(use-package anzu
-  :config
-  (progn
-    (global-anzu-mode)))
 
 ;(set-face-attribute 'fringe nil :background "dark slate gray")
 ;(set-face-attribute 'linum nil :background "dark slate gray")
