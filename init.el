@@ -5,9 +5,6 @@
 
 ;;; Code:
 
-;; Show the time it took to load this file.
-(defvar *emacs-load-start-time* (current-time))
-
 (message "Loading init file...")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -865,6 +862,9 @@
 (use-package helm-swoop
   :bind (("M-i" . helm-swoop)))
 
+;; My sgf library for handling Smart Go Format files
+(use-package sgf)
+
 ;(set-face-attribute 'fringe nil :background "dark slate gray")
 ;(set-face-attribute 'linum nil :background "dark slate gray")
 
@@ -897,13 +897,6 @@
 ;; Load custom file if present.
 (setq custom-file (concat user-emacs-directory "emacs-custom.el"))
 (load custom-file 'noerror)
-
-;; FIXME: check why I get an error when using emacs-init-time
-;; Show load time in *Messages* buffer.
-;; FIXME: broke when upgrading to 24.3
-;; (message "My init file loaded in %ds" (destructuring-bind (hi lo ms) (current-time)
-;;                                         (- (+ hi lo) (+ (first *emacs-load-start-time*) (second *emacs-load-start-time*)))))
-;; (message (concat "My init file loaded in " (emacs-init-time)))
 
 (provide 'init)
 ;;; init.el ends here
