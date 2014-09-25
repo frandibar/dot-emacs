@@ -60,8 +60,15 @@ PROP-VALUE is it's value."
       (format "%s_%s_%s_B_vs_%s_%s_W_%s.sgf" date black black-rank white white-rank result))))
 
 
+(defun sgf-rename-marked-files-dired ()
+  "In Dired mode, rename marked files."
+  (interactive)
+  (let ((files (dired-get-marked-files)))
+    (dolist (f files)
+      (rename-file f (sgf-get-filename f)))))
+
+
 (defun sgf-rename-file-dired ()
-  ;; TODO: make it work on all selected files
   "In Dired mode, rename file under cursor."
   (interactive)
   (let* ((oldname (dired-file-name-at-point))
