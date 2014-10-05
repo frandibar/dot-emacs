@@ -787,6 +787,11 @@ Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-q
       (delete-char -1)
       (insert replacement-char))))
 
+(defun mine-make-helm-full-frame ()
+  "Extracted from URL `http://emacs.stackexchange.com/questions/643/make-helm-window-the-only-window'"
+   (interactive)
+   (with-selected-window (helm-window)
+     (delete-other-windows)))
 
 (provide 'myfuncs)
 

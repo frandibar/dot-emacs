@@ -16,9 +16,7 @@
 ;; Load my functions: `load-path' is a list of directories where Emacs
 ;; Lisp libraries (`.el' and `.elc' files) are installed.
 (add-to-list 'load-path user-emacs-directory)
-;(add-to-list 'load-path user-emacs-directory)
 
-;(let ((default-directory user-emacs-directory))
 (let ((default-directory user-emacs-directory))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -26,20 +24,14 @@
 ;; Lisp files that shadow Emacs builtins (listing potential load path
 ;; problems).
 
-;; Add the site-lisp directory recursively to the load-path variable
-;; (needed when compiled only).
-(let ((default-directory "/usr/share/emacs/site-lisp"))
-  (normal-top-level-add-subdirs-to-load-path))
-
-;; Add the site-lisp directory recursively to the load-path variable
-;; (needed when compiled only)
-(let ((default-directory  "/usr/local/share/emacs/site-lisp"))
-  (normal-top-level-add-subdirs-to-load-path))
-
 ;; Package Manager
 ;; See ~Cask~ file for its configuration.
 ;; https://github.com/cask/cask
-(require 'cask "~/.emacs.d/.cask/24.3.1/elpa/cask-20140523.744/cask.el")
+;; On OSX it's necessary to manually add the .cask directory
+(let ((default-directory (concat user-emacs-directory ".cask")))
+  (normal-top-level-add-subdirs-to-load-path))
+
+(require 'cask)
 (cask-initialize)
 
 ;; The `use-package' declaration macro allows isolating package
@@ -68,14 +60,11 @@
 
 ;; OS specific settings.
 
+(setq shell-file-name "/bin/bash")
+(setq explicit-shell-file-name "/bin/bash")
+
 ;; FIXME: on OS X, when running Emacs.app, PATH is not set correctly.
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
-
-;; On OS X, use command key as meta, and option key as ctrl
-;; I commented this code because I prefer remapping using KeyRemap4MacBook software
-;; (when (eq system-type 'darwin)
-;;   (setq ns-alternate-modifier 'control
-;;         ns-command-modifier 'meta))
 
 ;; On OS X the $PATH environment variable and `exec-path' used by a
 ;; windowed Emacs instance will usually be the system-wide default
@@ -89,7 +78,26 @@
 
 (defvar calendar-date-style 'european)  ; dd/mm/yyyy
 
-(setq shell-file-name "/bin/bash")
+;; These options are specific to Emacs Mac Port
+;; Extracted from URL `https://gist.github.com/railwaycat/3498096'
+
+;; mac switch meta key
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'super)
+
+;; Standard emacs has these keybindings already defined.
+(global-set-key [(super a)] 'mark-whole-buffer)
+(global-set-key [(super v)] 'yank)
+(global-set-key [(super c)] 'kill-ring-save)
+(global-set-key [(super x)] 'kill-region)
+(global-set-key [(super s)] 'save-buffer)
+(global-set-key [(super l)] 'goto-line)
+(global-set-key [(super w)]
+                (lambda () (interactive) (delete-window)))
+(global-set-key [(super z)] 'undo)
+(global-set-key [(super k)] 'kill-this-buffer)
+(global-set-key [(super q)] 'save-buffers-kill-terminal)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -629,8 +637,9 @@
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
         (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point)
 
-        ;; Use full screen.
-        (setq helm-full-frame t)
+        ;; Instead of using full screen all the time, accomplished with (setq helm-full-frame t),
+        ;; Type s-t in helm mode to expand helm buffer.
+        (define-key helm-map [(super t)] 'mine-make-helm-full-frame)
 
         ;; In OSX, use mdfind instead of locate.
         (if (eq system-type 'darwin)
@@ -638,7 +647,7 @@
         ;; Ignore some files...
         (loop for ext in '("\\.elc$" "\\.pyc$")
               do (add-to-list 'helm-boring-file-regexp-list ext))
-        (global-set-key (kbd "s-t") 'helm-for-files)
+        (global-set-key [(super t)] 'helm-for-files)
 
         ;; Avoid showing up when using winner mode.
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
