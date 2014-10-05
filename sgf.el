@@ -63,9 +63,9 @@ PROP-VALUE is it's value."
 (defun sgf-rename-marked-files-dired ()
   "In Dired mode, rename marked files."
   (interactive)
-  (let ((files (dired-get-marked-files)))
-    (dolist (f files)
-      (rename-file f (sgf-get-filename f)))))
+  (dolist (file (dired-get-marked-files))
+    (rename-file file (sgf-get-filename file)))
+  (revert-buffer))
 
 
 (defun sgf-rename-file-dired ()
