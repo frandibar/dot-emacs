@@ -796,10 +796,11 @@
   :config
   (progn
     (guide-key-mode 1)
-    (setq guide-key/idle-delay 0.1)
+    (setq guide-key/idle-delay 0.5)
     (setq guide-key/recursive-key-sequence-flag t)
     (setq guide-key/guide-key-sequence
-          '((org-mode "C-c C-x")))))
+          '("C-c" "C-x"
+            (org-mode "C-c C-x")))))
 
 ;; A regexp/replace command for Emacs with interactive visual feedback.
 (use-package visual-regexp
@@ -876,6 +877,10 @@
 
 ;(set-face-attribute 'fringe nil :background "dark slate gray")
 ;(set-face-attribute 'linum nil :background "dark slate gray")
+
+;; Show keybindings in a nice format for major mode.
+;; Use as M-x discover-my-major
+(use-package discover-my-major)
 
 ;; Load initializations for this site.
 (use-package init-local)
