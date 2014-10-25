@@ -277,23 +277,9 @@
 
 ;; Emacs frontend to GNU Global source code tagging system.
 (use-package ggtags
+  :diminish " §"
   :config
   (add-hook 'prog-mode-hook 'ggtags-mode))
-
-;; GNU GLOBAL helm interface.
-(use-package helm-gtags
-  :config
-  (progn
-    (add-hook 'prog-mode-hook 'helm-gtags-mode))
-  :init
-  (progn
-    (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
-    (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
-    (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
-    (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
-    (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-    (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
-    (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
 
 ;; Set mode for unknown Fish shell configuration files.
 (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
@@ -390,6 +376,7 @@
 
 ;; Show function arglist or variable docstring in echo area.
 (use-package eldoc
+  :diminish eldoc-mode
   :config
   (progn
     (dolist (mode '(lisp-interaction-mode-hook
@@ -453,7 +440,9 @@
 
 ;; Treat undo history as a tree.
 (use-package undo-tree
-  :config
+  :diminish " τ"
+  :idle
+  ;; enable mode
   (global-undo-tree-mode))
 
 ;; Increase selected region by semantic units.
@@ -465,6 +454,7 @@
 ;; parentheses. For "tagged" markup modes, such as HTML and XML, it
 ;; wraps with tags.
 (use-package wrap-region
+  :diminish " ω"
   :config
   (wrap-region-global-mode t))
 
@@ -476,10 +466,12 @@
   :config
   (setq ace-jump-mode-case-fold nil))   ; case sensitive jump mode
 
-(use-package auto-complete)
+(use-package auto-complete
+  :diminish " ac")
 
 ;; Modern on-the-fly syntax checking.
 (use-package flycheck
+  :diminish " f"
   :config
   (global-flycheck-mode))
 
@@ -524,6 +516,7 @@
 ;; provides similar navigation for Emacs Lisp, supporting navigation
 ;; to the definitions of variables, functions, libraries and faces.
 (use-package elisp-slime-nav
+  :diminish " s"
   :config
   (progn
     (add-hook 'emacs-lisp-mode-hook (lambda () (elisp-slime-nav-mode t)))
@@ -531,6 +524,7 @@
 
 ;; Minor mode for editing parentheses.
 (use-package paredit
+  :diminish " ρ"
   :config
   (progn
     (dolist (mode '(clojure-mode-hook
@@ -553,6 +547,7 @@
       ;;(setq git-gutter-fr:side 'right-fringe)
       (global-git-gutter-mode 1))
   (use-package git-gutter
+    :diminish git-gutter-mode
     :config
     (global-git-gutter-mode 1)))
 
@@ -579,6 +574,7 @@
 ;; Root dir must have a file named .projectile to be considered a project
 ;; except for git repos. This file has entries with patterns to ignore files.
 (use-package projectile
+  :diminish " j"
   :config
   (projectile-global-mode)
   :init
@@ -612,6 +608,7 @@
 
 ;; Tools and minor mode to trim whitespace on text lines.
 (use-package ws-trim
+  :diminish ws-trim-mode
   :config
   (progn
     (setq-default ws-trim-level 1)   ; only modified lines are trimmed
@@ -620,12 +617,30 @@
 
 ;; Helm is an Emacs incremental and narrowing framework.
 (use-package helm
+  :diminish helm-mode
   :bind (("<f12>" . helm-mini))
   :init
   (progn
     (helm-mode 1)
     (use-package helm-projectile)
     (use-package helm-git)
+
+    ;; GNU GLOBAL helm interface.
+    (use-package helm-gtags
+      :diminish helm-gtags-mode
+      :config
+      (progn
+        (add-hook 'prog-mode-hook 'helm-gtags-mode))
+      :init
+      (progn
+        (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+        (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+        (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+        (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+        (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+        (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+        (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
+
     (use-package helm-config
       :config
       (progn
@@ -733,7 +748,7 @@
                         :inherit 'mode-line-position-face
                         :foreground "black" :background "#eab700")
 
-    (setq powerline-default-separator 'slant)
+    (setq powerline-default-separator 'zigzag)
 
     (defun mine-powerline-theme ()
       "Theme based on powerline-default-theme"
@@ -793,6 +808,7 @@
 
 ;; Guide the following key bindings automatically and dynamically.
 (use-package guide-key
+  :diminish guide-key-mode
   :config
   (progn
     (guide-key-mode 1)
@@ -831,11 +847,13 @@
 ;; Color identifiers based on their names.
 ;; Unique coloring of symbols instead of keywords.
 (use-package color-identifiers-mode
+  :diminish color-identifiers-mode
   :config
   (global-color-identifiers-mode))
 
 ;; Show number of matches in mode-line while searching.
 (use-package anzu
+  :diminish anzu-mode
   :config
   (progn
     (global-anzu-mode)))
@@ -844,24 +862,8 @@
 (use-package diminish
   :config
   (progn
-    (diminish 'anzu-mode)
-    (diminish 'auto-complete-mode " ac")
-    (diminish 'color-identifiers-mode)
-    (diminish 'eldoc-mode)
-    (diminish 'elisp-slime-nav-mode " s")
-    (diminish 'flycheck-mode " f")
-    (diminish 'ggtags-mode " §")
-    (diminish 'git-gutter-mode)
     (diminish 'global-whitespace-mode " _")
-    (diminish 'guide-key-mode)
-    (diminish 'helm-gtags-mode)
-    (diminish 'helm-mode)
     (diminish 'magit-auto-revert-mode)
-    (diminish 'paredit-mode " ρ")
-    (diminish 'projectile-mode " j")
-    (diminish 'undo-tree-mode " τ")
-    (diminish 'wrap-region-mode " ω")
-    (diminish 'ws-trim-mode)
     ))
 
 ;; A tree plugin like NerdTree for Vim.
