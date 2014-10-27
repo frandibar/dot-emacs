@@ -15,7 +15,7 @@
 
 ;; Load my functions: `load-path' is a list of directories where Emacs
 ;; Lisp libraries (`.el' and `.elc' files) are installed.
-(add-to-list 'load-path user-emacs-directory)
+;(add-to-list 'load-path user-emacs-directory)
 
 (let ((default-directory user-emacs-directory))
   (normal-top-level-add-subdirs-to-load-path))
@@ -391,7 +391,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; FIXME: had to use require, if not only the keybinded functions are loaded
-(require 'myfuncs (concat user-emacs-directory "myfuncs.el"))
+(require 'myfuncs)
 (use-package myfuncs
   :defer nil                                       ; this doesn't work
   :bind (("s-S-SPC" . mine-select-current-line)
@@ -497,7 +497,7 @@
     (setq elpy-default-minor-modes '(eldoc-mode
                                      yas-minor-mode
                                      auto-complete-mode))))
-(elpy-enable)
+;(elpy-enable)
 
 ;; Change the default naming of buffers to include parts of the file
 ;; name (directory names) until the buffer names are unique.
@@ -617,13 +617,12 @@
 
 ;; Helm is an Emacs incremental and narrowing framework.
 (use-package helm
-  :diminish helm-mode
+  :defer t
   :bind (("<f12>" . helm-mini))
   :init
   (progn
-    (helm-mode 1)
     (use-package helm-projectile)
-    (use-package helm-git)
+;    (use-package helm-git)
 
     ;; GNU GLOBAL helm interface.
     (use-package helm-gtags
@@ -660,7 +659,7 @@
         (if (eq system-type 'darwin)
             (setq helm-locate-command "mdfind %s %s"))
         ;; Ignore some files...
-        (loop for ext in '("\\.elc$" "\\.pyc$")
+        (cl-loop for ext in '("\\.elc$" "\\.pyc$")
               do (add-to-list 'helm-boring-file-regexp-list ext))
         (global-set-key [(super t)] 'helm-for-files)
 
@@ -668,12 +667,6 @@
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
-
-;; Show greek char for lambda in programming modes.
-;; Commented out because indentation is broken
-;; (use-package pretty-lambdada
-;;   :config
-;;   (add-hook 'prog-mode-hook 'pretty-lambda))
 
 ;; Edit a single list.
 (use-package edit-list)
@@ -863,7 +856,6 @@
   :config
   (progn
     (diminish 'global-whitespace-mode " _")
-    (diminish 'magit-auto-revert-mode)
     ))
 
 ;; A tree plugin like NerdTree for Vim.
@@ -883,6 +875,10 @@
 ;; Show keybindings in a nice format for major mode.
 ;; Use as M-x discover-my-major
 (use-package discover-my-major)
+
+(use-package aggressive-indent
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
 ;; Load initializations for this site.
 (use-package init-local)

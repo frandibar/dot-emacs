@@ -22,16 +22,23 @@ $ pip install pep8
 $ pip install rope
 ```
 
+# Misc
+
 Some **keybindings** worth mentioning:
 
 ### Searching
 Show all occurrences and jump between them with cursor keys.
-I used to do this with occur.<br/>
+I used to do this with `M-x` `occur`.<br/>
 `M-i` (helm-swoop)
+If typed again, invokes `helm-multi-swoop`. Additionally, works during `isearch`.
+While in `helm-swoop` press `C-c` `C-e` to edit mode, apply changes to original buffer by `C-x` `C-s`.
+
 
 ### Switching buffers
-`M-t` (helm-for-files)<br/>
+`Command-t` (helm-for-files)<br/>
 Jump between buffer configurations:<br/>
+`*[mode]` to filter my mode
+
 `C-c` `<left>`/`<right>` (winner-undo)/(winner-redo)
 
 ### Jumping
