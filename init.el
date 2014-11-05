@@ -63,18 +63,14 @@
 (setq shell-file-name "/bin/bash")
 (setq explicit-shell-file-name "/bin/bash")
 
-;; FIXME: on OS X, when running Emacs.app, PATH is not set correctly.
-(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
-
 ;; On OS X the $PATH environment variable and `exec-path' used by a
 ;; windowed Emacs instance will usually be the system-wide default
 ;; path, rather than that seen in a terminal window.
-;; FIXME: this should work but it doesn't
-;; (when (memq window-system '(mac ns))
-;;   (use-package exec-path-from-shell
-;;     :config
-;;     (progn
-;;       (exec-path-from-shell-initialize))))
+(when (memq window-system '(mac ns))
+  (use-package exec-path-from-shell
+    :config
+    (progn
+      (exec-path-from-shell-initialize))))
 
 (defvar calendar-date-style 'european)  ; dd/mm/yyyy
 
@@ -490,14 +486,13 @@
   :config
   (progn
     (setq elpy-rpc-backend "jedi")
-    (elpy-clean-modeline)      ; avoid showing minor modes
-    ;; (elpy-use-ipython)
+    (elpy-use-ipython)
     (setq python-shell-interpreter-args "-i --colors Linux")
     (setq python-shell-interpreter "/usr/local/bin/ipython")
     (setq elpy-default-minor-modes '(eldoc-mode
                                      yas-minor-mode
                                      auto-complete-mode))))
-;(elpy-enable)
+(elpy-enable)
 
 ;; Change the default naming of buffers to include parts of the file
 ;; name (directory names) until the buffer names are unique.
@@ -543,6 +538,7 @@
 ;; git-gutter.el can work in tty frame.
 (if window-system                       ; it's nil in console
     (use-package git-gutter-fringe
+      :diminish git-gutter-mode
       :config
       ;;(setq git-gutter-fr:side 'right-fringe)
       (global-git-gutter-mode 1))
