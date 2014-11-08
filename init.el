@@ -171,7 +171,9 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 
 ;; Useful for jumping to function definitions in buffer.
-(global-set-key (kbd "s-i") 'imenu)
+;(global-set-key (kbd "s-i") 'helm-semantic-or-imenu)
+(global-set-key (kbd "s-i") 'helm-imenu)
+
 
 ;; By default, emacs binds M-z to `zap-to-char'. I prefer binding it to
 ;; `zap-up-to-char', but the latter is not loaded by default (it's in
@@ -614,11 +616,10 @@
 ;; Helm is an Emacs incremental and narrowing framework.
 (use-package helm
   :defer t
-  :bind (("<f12>" . helm-mini))
   :init
   (progn
     (use-package helm-projectile)
-;    (use-package helm-git)
+    (use-package helm-git)
 
     ;; GNU GLOBAL helm interface.
     (use-package helm-gtags
@@ -639,9 +640,9 @@
     (use-package helm-config
       :config
       (progn
-        ;;(autoload 'helm-mode "helm-config")
         (define-key global-map [remap execute-extended-command] 'helm-M-x)
         (define-key global-map [remap find-file] 'helm-find-files)
+        (define-key global-map [remap switch-to-buffer] 'helm-mini)
         (define-key global-map [remap occur] 'helm-occur)
         (define-key global-map [remap list-buffers] 'helm-buffers-list)
         (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
@@ -656,7 +657,7 @@
             (setq helm-locate-command "mdfind %s %s"))
         ;; Ignore some files...
         (cl-loop for ext in '("\\.elc$" "\\.pyc$")
-              do (add-to-list 'helm-boring-file-regexp-list ext))
+                 do (add-to-list 'helm-boring-file-regexp-list ext))
         (global-set-key [(super t)] 'helm-for-files)
 
         ;; Avoid showing up when using winner mode.
