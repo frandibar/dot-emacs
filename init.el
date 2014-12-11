@@ -388,6 +388,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Add namespaces to elisp
+(use-package names)
+;; Enable integration with edebug, find-function, eval-defun, and eval-last-sexp
+;; (use-package names-dev)
+
 ;; FIXME: had to use require, if not only the keybinded functions are loaded
 (require 'myfuncs)
 (use-package myfuncs
@@ -528,7 +533,16 @@
                     hy-mode-hook
                     emacs-lisp-mode-hook
                     lisp-interaction-mode-hook))
-      (add-hook mode 'paredit-mode))))
+      (add-hook mode 'paredit-mode))
+    (defun mine-paredit-nonlisp ()
+      "Turn on paredit mode for non-lisps."
+      (interactive)
+      (set (make-local-variable 'paredit-space-for-delimiter-predicates)
+           '((lambda (endp delimiter) nil)))
+      (paredit-mode 1))
+
+    (add-hook 'js-mode-hook 'mine-paredit-nonlisp)
+    ))
 
 ;; Control Git from Emacs.
 (use-package magit
@@ -619,7 +633,7 @@
   :init
   (progn
     (use-package helm-projectile)
-    (use-package helm-git)
+    ;(use-package helm-git)
 
     ;; GNU GLOBAL helm interface.
     (use-package helm-gtags

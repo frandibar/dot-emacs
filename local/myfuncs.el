@@ -3,9 +3,14 @@
 ;;; Commentary:
 ;;; My custom miscellaneous functions
 
+;; Package-Requires: ((names "0.5") (emacs "24"))
+
 ;;; Code:
 
-(defun mine-backward-up-sexp (arg)
+;;;###autoload
+(define-namespace mine-
+
+(defun backward-up-sexp (arg)
   "Added because existing function `backward-up-list' won't work when
 point is between double quotes.
 
@@ -15,47 +20,47 @@ Extracted from URL
   (let ((ppss (syntax-ppss)))
     (cond ((elt ppss 3)
            (goto-char (elt ppss 8))
-           (mine-backward-up-sexp (1- arg)))
+           (backward-up-sexp (1- arg)))
           ((backward-up-list arg)))))
 
-(defun mine-dip ()
+(defun dip ()
   "Kill text inside parentheses.
 Similar to di) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (mine-backward-up-sexp nil)
+  (backward-up-sexp nil)
   (kill-sexp)
   (insert-parentheses))
 
-(defalias 'dip 'mine-dip)
+(defalias 'dip #'dip)
 
-; FIXME
-(defun mine-vip ()
+                                        ; FIXME
+(defun vip ()
   "Mark text inside parenthesis (excluding parentheses).
 Similar to vi) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (mine-backward-up-sexp nil)
+  (backward-up-sexp nil)
   (mark-sexp)
   (forward-char)
   (exchange-point-and-mark)
   (backward-char))
 
-(defalias 'vip 'mine-vip)
+(defalias 'vip #'vip)
 
-; FIXME
-(defun mine-vap ()
+                                        ; FIXME
+(defun vap ()
   "Mark text inside parenthesis (including parenthesis).
 Similar to va) in vim.
 It doesn't work if cursor is between double quotes."
   (interactive)
-  (mine-backward-up-sexp nil)
+  (backward-up-sexp nil)
   (mark-sexp)
   (exchange-point-and-mark))
 
-(defalias 'vap 'mine-vap)
+(defalias 'vap #'vap)
 
-(defun mine-match-paren (arg)
+(defun match-paren (arg)
   "Go to the matching parenthesis if cursor on a parenthesis;
 otherwise insert %."
   (interactive "p")
@@ -63,8 +68,8 @@ otherwise insert %."
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t (self-insert-command (or arg 1)))))
 
-; FIXME
-(defun mine-toggle-fullscreen ()
+                                        ; FIXME
+(defun toggle-fullscreen ()
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32
                          '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0))
@@ -73,39 +78,39 @@ otherwise insert %."
                                         ; disabled because sometimes leaves a status bar with too many lines
                                         ;(toggle-fullscreen)
 
-(defun mine-point-to-middle ()
+(defun point-to-middle ()
   "Put cursor on top line of window.
 Similar to 'M' in vim."
   (interactive)
   (push-mark)
   (move-to-window-line nil))
 
-(defalias 'mm 'mine-point-to-middle)
+(defalias 'mm 'point-to-middle)
 
-(defun mine-point-to-top ()
+(defun point-to-top ()
   "Put cursor on top line of window.
 Similar to 'H' in vim."
   (interactive)
   (push-mark)
   (move-to-window-line 0))
 
-(defalias 'hh 'mine-point-to-top)
+(defalias 'hh 'point-to-top)
 
-(defun mine-point-to-bottom ()
+(defun point-to-bottom ()
   "Put cursor at bottom of last visible line.
 Similar to 'L' in vim."
   (interactive)
   (push-mark)
   (move-to-window-line -1))
 
-(defalias 'll 'mine-point-to-bottom)
+(defalias 'll 'point-to-bottom)
 
-(defun mine-insert-date()
+(defun insert-date()
   (interactive)
   (insert (format-time-string "%a %b %d, %Y")))
 
 ;; Convert a buffer from DOS `^M' end of lines to Unix end of lines.
-(defun mine-dos-to-unix ()
+(defun dos-to-unix ()
   "Cut all visible ^M from the current buffer."
   (interactive)
   (save-excursion
@@ -113,7 +118,7 @@ Similar to 'L' in vim."
     (while (search-forward "\r" nil t)
       (replace-match ""))))
 
-(defun mine-unix-to-dos ()
+(defun unix-to-dos ()
   "Convert a buffer from Unix end of lines to DOS `^M' end of
 lines."
   (interactive)
@@ -122,14 +127,14 @@ lines."
     (while (search-forward "\n" nil t)
       (replace-match "\r\n"))))
 
-(defun mine-hide-dos-eol ()
+(defun hide-dos-eol ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings.
 Note: This function overrides variable `buffer-display-table'."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
 
-(defun mine-switch-cpp-h-file ()
+(defun switch-cpp-h-file ()
   (interactive)
   "Switches buffer to the corresponding header file (.h) if current buffer
 is a .cpp file, and vice-versa.
@@ -141,28 +146,28 @@ It assumes both files are in the same path. If not, it creates a new file."
            (concat (substring cpp-or-h-file 0 (- (length cpp-or-h-file) 4)) ".h"))))
   (find-file (alternate-file (buffer-file-name (current-buffer)))))
 
-(defun mine-fast-buffer-switch ()
+(defun fast-buffer-switch ()
   "Switch to last buffer."
   (interactive)
   ;; (switch-to-buffer (other-buffer)))    ; switch to most recent non visible buffer
   (switch-to-buffer (other-buffer (current-buffer) t))) ; ignore if most recent is visible or not
 
-(defun mine-with-number-at-point (fn n)
+(defun with-number-at-point (fn n)
   (save-excursion
     (skip-chars-forward "[:alpha:]_")
     (or (looking-at "-?[0-9]+")
         (error "No number at point"))
     (replace-match (number-to-string (funcall fn (string-to-number (match-string 0)) n)))))
 
-(defun mine-increment-number-at-point (&optional n)
+(defun increment-number-at-point (&optional n)
   (interactive "p")
-  (mine-with-number-at-point '+ n))
+  (with-number-at-point '+ n))
 
-(defun mine-decrement-number-at-point (&optional n)
+(defun decrement-number-at-point (&optional n)
   (interactive "p")
-  (mine-with-number-at-point '- n))
+  (with-number-at-point '- n))
 
-(defun mine-copy-current-line (arg)
+(defun copy-current-line (arg)
   "Copy and paste ARG lines from point.
 If point is on last buffer line, then no newline is inserted."
   (interactive "p")
@@ -171,7 +176,7 @@ If point is on last buffer line, then no newline is inserted."
     (yank)
     (yank)))
 
-(defun mine-current-line-to-clipboard (arg)
+(defun current-line-to-clipboard (arg)
   "Copy ARG lines to clipboard. Default value for ARG is 1.
 Although for ARG=1 it doesn't make much sense since M-w does the
 same thing.  Similar to 'Y' in vim."
@@ -182,18 +187,18 @@ same thing.  Similar to 'Y' in vim."
 
 ;; (require 'highlight-symbol)
 
-;; (defun mine-hl-symbol-and-jump-next ()
+;; (defun hl-symbol-and-jump-next ()
 ;;   "Search for next occurance of symbol under cursor, with highlight.
 ;; Similar to '*' in vim, except that the highlighting is preserved
 ;; on next search."
 ;;   (interactive)
-;;   (mine-hl-symbol-and-jump 'highlight-symbol-next))
+;;   (hl-symbol-and-jump 'highlight-symbol-next))
 
-;; (defun mine-hl-symbol-and-jump-prev ()
+;; (defun hl-symbol-and-jump-prev ()
 ;;   (interactive)
-;;   (mine-hl-symbol-and-jump 'highlight-symbol-prev))
+;;   (hl-symbol-and-jump 'highlight-symbol-prev))
 
-;; (defun mine-hl-symbol-and-jump (fn-next-or-prev)
+;; (defun hl-symbol-and-jump (fn-next-or-prev)
 ;;   "Search for previous occurance of symbol under cursor, with highlight.
 ;; Similar to '#' in vim, except that the highlighting is preserved
 ;; on next search."
@@ -205,7 +210,7 @@ same thing.  Similar to 'Y' in vim."
 ;;       (highlight-symbol-at-point)
 ;;       (funcall fn-next-or-prev))))
 
-;; (defun mine-hl-symbol-cleanup ()
+;; (defun hl-symbol-cleanup ()
 ;;   "Clear all highlighted symbols.
 ;; Taken from http://www.emacswiki.org/emacs/SearchAtPoint."
 ;;   (interactive)
@@ -215,15 +220,15 @@ same thing.  Similar to 'Y' in vim."
 ;; Search at point, similar to * in vim
 ;; http://www.emacswiki.org/emacs/SearchAtPoint
 ;; I-search with initial contents
-(defvar mine-isearch-initial-string nil)
+(defvar isearch-initial-string nil)
 
-(defun mine-isearch-set-initial-string ()
-  (remove-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
-  (setq isearch-string mine-isearch-initial-string)
+(defun isearch-set-initial-string ()
+  (remove-hook 'isearch-mode-hook 'isearch-set-initial-string)
+  (setq isearch-string isearch-initial-string)
   (isearch-search-and-update))
 
-; TODO: fix, fails when operating on last buffer occurrence
-(defun mine-isearch-forward-at-point (&optional regexp-p no-recursive-edit)
+                                        ; TODO: fix, fails when operating on last buffer occurrence
+(defun isearch-forward-at-point (&optional regexp-p no-recursive-edit)
   "Interactive search forward for the symbol at point."
   (interactive "P\np")
   (if regexp-p (isearch-forward regexp-p no-recursive-edit)
@@ -231,12 +236,12 @@ same thing.  Similar to 'Y' in vim."
            (begin (progn (skip-syntax-backward "w_") (point))))
       (if (eq begin end)
           (isearch-forward regexp-p no-recursive-edit)
-        (setq mine-isearch-initial-string (buffer-substring begin end))
-        (add-hook 'isearch-mode-hook 'mine-isearch-set-initial-string)
-;        (goto-char end)
+        (setq isearch-initial-string (buffer-substring begin end))
+        (add-hook 'isearch-mode-hook 'isearch-set-initial-string)
+                                        ;        (goto-char end)
         (isearch-forward regexp-p no-recursive-edit)))))
 
-(defun mine-window-horizontal-to-vertical ()
+(defun window-horizontal-to-vertical ()
   "Switches from a horizontal split to a vertical split.
 http://www.emacswiki.org/emacs/Rick_Bielawski#toc5
 Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs"
@@ -250,7 +255,7 @@ Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs"
     (goto-char buf-point)))
 
 ;; complement of above created by rgb 11/2004
-(defun mine-window-vertical-to-horizontal ()
+(defun window-vertical-to-horizontal ()
   "Switches from a vertical split to a horizontal split."
   (interactive)
   (let ((one-buf (window-buffer (selected-window)))
@@ -261,7 +266,7 @@ Idea and starter code from Benjamin Rutt (rutt.4+news@osu.edu) on comp.emacs"
     (switch-to-buffer one-buf)
     (goto-char buf-point)))
 
-(defun mine-semnav-up (arg)
+(defun semnav-up (arg)
   "Extracted from URL `http://xahlee.org/emacs/modernization_mark-word.html'
 by Nikolaj Schumacher, 2008-10-20. Released under GPL."
   (interactive "p")
@@ -276,7 +281,7 @@ by Nikolaj Schumacher, 2008-10-20. Released under GPL."
       (incf arg)))
   (up-list arg))
 
-(defun mine-extend-selection (arg &optional incremental)
+(defun extend-selection (arg &optional incremental)
   "Select the current word.
 Subsequent calls expands the selection to larger semantic unit.
 By Nikolaj Schumacher, 2008-10-20. Released under GPL."
@@ -289,14 +294,14 @@ By Nikolaj Schumacher, 2008-10-20. Released under GPL."
         (forward-sexp)
         (mark-sexp -1))
     (if (> arg 1)
-        (mine-extend-selection (1- arg) t)
+        (extend-selection (1- arg) t)
       (if (looking-at "\\=\\(\\s_\\|\\sw\\)*\\_>")
           (goto-char (match-end 0))
         (unless (memq (char-before) '(?\) ?\"))
           (forward-sexp)))
       (mark-sexp -1))))
 
-(defun mine-select-text-in-quote ()
+(defun select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
 Delimiters are paired characters:
  () [] {} «» ‹› “” 〖〗 【】 「」 『』 （） 〈〉 《》 〔〕 ⦗⦘ 〘〙
@@ -315,7 +320,7 @@ is easy to get content inside HTML tags."
     (set-mark b1)
     ))
 
-(defun mine-close-buffer-and-window ()
+(defun close-buffer-and-window ()
   "Kills buffer and window. Asks for confirmation if buffer is not associated to a file nor is a dired buffer."
   (interactive)
   (when (or (buffer-file-name)
@@ -325,7 +330,7 @@ is easy to get content inside HTML tags."
     (delete-window)))
 
 
-(defun mine-enclose-quotes (start end)
+(defun enclose-quotes (start end)
   "Insert double quotes around a region."
   (interactive "r")
   (save-excursion
@@ -333,7 +338,7 @@ is easy to get content inside HTML tags."
     (goto-char start) (insert-char ?" 1)
     ))
 
-(defun mine-enclose-parens (start end)
+(defun enclose-parens (start end)
   "Insert parenthesis around a region."
   (interactive "r")
   (save-excursion
@@ -341,7 +346,7 @@ is easy to get content inside HTML tags."
   (goto-char start) (insert-char ?( 1)
                                  ))
 
-(defun mine-replace-enclosing-char (old new)
+(defun replace-enclosing-char (old new)
   "Replace the enclosing OLD char with NEW.
 The cursor must be located in between the enclosing chars.
 For empty strings, cursor should be on closing pair.
@@ -373,7 +378,7 @@ automatically, and allow specifying it with prefix argument.
     (delete-char 1)
     (insert-char (closer new) 1)))
 
-(defun mine-next-user-buffer ()
+(defun next-user-buffer ()
   "Switch to the next user buffer in cyclic order.
 User buffers are those not starting with * nor in dired-mode.
 Based on http://xahlee.org/emacs/elisp_examples.html"
@@ -385,7 +390,7 @@ Based on http://xahlee.org/emacs/elisp_examples.html"
                 (not (string-equal start-buf (buffer-name))))
       (next-buffer))))
 
-(defun mine-previous-user-buffer ()
+(defun previous-user-buffer ()
   "Switch to the previous user buffer in cyclic order.
 User buffers are those not starting with * nor in dired-mode."
   (interactive)
@@ -398,7 +403,7 @@ User buffers are those not starting with * nor in dired-mode."
 
 ;; displays a popup window, useful for agenda notifications.
 ;; requires zenity
-(defun mine-popup (title msg)
+(defun popup (title msg)
   (shell-command (concat "zenity --warning --width=300 --title=\"" title "\" --text=\"" msg "\"")))
 
 ;; extracted from http://xahlee.org/emacs/emacs_copy_cut_current_line.html
@@ -419,14 +424,14 @@ User buffers are those not starting with * nor in dired-mode."
      (progn
        (list (line-beginning-position) (line-beginning-position 2)) ) ) ))
 
-(defun mine-select-current-line ()
+(defun select-current-line ()
   "Select the current line.
 Extracted from URL `http://ergoemacs.org/emacs/modernization_mark-word.html'."
   (interactive)
   (end-of-line) ; move to end of line
   (set-mark (line-beginning-position)))
 
-(defun mine-filename-to-clipboard ()
+(defun filename-to-clipboard ()
   "Copy the current buffer file name to the clipboard.
 Extracted from URL `http://emacsredux.com'."
   (interactive)
@@ -437,7 +442,7 @@ Extracted from URL `http://emacsredux.com'."
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defun mine-xml-format ()
+(defun xml-format ()
   "Reformat xml using xmllint"
   (interactive)
   ;; use xmllint instead of sgml-pretty-print because it's output is nicer
@@ -445,7 +450,7 @@ Extracted from URL `http://emacsredux.com'."
   (web-mode))
 
 
-(defun mine-toggle-folding-level (level)
+(defun toggle-folding-level (level)
   "Toggle folding level to show/hide only lines indentation level LEVEL lines
   TODO: not working"
   (interactive "P")
@@ -458,10 +463,10 @@ Extracted from URL `http://emacsredux.com'."
       ;; use set-selective display function instead of (setq selective-display)
       ;; so message appears
       (set-selective-display (cond (level (* level offset))
-                                    ((eq selective-display 0) offset)
-                                    (t 0))))))
+                                   ((eq selective-display 0) offset)
+                                   (t 0))))))
 
-(defun mine-toggle-case ()
+(defun toggle-case ()
   "Toggle the letter case of current word or text selection.
 Toggles between: “all lower”, “Init Caps”, “ALL CAPS”.
 
@@ -543,7 +548,7 @@ eshell-prompt-function-long)"
         (move-dir-to-trash name)
       (move-file-to-trash name))))
 
-(defun mine-scissors ()
+(defun scissors ()
   (interactive)
   (insert "8<--------8<--------8<--------8<--------8<--------8<--------8<--------8<--------"))
 
@@ -553,17 +558,17 @@ eshell-prompt-function-long)"
   "Clear the sauron buffer."
   (interactive)
   (when
-    (and sr-buffer (buffer-live-p sr-buffer))
-; I commented this out to avoid being asked
-;      (yes-or-no-p "Are you sure you want to clear the log? "))
+      (and sr-buffer (buffer-live-p sr-buffer))
+                                        ; I commented this out to avoid being asked
+                                        ;      (yes-or-no-p "Are you sure you want to clear the log? "))
     (with-current-buffer sr-buffer
       (let ((inhibit-read-only t))
-    (erase-buffer)))
+        (erase-buffer)))
     (message nil)
-; added by me
+                                        ; added by me
     (sr-hide)))
 
-(defun mine-smart-open-line ()
+(defun smart-open-line ()
   "Insert an empty line after the current line.
 Position the cursor at its beginning, according to the current mode.
 Extracted from URL `http://emacsredux.com'."
@@ -572,16 +577,16 @@ Extracted from URL `http://emacsredux.com'."
   (newline-and-indent))
 
 ;; use the following functions to specify a font for a mode
-;; i.e. (add-hook 'help-mode-hook 'mine-use-proportional-font)
-(defun mine-use-proportional-font ()
+;; i.e. (add-hook 'help-mode-hook 'use-proportional-font)
+(defun use-proportional-font ()
   "Switch the current buffer to a proportional font."
   (face-remap-add-relative 'default '(:family "FreeSans")))
 
-(defun mine-use-monospace-font ()
+(defun use-monospace-font ()
   "Switch the current buffer to a monospace font."
   (face-remap-add-relative 'default '(:family "Monospace")))
 
-(defun mine-remove-crln ()
+(defun remove-crln ()
   "Removes CRLF (^M) in file"
   (interactive)
   (save-excursion
@@ -598,13 +603,13 @@ Extracted from URL `http://emacsredux.com/blog/2013/04/21/edit-files-as-root'."
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 
-(defun mine-cmp-pairs (fn x y)
+(defun cmp-pairs (fn x y)
   "Returns a list ((fn x1 y1) (fn x2 y2) ... (fn xn yn)) for X = (x1 x2 ... xn) and Y = (y1 y2 ... yn).
 Both lists must have same length."
   (if (= (length x) (length y))
-    (if x
-        (cons (funcall fn (car x) (car y)) (mine-cmp-pairs fn (cdr x) (cdr y)))
-      '())
+      (if x
+          (cons (funcall fn (car x) (car y)) (cmp-pairs fn (cdr x) (cdr y)))
+        '())
     (error "Lists must have same size.")))
 
 ;; smarter move to BOL:
@@ -621,7 +626,7 @@ Both lists must have same length."
     (when (= pos (point))
       ad-do-it)))
 
-(defun mine-eshell-kill-line ()
+(defun eshell-kill-line ()
   (interactive)
   (eshell-bol)
   (kill-line))
@@ -637,11 +642,11 @@ Extracted from URL `http://ergoemacs.org/emacs/emacs_byte_compile.html'."
 (add-hook 'after-save-hook 'byte-compile-current-buffer)
 
 ;; make long prefixes display as shorter prefixes
-(defface mine-prefix
+(defface prefix
   '((t (:foreground "grey50")))
   "Face for simplified prefixes.")
 
-(defun mine-simplify-prefix (prefix rep)
+(defun simplify-prefix (prefix rep)
   "Replace PREFIX with REP visually on this buffer.
 
 PREFIX is simply displayed as REP, but not actually replaced with REP.
@@ -658,7 +663,7 @@ Extracted from URL `http://yoo2080.wordpress.com/2013/09/22/how-to-choose-emacs-
 
           (0 (progn (put-text-property (match-beginning 0) (match-end 0)
                                        'display ,rep)
-                    'mine-prefix)))))
+                    'prefix)))))
   (font-lock-fontify-buffer))
 
 (defun backward-up-list+-1 ()
@@ -679,7 +684,7 @@ Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-mo
 
 (define-key lisp-mode-shared-map (kbd "C-M-0") 'up-list+-1)
 
-(defun mine-comment-tests ()
+(defun comment-tests ()
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -689,7 +694,7 @@ Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-mo
     ))
 
 
-(defun mine-uncomment-tests ()
+(defun uncomment-tests ()
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -698,7 +703,7 @@ Extracted from URL `http://jaderholm.com/blog/programothesis-27-emacs-paredit-mo
         (replace-match "def test")))
     ))
 
-(defun mine-pdb-break ()
+(defun pdb-break ()
   (interactive)
   (insert "import pdb;pdb.set_trace()  # TODO remove\n"))
 
@@ -734,45 +739,45 @@ invoked from a Python process, it will switch back to the `python-mode' buffer."
     ;; still exists.
     (when (eq major-mode 'inferior-python-mode)
       (if (buffer-live-p python-last-buffer)
-           (switch-to-buffer python-last-buffer)
+          (switch-to-buffer python-last-buffer)
         ;; buffer's dead; clear the variable.
         (setq python-last-buffer nil)))))
 
 (define-key inferior-python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
 (define-key python-mode-map (kbd "<f10>") 'toggle-between-python-buffers)
 
-(defun mine-json-format ()
+(defun json-format ()
   "JSON Pretty format for selected region."
   (interactive)
   (save-excursion
     (shell-command-on-region (mark) (point) "python -m json.tool" (buffer-name) t)))
 
-(defun mine-point-in-string-p (pt)
+(defun point-in-string-p (pt)
   "Returns t if PT is in a string
 Works in strings enclosed in single quotes, as opposed to `in-string-p'
 Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
   (eq 'string (syntax-ppss-context (syntax-ppss pt))))
 
 
-(defun mine-beginning-of-string ()
+(defun beginning-of-string ()
   "Moves to the beginning of a syntactic string
 Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
   (interactive)
-  (unless (mine-point-in-string-p (point))
+  (unless (point-in-string-p (point))
     (error "You must be in a string for this command to work"))
-  (while (mine-point-in-string-p (point))
+  (while (point-in-string-p (point))
     (forward-char -1))
   (point))
 
-(defun mine-swap-quotes ()
+(defun swap-quotes ()
   "Swaps the quote symbols in a \\[python-mode] string
 Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-quote-symbols-emacs-parsepartialsexp/'"
   (interactive)
   (save-excursion
     (let ((bos (save-excursion
-                 (mine-beginning-of-string)))
+                 (beginning-of-string)))
           (eos (save-excursion
-                 (mine-beginning-of-string)
+                 (beginning-of-string)
                  (forward-sexp)
                  (point)))
           (replacement-char ?\'))
@@ -780,18 +785,19 @@ Extracted from URL `http://www.masteringemacs.org/articles/2014/08/26/swapping-q
       ;; if the following character is a single quote then the
       ;; `replacement-char' should be a double quote.
       (when (eq (following-char) ?\')
-          (setq replacement-char ?\"))
+        (setq replacement-char ?\"))
       (delete-char 1)
       (insert replacement-char)
       (goto-char eos)
       (delete-char -1)
       (insert replacement-char))))
 
-(defun mine-make-helm-full-frame ()
+(defun make-helm-full-frame ()
   "Extracted from URL `http://emacs.stackexchange.com/questions/643/make-helm-window-the-only-window'"
-   (interactive)
-   (with-selected-window (helm-window)
-     (delete-other-windows)))
+  (interactive)
+  (with-selected-window (helm-window)
+    (delete-other-windows)))
+)
 
 (provide 'myfuncs)
 
