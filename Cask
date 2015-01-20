@@ -15,6 +15,7 @@
 (depends-on "bind-key")
 (depends-on "browse-kill-ring")
 (depends-on "cask")
+(depends-on "change-inner")
 (depends-on "color-identifiers-mode")
 (depends-on "color-theme-active")
 (depends-on "color-theme-monokai")

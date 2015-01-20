@@ -53,8 +53,7 @@
 
 (require 'use-package)
 
-;; Keep Cask file in sync with the packages.
-;; installed/uninstalled via `list-packages'.
+;; Keep Cask file in sync with the installed/uninstalled packages.
 (use-package pallet)
 
 
@@ -80,20 +79,6 @@
 ;; mac switch meta key
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
-
-;; Standard emacs has these keybindings already defined.
-(global-set-key [(super a)] 'mark-whole-buffer)
-(global-set-key [(super v)] 'yank)
-(global-set-key [(super c)] 'kill-ring-save)
-(global-set-key [(super x)] 'kill-region)
-(global-set-key [(super s)] 'save-buffer)
-(global-set-key [(super l)] 'goto-line)
-(global-set-key [(super w)]
-                (lambda () (interactive) (delete-window)))
-(global-set-key [(super z)] 'undo)
-(global-set-key [(super k)] 'kill-this-buffer)
-(global-set-key [(super q)] 'save-buffers-kill-terminal)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -156,9 +141,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; KEYBINDINGS
+;; GLOBAL KEYBINDINGS
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Standard Emacs has these keybindings defined.
+(global-set-key [(super a)] 'mark-whole-buffer)
+(global-set-key [(super v)] 'yank)
+(global-set-key [(super c)] 'kill-ring-save)
+(global-set-key [(super x)] 'kill-region)
+(global-set-key [(super s)] 'save-buffer)
+(global-set-key [(super l)] 'goto-line)
+(global-set-key [(super z)] 'undo)
+(global-set-key [(super w)] 'delete-window)
+(global-set-key [(super k)] 'kill-this-buffer)
+(global-set-key [(super q)] 'save-buffers-kill-terminal)
 
 ;; When possible, they should start with C-c, and then C- again to avoid race
 ;; condition between first and second keys.
@@ -171,11 +168,10 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 
 ;; Useful for jumping to function definitions in buffer.
-;(global-set-key (kbd "s-i") 'helm-semantic-or-imenu)
 (global-set-key (kbd "s-i") 'helm-imenu)
 
 
-;; By default, emacs binds M-z to `zap-to-char'. I prefer binding it to
+;; By default, Emacs binds M-z to `zap-to-char'. I prefer binding it to
 ;; `zap-up-to-char', but the latter is not loaded by default (it's in
 ;; misc.el instead of simple.el).
 (autoload 'zap-up-to-char "misc" "Kill up to, but not including ARGth occurrence of CHAR.")
@@ -184,8 +180,9 @@
 
 ;; Same thing with `forward-to-word'.
 (autoload 'forward-to-word "misc" "Move forward until encountering the beginning of a word.")
-(global-set-key (kbd "M-f") 'forward-to-word)  ; TODO: use subword variant (subword-forward leaves cursor before word)
-;(global-set-key (kbd "M-f") 'subword-forward)
+(global-set-key (kbd "M-f") 'forward-to-word)
+;; TODO: use subword variant (subword-forward leaves cursor before word)
+;;(global-set-key (kbd "M-f") 'subword-forward)
 
 ;; Use these keybindings for window switching since default ones
 ;; (windmove-default-keybindings) S-{up,down,left,right}
@@ -200,17 +197,6 @@
 
 ;; On OSX, s-x is mapped to `kill-region' so there is no need to remap.
 (global-set-key (kbd "C-w") 'backward-kill-word) ; override `kill-region'
-
-(use-package python
-  :init
-  (progn
-    (defvar inferior-python-mode-map)
-    ;; Behave like in a terminal.
-    (define-key inferior-python-mode-map (kbd "C-S-p") 'comint-previous-input)
-    (define-key inferior-python-mode-map (kbd "C-S-n") 'comint-next-input)
-    ;; for some unknown reason using :bind doesn't work
-    (define-key python-mode-map (kbd "C-M-<") 'python-indent-shift-left)
-    (define-key python-mode-map (kbd "C-M->") 'python-indent-shift-right)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -335,7 +321,7 @@
     (add-to-list 'auto-mode-alist '("\\.txt\\'" . org-mode))
     ;; org-mode clean view
     ;; (setq org-startup-indented t)   ; commented out as it produces flickering
-                                       ; in order to hide the leading stars, set the org-hide face color to background
+                                        ; in order to hide the leading stars, set the org-hide face color to background
     (setq org-hide-leading-stars t)   ; this is also set with org-startup-indented
     ;; agenda view of next 14 days
     (defvar org-agenda-span 14)
@@ -346,18 +332,18 @@
                                    "~/xapo/agenda.org")))
 
     (defvar org-capture-templates
-          '(("m" "movilidad")
-            ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
-             "* %^t %^{prompt}")
-            ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
-             "* %^t %^{prompt}")
-            ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
-             "* %^t %^{prompt}")
-            ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
-             "* %^t %^{prompt}")
-            ("x" "xapo" entry (file+headline "~/xapo/agenda.org" "xapo")
-             "* %^t %^{")
-            ))
+      '(("m" "movilidad")
+        ("ma" "auto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "auto")
+         "* %^t %^{prompt}")
+        ("mm" "moto" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "moto")
+         "* %^t %^{prompt}")
+        ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
+         "* %^t %^{prompt}")
+        ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
+         "* %^t %^{prompt}")
+        ("x" "xapo" entry (file+headline "~/xapo/agenda.org" "xapo")
+         "* %^t %^{")
+        ))
 
     ;;     ;; the appointment notification facility
     ;;     ;; based on http://emacs-fu.blogspot.com.ar/2009/11/showing-pop-ups.html
@@ -381,6 +367,45 @@
                     emacs-lisp-mode-hook))
       (add-hook mode 'turn-on-eldoc-mode))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; PYTHON
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package python
+  :init
+  (progn
+    (defvar inferior-python-mode-map)
+    ;; Behave like in a terminal.
+    (define-key inferior-python-mode-map (kbd "C-S-p") 'comint-previous-input)
+    (define-key inferior-python-mode-map (kbd "C-S-n") 'comint-next-input)
+    ;; for some unknown reason using :bind doesn't work
+    (define-key python-mode-map (kbd "C-M-<") 'python-indent-shift-left)
+    (define-key python-mode-map (kbd "C-M->") 'python-indent-shift-right)))
+
+;; TODO: this should go inside the use-package
+(add-hook 'python-mode-hook
+          (lambda ()
+            (flycheck-mode)
+            (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
+            (flycheck-select-checker 'python-flake8)))
+
+;; Emacs Python Development Environment.
+(use-package elpy
+  ;; Default bindings are overriden by smartscan
+  :bind (("M-C-n" . elpy-nav-forward-definition)    ; default M-n
+         ("M-C-p" . elpy-nav-backward-definition))  ; default M-p
+  :config
+  (progn
+    (setq elpy-rpc-backend "jedi")
+    (elpy-use-ipython)
+    (setq python-shell-interpreter-args "-i --colors Linux")
+    (setq python-shell-interpreter "/usr/local/bin/ipython")
+    (setq elpy-default-minor-modes '(eldoc-mode
+                                     ;; yas-minor-mode
+                                     auto-complete-mode))))
+(elpy-enable)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -393,23 +418,34 @@
 ;; Enable integration with edebug, find-function, eval-defun, and eval-last-sexp
 ;; (use-package names-dev)
 
+;; My own libraries (starting with fd-)
+(use-package fd-vim
+  :bind (("C-c C-h" . fd-vim-point-to-top)
+         ("C-c C-m" . fd-vim-point-to-middle)
+         ("C-c C-l" . fd-vim-point-to-bottom)
+
+         ("C-c C-a" . fd-vim-increment-number-at-point)
+         ("C-c C-x" . fd-vim-decrement-number-at-point)
+         ("C-5" . fd-vim-match-paren)                ; similar to vim's %
+         ("C-6" . fd-vim-fast-buffer-switch)         ; similar to vim's ^
+         ))
+
+(use-package fd-buf)
+(use-package fd-fmt)
+(use-package fd-file)
+(use-package fd-py)
+(use-package fd-font)
+(use-package fd-eshell)
+
+
 ;; FIXME: had to use require, if not only the keybinded functions are loaded
-(require 'myfuncs)
-(use-package myfuncs
+(require 'fd-misc)
+(use-package fd-misc
   :defer nil                                       ; this doesn't work
-  :bind (("s-S-SPC" . mine-select-current-line)
+  :bind (("s-S-SPC" . fd-misc-select-current-line)
 
-         ("C-c C-a" . mine-increment-number-at-point)
-         ("C-c C-x" . mine-decrement-number-at-point)
-
-         ("C-<prior>" . mine-previous-user-buffer) ; Ctrl+PageDown
-         ("C-<next>" . mine-next-user-buffer)      ; Ctrl+PageUp
-         ("C-5" . mine-match-paren)                ; similar to vim's %
-         ("C-6" . mine-fast-buffer-switch)         ; similar to vim's ^
-         ("C-8" . mine-isearch-forward-at-point)   ; similar to vim's *
-         ;; ("M-k" . mine-close-buffer-and-window)    ; override kill-sentence
-         ("M-C" . mine-toggle-case)
-         ;; ("C-x $" . mine-toggle-folding-level)  ;; overrides set-selective-display
+         ("C-8" . fd-misc-isearch-forward-at-point)   ; similar to vim's *
+         ("M-C" . fd-misc-toggle-case)
          ))
 
 (use-package starter-kit-defuns
@@ -478,29 +514,6 @@
   :config
   (global-flycheck-mode))
 
-;; TODO: this should go inside the use-package
-(add-hook 'python-mode-hook
-          (lambda ()
-            (flycheck-mode)
-            (flycheck-set-checker-executable 'python-flake8 "/usr/local/bin/flake8")
-            (flycheck-select-checker 'python-flake8)))
-
-;; Emacs Python Development Environment.
-(use-package elpy
-  ;; Default bindings are overriden by smartscan
-  :bind (("M-C-n" . elpy-nav-forward-definition)    ; default M-n
-         ("M-C-p" . elpy-nav-backward-definition))  ; default M-p
-  :config
-  (progn
-    (setq elpy-rpc-backend "jedi")
-    (elpy-use-ipython)
-    (setq python-shell-interpreter-args "-i --colors Linux")
-    (setq python-shell-interpreter "/usr/local/bin/ipython")
-    (setq elpy-default-minor-modes '(eldoc-mode
-                                     yas-minor-mode
-                                     auto-complete-mode))))
-(elpy-enable)
-
 ;; Change the default naming of buffers to include parts of the file
 ;; name (directory names) until the buffer names are unique.
 (use-package uniquify
@@ -534,14 +547,14 @@
                     emacs-lisp-mode-hook
                     lisp-interaction-mode-hook))
       (add-hook mode 'paredit-mode))
-    (defun mine-paredit-nonlisp ()
+    (defun fd-paredit-nonlisp ()
       "Turn on paredit mode for non-lisps."
       (interactive)
       (set (make-local-variable 'paredit-space-for-delimiter-predicates)
            '((lambda (endp delimiter) nil)))
       (paredit-mode 1))
 
-    (add-hook 'js-mode-hook 'mine-paredit-nonlisp)
+    (add-hook 'js-mode-hook 'fd-paredit-nonlisp)
     ))
 
 ;; Control Git from Emacs.
@@ -633,7 +646,7 @@
   :init
   (progn
     (use-package helm-projectile)
-    ;(use-package helm-git)
+                                        ;(use-package helm-git)
 
     ;; GNU GLOBAL helm interface.
     (use-package helm-gtags
@@ -664,7 +677,7 @@
 
         ;; Instead of using full screen all the time, accomplished with (setq helm-full-frame t),
         ;; Type s-t in helm mode to expand helm buffer.
-        (define-key helm-map [(super t)] 'mine-make-helm-full-frame)
+        (define-key helm-map [(super t)] 'fd-make-helm-full-frame)
 
         ;; In OSX, use mdfind instead of locate.
         (if (eq system-type 'darwin)
@@ -678,6 +691,10 @@
         (add-hook 'helm-before-initialize-hook #'(lambda () (winner-mode -1)))
         (add-hook 'helm-cleanup-hook #'(lambda () (winner-mode 1)))
         ))))
+
+;; Efficiently hopping squeezed lines powered by helm interface.
+(use-package helm-swoop
+  :bind (("M-i" . helm-swoop)))
 
 ;; Edit a single list.
 (use-package edit-list)
@@ -754,7 +771,7 @@
 
     (setq powerline-default-separator 'zigzag)
 
-    (defun mine-powerline-theme ()
+    (defun fd-powerline-theme ()
       "Theme based on powerline-default-theme"
       (interactive)
       (setq-default mode-line-format
@@ -771,7 +788,7 @@
                                                                powerline-default-separator
                                                                (cdr powerline-default-separator-dir))))
                               (lhs (list (powerline-raw "%*" nil 'l)  ; print flags % if read only, * if modified
-                                         ;(powerline-raw mode-line-mule-info nil 'l)
+                                        ;(powerline-raw mode-line-mule-info nil 'l)
                                          ;; line : column
                                          (powerline-raw " %l:%c " face2)
                                          (funcall separator-left face2 face1)
@@ -802,7 +819,7 @@
                          (concat (powerline-render lhs)
                                  (powerline-fill face2 (powerline-width rhs))
                                  (powerline-render rhs)))))))
-    (mine-powerline-theme)
+    (fd-powerline-theme)
     ))
 
 ;; Discover more of Emacs.
@@ -873,10 +890,6 @@
 (use-package neotree
   :bind (("<f8>" . neotree-toggle)))
 
-;; Efficiently hopping squeezed lines powered by helm interface.
-(use-package helm-swoop
-  :bind (("M-i" . helm-swoop)))
-
 ;; My sgf library for handling Smart Go Format files
 (use-package sgf)
 
@@ -890,6 +903,11 @@
 (use-package aggressive-indent
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+
+;; Bring vim's ci to emacs.
+(use-package change-inner
+  :bind (("C-c C-i" . change-inner)
+         ("C-c C-o" . change-outer)))
 
 ;; Load initializations for this site.
 (use-package init-local)
@@ -923,4 +941,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-(put 'narrow-to-page 'disabled nil)

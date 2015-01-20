@@ -51,7 +51,7 @@ Show function definitions on another buffer (python-mode only):<br/>
 `C-c` `C-o` (elpy-occur-definitions) <br/>
 
 ### Projects
-`C-c` `C-p` `a` Run awk in project.<br/>
+`C-c` `p s` `a` Run ack in project.<br/>
 `C-c` `C-p` `h` Open file in project.<br/>
 
 ### Directory
